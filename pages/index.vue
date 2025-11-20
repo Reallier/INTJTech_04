@@ -250,6 +250,11 @@ const activeSection = ref("hero");
 let observer: IntersectionObserver | null = null;
 
 onMounted(() => {
+  // 强制滚动到页面顶部 - 使用多种方式确保兼容性
+  window.scrollTo({ top: 0, behavior: 'auto' });
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+  
   observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -300,53 +305,75 @@ onBeforeUnmount(() => {
     </header>
 
     <main>
-      <section id="hero" class="section">
-        <div class="container hero">
-          <div>
+      <section id="hero" class="section hero-section">
+        <div class="container hero-container">
+          <!-- 左侧文本区域 -->
+          <div class="hero-content">
             <div class="eyebrow">
               <span class="dot" />
               紫薯科技 · 面向小微企业的 AI Agent 技术伙伴
             </div>
-            <h1>让小微企业把「重复又重要的工作」交给 Agent 处理</h1>
-            <p>
-              我们是一支小而精的工程团队，由长期在一线写代码的工程师主导。
-              专门帮已经有业务但技术人手有限的团队，用 AI Agent
-              和二次开发，让工作更省时间、更可控。
-            </p>
-            <div class="hero-list">
-              <div><strong>适合谁：</strong>已有稳定业务，想用 AI 提效，但没有完整技术团队 / 缺 Agent 落地经验。</div>
-              <div>
-                <strong>典型项目节奏：</strong> 1–6 周内交付，预算多在
-                <strong>￥8,000–￥60,000</strong> 区间。
+            
+            <!-- 主标题 -->
+            <h1 class="hero-title">小微企业的专属 <span class="highlight">AI 工程团队</span></h1>
+            
+            <!-- 副标题 -->
+            <h2 class="hero-subtitle">
+              用工程化方法做 Agent 设计、开发与落地，让流程自动化、更省心、更可控。
+            </h2>
+            
+            <!-- 支持卖点 -->
+            <div class="hero-benefits">
+              <div class="benefit-tag">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <!-- 淡灰色圆圈背景 -->
+                  <circle cx="12" cy="12" r="10" fill="none" stroke="#E5E7EB" stroke-width="1"/>
+                  <!-- 细线条对勾图标 -->
+                  <path d="M20 6L9 17L4 12" stroke="#6366F1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                工程落地，不止是 Demo
+              </div>
+              <div class="benefit-tag">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <!-- 淡灰色圆圈背景 -->
+                  <circle cx="12" cy="12" r="10" fill="none" stroke="#E5E7EB" stroke-width="1"/>
+                  <!-- 细线条对勾图标 -->
+                  <path d="M20 6L9 17L4 12" stroke="#6366F1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                1–6 周可交付，小工程不拖期
+              </div>
+              <div class="benefit-tag">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <!-- 淡灰色圆圈背景 -->
+                  <circle cx="12" cy="12" r="10" fill="none" stroke="#E5E7EB" stroke-width="1"/>
+                  <!-- 细线条对勾图标 -->
+                  <path d="M20 6L9 17L4 12" stroke="#6366F1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                成本透明：¥8,000–¥60,000
               </div>
             </div>
+            
+            <!-- CTA按钮 -->
             <div class="cta-row">
-              <a class="btn btn-primary" href="#contact">加微信聊聊</a>
-              <a class="btn btn-secondary" href="#contact">发邮件沟通</a>
+              <a class="btn btn-primary" href="#contact">立即沟通需求</a>
+              <a class="btn btn-secondary" href="#contact">
+                看看我们怎么做项目
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
             </div>
+            
             <div class="note">
               不确定从哪里开始？先用 15 分钟聊聊你的业务场景，一起找一个小切入口。
             </div>
           </div>
-
-          <div class="hero-card">
-            <div class="badge">试水 → 上线 → 优化</div>
-            <h3>我们怎么推进</h3>
-            <div class="timeline">
-              <div v-for="step in timeline" :key="step" class="timeline-step">
-                {{ step }}
-              </div>
-            </div>
-            <div class="chips">
-              <span v-for="chip in heroChips" :key="chip" class="chip">{{ chip }}</span>
-            </div>
-            <div class="info-row">
-              <strong>做事风格：</strong>
-              偏工程、少花哨；能落地、易维护；用现有工具做二次开发优先。
-            </div>
-            <div class="info-row">
-              <strong>沟通方式：</strong>
-              直接和核心工程师对话，不绕流程。
+          
+          <!-- 右侧视觉区域 -->
+          <div class="hero-visual">
+            <!-- Agent Orchestrator 架构图 -->
+            <div class="engineering-illustration">
+              <img src="~/assets/images/agent-diagram.svg" alt="Agent Orchestrator 架构图" width="100%" height="auto">
             </div>
           </div>
         </div>
@@ -538,5 +565,14 @@ onBeforeUnmount(() => {
         </div>
       </section>
     </main>
+    <footer class="footer">
+      <div class="container">
+        <div>紫薯科技 · AI Agent 技术伙伴</div>
+        <small>小团队、重工程、追求可落地的 Agent 交付</small>
+        <div>
+          <a href="#hero">回到顶部</a>
+        </div>
+      </div>
+    </footer>
   </div>
 </template>
