@@ -9,6 +9,32 @@ export default defineNuxtConfig({
           content:
             "小而精的工程团队，帮小微企业把重复又重要的工作交给 Agent 处理，让自动化落地更省时间、更可控。"
         }
+      ],
+      link: [
+        {
+          rel: "icon",
+          type: "image/png",
+          href: "/site-logo.png",
+          sizes: "32x32"
+        },
+        {
+          rel: "icon",
+          type: "image/png",
+          href: "/site-logo.png",
+          sizes: "64x64"
+        },
+        {
+          rel: "icon",
+          type: "image/png",
+          href: "/site-logo.png",
+          sizes: "128x128"
+        },
+        {
+          rel: "icon",
+          type: "image/png",
+          href: "/site-logo.png",
+          sizes: "256x256"
+        }
       ]
     }
   },

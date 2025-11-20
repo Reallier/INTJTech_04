@@ -207,7 +207,7 @@ const members: Member[] = [
     bullets: [
       "负责整体技术方案、系统设计和项目把控",
       "熟悉企业级生产环境、稳定性与可维护性",
-      "擅长把“想法”拆成能长期维护的技术方案"
+      "擅长把“想法”拆成能长期维护技术方案"
     ],
     summary: "方向与架构把控，强调可维护性与生产可行性。"
   },
@@ -295,7 +295,7 @@ onBeforeUnmount(() => {
     <header class="top-nav">
       <div class="container">
         <div class="brand">
-          <div class="brand-mark" />
+          <img src="/site-logo.png" alt="紫薯科技Logo" style="width: 40px; height: 40px; vertical-align: middle; margin-right: 8px;" />
           紫薯科技 · AI Agent
         </div>
         <nav class="nav-links">
@@ -497,31 +497,64 @@ onBeforeUnmount(() => {
           <p class="section-subtitle">
             紫薯科技是一个 2–3 人的小型工程团队，每个人都长期在一线写代码、做真实业务系统。
           </p>
-          <div class="grid-two">
-            <div class="card">
-              <h3>核心成员</h3>
-              <p class="meta">
+          <div class="team-grid">
+            <div class="info-card info-top">
+              <div class="pill pill-ghost">小型工程团队</div>
+              <h3>2–3 人配置，方向 / 系统 / 体验都到位</h3>
+              <p class="intro-meta">
                 简单说，就是：一个负责方向和架构 + 一个负责系统与运维质量 + 一个负责体验与落地细节。
               </p>
-              <p>共同目标：让 Agent 不只是“看上去很酷”，而是真正在公司里稳定被每天使用。</p>
+              <p class="muted">
+                共同目标：让 Agent 不只是“看上去很酷”，而是真正在公司里稳定被每天使用。
+              </p>
             </div>
-            <div class="card">
-              <h3>我们关注的关键点</h3>
-              <ul>
-                <li>生产可用性：稳定性、监控、错误发现与追踪。</li>
-                <li>可维护性：有清晰的输入输出协议、文档化的约束与边界。</li>
-                <li>体验：好用、好看、好上手，方便团队内部推广。</li>
-              </ul>
-            </div>
-          </div>
-          <div class="cards-grid" style="margin-top: 18px">
-            <article v-for="member in members" :key="member.name" class="card">
-              <h3>{{ member.name }} — {{ member.role }}</h3>
-              <ul>
+
+            <article
+              v-for="(member, index) in members"
+              :key="member.name"
+              class="member-card"
+              :class="`member-slot-${index}`"
+            >
+              <div class="member-header">
+                <div class="member-name">{{ member.name }}</div>
+                <span class="member-role">{{ member.role }}</span>
+              </div>
+              <p class="member-summary">{{ member.summary }}</p>
+              <ul class="member-bullets">
                 <li v-for="bullet in member.bullets" :key="bullet">{{ bullet }}</li>
               </ul>
-              <p class="meta">{{ member.summary }}</p>
             </article>
+
+            <div class="info-card info-bottom">
+              <div class="team-meta-row">
+                <div class="team-meta-block">
+                  <span class="meta-label">规模</span>
+                  <span class="meta-value">2–3 人常驻</span>
+                  <small>保持直接沟通，快速迭代</small>
+                </div>
+                <div class="team-meta-block">
+                  <span class="meta-label">工作方式</span>
+                  <span class="meta-value">先跑通，再精炼</span>
+                  <small>落地导向，可观测且好维护</small>
+                </div>
+              </div>
+
+              <div class="team-focus-title">我们关注的关键点</div>
+              <div class="team-focus-chips">
+                <div class="focus-chip">
+                  <div class="chip-title">生产可用性</div>
+                  <div class="chip-desc">稳定性、监控、错误发现与追踪</div>
+                </div>
+                <div class="focus-chip">
+                  <div class="chip-title">可维护性</div>
+                  <div class="chip-desc">清晰的输入输出协议、文档化的约束与边界</div>
+                </div>
+                <div class="focus-chip">
+                  <div class="chip-title">体验</div>
+                  <div class="chip-desc">好用、好看、好上手，方便团队内部推广</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
