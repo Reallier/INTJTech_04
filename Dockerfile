@@ -26,9 +26,6 @@ WORKDIR /app
 COPY --from=builder /app/.output /app/.output
 COPY --from=builder /app/package*.json ./
 
-# 安装生产依赖
-RUN npm ci --only=production
-
 # 暴露端口（Nuxt 默认使用 3000 端口）
 EXPOSE 3000
 
