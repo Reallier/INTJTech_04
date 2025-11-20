@@ -4,7 +4,8 @@ services:
     image: zilshu-tech-site:latest
     environment:
       - NODE_ENV=production
-      - PORT=3000
+      - NITRO_HOST=0.0.0.0
+      - NITRO_PORT=3000
     restart: always
     networks:
       - traefik
