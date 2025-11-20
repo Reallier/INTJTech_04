@@ -373,7 +373,7 @@ onBeforeUnmount(() => {
           <div class="hero-visual">
             <!-- Agent Orchestrator 架构图 -->
             <div class="engineering-illustration">
-              <img src="~/assets/images/agent-diagram.svg" alt="Agent Orchestrator 架构图" width="100%" height="auto">
+              <img src="/agent-diagram.svg" alt="Agent Orchestrator 架构图" style="width: 100%; height: auto;">
             </div>
           </div>
         </div>
