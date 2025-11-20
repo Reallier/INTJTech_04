@@ -223,7 +223,11 @@ h1.hero-title {
 
 /* 高亮文字 */
 h1.hero-title .highlight {
-  color: #6366F1; /* 品牌紫/蓝 */
+  color: #6366F1; /* fallback */
+  background-image: linear-gradient(135deg, #6366f1, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   position: relative;
   display: inline-block;
 }
@@ -236,7 +240,7 @@ h1.hero-title .highlight::after {
   left: 0;
   width: 0;
   height: 2px;
-  background-color: rgba(99, 102, 241, 0.75); /* 降低透明度到75% */
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.8), rgba(139, 92, 246, 0.8));
   animation: underlineSlide 500ms ease-out 300ms forwards;
 }
 
@@ -300,14 +304,19 @@ h2.hero-subtitle {
 }
 
 .btn-primary {
-  background-color: #6366F1;
-  color: white;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #ffffff;
   border: none;
+  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.22);
 }
 
 .btn-primary:hover {
-  background-color: #4F46E5;
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #7c3aed, #6366f1);
+  color: #ffffff; /* 保持高对比度，避免继承链接悬停色 */
+  transform: translateY(-2px) scale(1.01);
+  box-shadow:
+    0 10px 26px rgba(99, 102, 241, 0.34),
+    0 0 0 6px rgba(99, 102, 241, 0.12);
 }
 
 .btn-secondary {
@@ -319,6 +328,18 @@ h2.hero-subtitle {
 .btn-secondary:hover {
   border-color: #9CA3AF;
   color: #1F2937;
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
+}
+
+.btn-primary:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 3px #ffffff,
+    0 0 0 6px rgba(99, 102, 241, 0.45);
 }
 
 .btn svg {
@@ -773,9 +794,14 @@ h2.hero-subtitle {
 }
 
 .footer {
-  background: var(--color-text);
-  color: #f9fafb;
+  background: linear-gradient(
+    135deg,
+    rgba(124, 58, 237, 0.08),
+    rgba(14, 165, 233, 0.08)
+  );
+  color: var(--color-text);
   padding: 28px 0;
+  border-top: 1px solid var(--color-border);
 }
 
 .footer .container {
@@ -787,15 +813,15 @@ h2.hero-subtitle {
 }
 
 .footer small {
-  color: #e5e7eb;
+  color: var(--color-text-muted);
 }
 
 .footer a {
-  color: #e5e7eb;
+  color: var(--color-primary);
 }
 
 .footer a:hover {
-  color: #c084fc;
+  color: #5b21b6;
 }
 /* Services 部分 */
 #services .section-heading,
