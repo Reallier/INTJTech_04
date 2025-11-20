@@ -1,0 +1,33 @@
+# 依赖目录
+node_modules/
+
+# Git 版本控制文件
+.git/
+.gitignore
+
+# Nuxt 构建目录
+.nuxt/
+.output/
+
+# 环境变量文件
+.env
+.env.local
+.env.*.local
+
+# IDE 配置文件
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 日志文件
+logs/
+*.log
+
+# 测试覆盖率
+coverage/
+
+# 操作系统文件
+.DS_Store
+Thumbs.db

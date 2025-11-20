@@ -1,0 +1,21 @@
+services:
+  zilshu-tech-site:
+    build: .
+    image: zilshu-tech-site:latest
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    restart: always
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.zilshu-tech-site.rule=Host(`intjtech.reallier.top`)"
+      - "traefik.http.routers.zilshu-tech-site.entrypoints=websecure"
+      - "traefik.http.routers.zilshu-tech-site.tls=true"
+      - "traefik.http.routers.zilshu-tech-site.tls.certresolver=myresolver"
+      - "traefik.http.services.zilshu-tech-site.loadbalancer.server.port=3000"
+
+networks:
+  traefik:
+    external: true
