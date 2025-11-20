@@ -23,7 +23,9 @@ FROM node:18-alpine AS production
 WORKDIR /app
 
 # 从构建阶段复制必要的文件
+COPY --from=builder /app/public ./public
 COPY --from=builder /app/.output /app/.output
+RUN mkdir -p /app/.output/server/chunks/public && cp -r /app/.output/public/. /app/.output/server/chunks/public/ && ls -la /app/.output/server/chunks/public/
 COPY --from=builder /app/package*.json ./
 
 # 暴露端口（Nuxt 默认使用 3000 端口）

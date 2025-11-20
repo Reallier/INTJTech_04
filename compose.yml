@@ -1,7 +1,6 @@
 services:
   zilshu-tech-site:
-    build: .
-    image: zilshu-tech-site:latest
+    image: ccr.ccs.tencentyun.com/reallier/zilshu-tech-site:latest
     environment:
       - NODE_ENV=production
       - NITRO_HOST=0.0.0.0
