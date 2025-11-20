@@ -202,7 +202,7 @@ const pricing: Pricing[] = [
 
 const members: Member[] = [
   {
-    name: "A",
+    name: "Reallier",
     role: "前海外独角兽 SDK 效能架构负责人",
     bullets: [
       "负责整体技术方案、系统设计和项目把控",
@@ -212,7 +212,7 @@ const members: Member[] = [
     summary: "方向与架构把控，强调可维护性与生产可行性。"
   },
   {
-    name: "B",
+    name: "Gzzch",
     role: "技术极客 / DevOps & 深度开发",
     bullets: [
       "长期在一线做深度开发，技术圈小有名气",
@@ -222,7 +222,7 @@ const members: Member[] = [
     summary: "系统与运维质量，保障上线后的稳定度。"
   },
   {
-    name: "C",
+    name: "Rouva",
     role: "前大厂设计部门 Agent 落地技术负责人",
     bullets: [
       "在大厂负责设计团队内部 Agent / 自动化落地",
