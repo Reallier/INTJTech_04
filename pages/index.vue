@@ -443,7 +443,14 @@ onBeforeUnmount(() => {
             我们不是大公司，没有庞大组织，也没有复杂流程。但对很多小微企业来说，这种“小”反而更好用。
           </p>
           <div class="cards-grid">
-            <article v-for="adv in advantages" :key="adv.title" class="card">
+            <article
+              v-for="(adv, idx) in advantages"
+              :key="adv.title"
+              class="card advantage-card"
+            >
+              <div class="adv-icon" aria-hidden="true">
+                {{ (idx + 1).toString().padStart(2, "0") }}
+              </div>
               <h3>{{ adv.title }}</h3>
               <p class="meta">{{ adv.detail }}</p>
             </article>
