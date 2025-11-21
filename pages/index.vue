@@ -14,7 +14,13 @@ type CaseItem = {
   actions: string[];
   outcome: string;
 };
-type Advantage = { title: string; detail: string };
+type Advantage = {
+  title: string;
+  detail: string;
+  tag?: string;
+  extra?: string;
+  icon?: string;
+};
 type Pricing = {
   title: string;
   duration: string;
@@ -118,30 +124,51 @@ const cases: CaseItem[] = [
   }
 ];
 
-const advantages: Advantage[] = [
+const coreAdvantages: Advantage[] = [
+  {
+    title: "安全可控，数据在你们手里",
+    tag: "安全",
+    detail: "安全和合规是前提，不是附加功能。",
+    extra: "支持私有化 / 专有云部署；权限控制、操作审计、数据脱敏齐备，数据留在你们环境。",
+    icon: "fa-solid fa-shield-halved"
+  },
+  {
+    title: "易集成、少侵入，方便维护",
+    tag: "对接",
+    detail: "把智能能力嵌进现有系统，而不是推倒重来。",
+    extra: "对接 IM / CRM / 工单 / 知识库 / OA；通过 API / 中间层 / Agent 二开，降低侵入并可版本管理关键逻辑。",
+    icon: "fa-solid fa-plug"
+  },
+  {
+    title: "可观测、可接手，避免锁定",
+    tag: "可控",
+    detail: "系统对你们透明、可维护，而不是黑盒。",
+    extra: "代码、脚本、配置优先放在你们仓库；命中率、转人工、覆盖率等指标可观测可导出，附文档与培训便于自查。",
+    icon: "fa-solid fa-chart-line"
+  }
+];
+
+const supportAdvantages: Advantage[] = [
   {
     title: "试错成本低",
-    detail: "可以从小场景、小部门先试，不需要一开始就做“大而全”。"
-  },
-  {
-    title: "沟通链路短",
-    detail: "基本直接和核心工程师对话，需求理解和落地更快。"
-  },
-  {
-    title: "偏好快速迭代",
-    detail: "习惯先上线可用版本，再在真实使用里持续调，不拖长周期。"
-  },
-  {
-    title: "善于二次开发",
-    detail: "优先叠加在你现有流程与工具上，而不是让你重做系统。"
+    tag: "试点",
+    detail: "从小场景、小部门先试起，先跑通一个可用版本。",
+    extra: "效果可见、数据可控后，再决定是否扩大投入。",
+    icon: "fa-solid fa-flask"
   },
   {
     title: "方案更灵活不套路",
-    detail: "不会给你包装好的标准化模板，而是根据你的业务特点定制最轻、最合适的方案。"
+    tag: "定制",
+    detail: "不卖固定模板，在通用与定制间找成本/效果平衡。",
+    extra: "按现状裁剪开发量，避免“大而全”带来的维护负担。",
+    icon: "fa-solid fa-sliders"
   },
   {
-    title: "更在意长期合作",
-    detail: "小团队没有“项目指标压力”，我们更关注的是能不能持续给你带来价值，因为每一个真实有效的合作，对我们都很重要。"
+    title: "小团队，沟通链路短、迭代快",
+    tag: "效率",
+    detail: "直接和核心工程师 / 架构师对话，理解与落地更快。",
+    extra: "先上线可真实使用的版本，再按数据快速迭代。",
+    icon: "fa-solid fa-bolt"
   }
 ];
 
@@ -497,25 +524,50 @@ onBeforeUnmount(() => {
 
       <section id="advantages" class="section">
         <div class="container">
-          <h2 class="section-heading">为什么找我们这样的小团队（Advantages）</h2>
+          <h2 class="section-heading">为什么找我们这样的「小而精」团队（Advantages）</h2>
           <p class="section-subtitle">
-            我们不是大公司，没有庞大组织，也没有复杂流程。但对很多小微企业来说，这种“小”反而更好用。
+            我们不是大公司，没有庞大组织和流程，但在 AI Agent / 业务自动化方向长期深耕。对很多中小企业来说，一支规模不大但技术与业务都过关的团队，往往比“人多但不熟你业务”的团队更适合。
           </p>
-          <div class="cards-grid">
-            <article
-              v-for="(adv, idx) in advantages"
-              :key="adv.title"
-              class="card advantage-card"
-            >
-              <div class="adv-icon" aria-hidden="true">
-                {{ (idx + 1).toString().padStart(2, "0") }}
+          <div class="advantage-groups">
+            <div class="adv-group advantage-top">
+              <div class="cards-grid advantages-grid primary-grid">
+                <article
+                  v-for="adv in coreAdvantages"
+                  :key="adv.title"
+                  class="card advantage-card advantage-primary"
+                >
+                  <div class="adv-tag" role="img" :aria-label="adv.tag || adv.title">
+                    <i :class="adv.icon || 'fa-solid fa-star'"></i>
+                  </div>
+                  <h3>{{ adv.title }}</h3>
+                  <div class="adv-body">
+                    <p class="meta">{{ adv.detail }}</p>
+                    <p v-if="adv.extra" class="extra">{{ adv.extra }}</p>
+                  </div>
+                </article>
               </div>
-              <h3>{{ adv.title }}</h3>
-              <p class="meta">{{ adv.detail }}</p>
-            </article>
+            </div>
+            <div class="adv-group advantage-bottom">
+              <div class="cards-grid advantages-grid secondary-grid">
+                <article
+                  v-for="adv in supportAdvantages"
+                  :key="adv.title"
+                  class="card advantage-card advantage-secondary"
+                >
+                  <div class="adv-tag" role="img" :aria-label="adv.tag || adv.title">
+                    <i :class="adv.icon || 'fa-solid fa-star'"></i>
+                  </div>
+                  <h3>{{ adv.title }}</h3>
+                  <div class="adv-body">
+                    <p class="meta">{{ adv.detail }}</p>
+                    <p v-if="adv.extra" class="extra">{{ adv.extra }}</p>
+                  </div>
+                </article>
+              </div>
+            </div>
           </div>
-          <div class="note">
-            目标：先做一个可用版本上线，再在真实使用里持续调，而不是拖几个月憋一个大版本。
+          <div class="note advantage-note">
+            目标：在安全、可控的前提下，先跑通 1–2 个可观测、有数据的试点，再基于效果逐步扩展，而不是一开始就做周期长、风险大的大项目。
           </div>
         </div>
       </section>
@@ -561,7 +613,7 @@ onBeforeUnmount(() => {
         <div class="container">
           <h2 class="section-heading">关于我们（Team）</h2>
           <p class="section-subtitle">
-            紫薯科技是一个 2–3 人的小型工程团队，每个人都长期在一线写代码、做真实业务系统。
+            紫薯科技是一个核心成员仅有 3 人的小型工程团队，每个人都长期在一线写代码、做真实业务系统。
           </p>
           <div class="team-grid">
             <div class="info-card info-top">

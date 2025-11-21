@@ -493,45 +493,107 @@ h2.hero-subtitle {
 }
 
 /* Advantages 区域 */
-#advantages .cards-grid {
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+#advantages .section-subtitle {
+  margin-bottom: 12px;
+}
+
+.advantage-groups {
+  display: grid;
+  gap: 14px;
+}
+
+.adv-group {
+  display: grid;
+  gap: 10px;
+}
+
+.adv-group-title {
+  font-weight: 700;
+  color: var(--color-text-muted);
+  letter-spacing: 0.2px;
+}
+
+.advantages-grid {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+#advantages .primary-grid {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+#advantages .secondary-grid {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
 .advantage-card {
   position: relative;
   overflow: hidden;
+  padding: 18px;
+  border-radius: var(--radius-lg);
 }
 
-.advantage-card .adv-icon {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  background: linear-gradient(
-    135deg,
-    rgba(99, 102, 241, 0.12),
-    rgba(124, 58, 237, 0.14)
-  );
-  border: 1px solid rgba(99, 102, 241, 0.22);
-  color: #4f46e5;
-  font-weight: 800;
-  font-size: 14px;
-  letter-spacing: 0.4px;
-  box-shadow: 0 10px 24px rgba(99, 102, 241, 0.14);
+.advantage-top .advantage-card {
+  padding: 22px;
+  min-height: 180px;
+}
+
+.advantage-bottom .advantage-card {
+  padding: 16px;
+  min-height: 150px;
 }
 
 .advantage-card h3 {
   margin: 0 0 6px;
-  padding-right: 56px;
+  padding-right: 8px;
 }
 
 #advantages .advantage-card .meta {
   margin: 0;
-  padding-right: 52px;
+}
+
+.adv-body {
+  display: grid;
+  gap: 4px;
+}
+
+.advantage-card .extra {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.adv-tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 0.2px;
+  box-shadow: none;
+}
+
+.advantage-primary {
+  background: linear-gradient(140deg, #f5f2ff, #eef4ff);
+  border: 1px solid rgba(124, 58, 237, 0.22);
+  box-shadow: var(--shadow-card);
+}
+
+.advantage-secondary {
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border);
+}
+
+.advantage-note {
+  margin-top: 14px;
+  font-size: 14px;
 }
 
 .pill {
