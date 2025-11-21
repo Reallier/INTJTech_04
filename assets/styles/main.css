@@ -797,6 +797,88 @@ h2.hero-subtitle {
   padding: 16px;
   display: grid;
   gap: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.note-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(124, 58, 237, 0.5);
+  box-shadow: 0 12px 28px rgba(124, 58, 237, 0.08);
+}
+
+.note-card h3 {
+  margin: 0;
+}
+
+.note-card-cta {
+  font-weight: 700;
+  color: #a78bfa;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.note-modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(17, 24, 39, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 40;
+}
+
+.note-modal {
+  width: min(960px, calc(100% - 32px));
+  max-height: 90vh;
+  background: var(--color-surface);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(31, 41, 55, 0.25);
+  padding: 22px;
+  display: grid;
+  gap: 12px;
+  border: 1px solid var(--color-border);
+}
+
+.note-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.note-modal-header h3 {
+  margin: 6px 0 0;
+}
+
+.note-modal-body {
+  overflow-y: auto;
+  padding-right: 6px;
+  display: grid;
+  gap: 12px;
+  color: var(--color-text-muted);
+}
+
+.note-modal-close {
+  border: 1px solid var(--color-border);
+  background: #f9fafb;
+  border-radius: 999px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-weight: 800;
+  color: var(--color-text);
+  transition: all 0.2s ease;
+}
+
+.note-modal-close:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .contact-panel {

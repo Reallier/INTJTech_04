@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
 type NavItem = { id: string; label: string };
 type Service = {
@@ -29,7 +29,7 @@ type Member = {
   bullets: string[];
   summary: string;
 };
-type NoteItem = { date: string; title: string; summary: string };
+type NoteItem = { date: string; title: string; summary: string; content: string };
 
 const navItems: NavItem[] = [
   { id: "hero", label: "Hero" },
@@ -235,19 +235,57 @@ const members: Member[] = [
 
 const notes: NoteItem[] = [
   {
-    date: "2025-01-xx",
-    title: "给内部客服系统接入 Agent 时，如何处理“模糊问题”和“超出权限的问题”",
-    summary: "设定业务边界、拒绝策略与转人工分流，避免越界回答。"
+    date: "2025-02-20",
+    title: "Coze / Dify / n8n：近期上手要点与踩坑记录",
+    summary:
+      "Coze 的灵魂在工作流与插件，要自己调 chunk 策略与 API adapter；Dify 像工程师的 AI 中台，RAG/日志/观测完善但生产部署要把数据库、向量库、对象存储和反代配齐；n8n 本质是自动化引擎，AI 节点很薄，记得限流、封装上下文。",
+    content: `Coze，官方卖点说的是零代码拖拽，但真用起来就知道灵魂其实在工作流和插件生态上。我之前给 Bot 接了个 OAuth2插件，结果它能在流程里直接把 token 拿回来继续跑，像这种细节一般竞品真没做。它的工作流节点更像轻量级的iPaaS，虽然比不上n8n那么变态，但常见的 HTTP API、KV 存储、上下文管理都能撑住；如果本来就习惯 Zapier 或 Make，迁移到这里没什么门槛。知识库这一块就比较挑人了，PDF 上传、网页抓取看起来省心，但实际效果完全取决于 embedding 的分块策略，我第一次丢长文档进去，回答飘得跟特么 GPT-2回魂一样，最后只能自己调chunk size 和 overlap 才阳间一点。另外 Coze的API 返回和 OpenAl 也不完全兼容，message 分段和 toolcall 的 schema 都有坑，不写 adapter，前端（Next.js/ Vercel 上跑的 Chat UI）直接对接基本要挂。好处是它对外触达确实方便，多渠道一键发布省了不少功夫，所以适合 MVP 或外部试水，但要做长期复杂系统可能还是不太行。
+
+Dify 的路线就不一样，属于是工程师的“AI 中台”。四大件——模型管理、RAG 检索、Agent 工作流、观测评估——一套齐活。它的日志和评测系统非常不错，可以直接看到每次调用的 prompt、响应、token 消耗和命中率，调优复杂链路的时候比自己写一堆 debuglog 快活。RAG部分也给足了选择，pgvector、 Milvus、Weaviate 都能接，但坑在于底层数据库必须先调优好，不然索引没建全、连接池没调，几百 QPS就寄；embedding 跑大了还得盯存储成本，S3/MinlO的账单比 KPI 诚实。部署上官方说“一键”，但那个 Docker Compose 只能算 demo，真要上生产还是Helm/K8S,Postgres、Redis、对象存储、反代（Nginx/Traefilk）全得配齐，最好再上 GitOps （ArgoCD/Flux）做多环境持续交付。不提前规划PVC，迁移的时候会血压飙升。
+
+n8n这东西就更直接了，它压根不是 AI平台，应该算是个自动化引擎，AI 节点只是其中一个 widget。强项是几百个集成组件，Webhook、消息队列（Kafka、RabbitMQ）、数据库（MySQL、Postgres、Mongo）全能接，逻辑编排还能写小段JS 控制流，相当于把 Node.js 灵活性抽象进了可视化。我当时拿 Google Sheet 做灵感池触发LLM 生成标题，结果忘了限流，API队列直接开始爬行，最后只能加 Redis 阀门限流。AI节点本身其实挺薄的，系统提示、上下文拼接都要自己封装，和LangChain、Llamalndex 那种专门为大模型打磨的框架没法比，但胜在生态够厚，几乎能和任何 Saas 打通。如果想更稳，还可以搭配 Temporal或 Prefect 这种调度框架，做复杂任务编排；所以n8n也不用懂Al了，懂你Leader 需求就行了`
   },
   {
-    date: "2025-01-xx",
-    title: "从 Excel 报表到自动周报：一次把“复制粘贴”替换掉的实战拆解",
-    summary: "输入格式规范化、指标抽象、模版化输出、上线后的监测与回放。"
+    date: "2025-02-20",
+    title: "Airflow 的价值是透明性，而非执行性能",
+    summary:
+      "延迟主要来自调度与进程通信开销，天生不适合低延迟场景；它在批处理和数据管道里提供可追溯、可观测的可见性，TaskFlow API 体现“代码即 DAG”；规模化后文档支撑有限，但生态惯性让它仍是事实标准。",
+    content: `Airflow 的体验再次验证了一个恒定的工程规律：任何系统都受制于自身的设计边界。 相同的 CPU，服务器执行同一 DAG 需十秒，本地性能模式四五秒，节能模式甚至三秒。这种反常的梯度说明瓶颈不在硬件，而在解释器调度、进程通信与 Executor 实现。系统开销主导了延迟结构，Airflow 在设计层面无法避免这种“控制面放大效应”——亚毫秒级逻辑被膨胀成秒级延迟，这是其体系固有的代价。
+
+它真正擅长的领域是批处理与数据管道。CeleryExecutor 的运行模式更接近“批量编排器”而非“实时控制器”。延迟敏感的业务（支付、订单流转、同步交易）并不需要调度层，只需数据库状态枚举即可。Airflow 的核心价值并非执行性能，而是透明性：可追溯、可观测、可统计。它在系统中承担“可见化节点”的角色，将复杂的异步过程转化为可解释的结构映射。
+
+TaskFlow API 的出现，进一步揭示了行业的结构拐点：配置文件的表达力已达极限。YAML 的简洁性与约束性在复杂逻辑下失效，代码成为新的均衡点。Airflow 选择“代码即 DAG”，是主动放弃低门槛，换取逻辑的完备性。循环、条件、依赖在语言层内天然具备抽象能力，比层层缩进的配置文件更具可维护性。系统设计从描述式转向命令式，体现出编排系统演化的必然方向——在复杂性增量面前，静态配置让位于可组合逻辑。
+
+代价是清晰的。Airflow 在单 DAG 层面友好，但当规模扩展到模块化、多依赖场景时，文档支撑不足，知识传递依赖经验。系统因此形成筛选机制：只有具备项目组织思维的用户才能留下。 对留下的人而言，Airflow 从“任务调度器”演化为“流程管理框架”，DAG 不再是任务列表，而是运行时依赖图。
+
+竞争者 Prefect 与 Dagster 的策略集中在托管云与用户体验。它们以“轻量、现代”作为入口，尝试以服务化取代生态，但技术债、生态积累与社区规模决定了优势不对称。Apache 基金会的长周期治理与十年沉淀，使 Airflow 成为事实标准。这里的壁垒不是功能，而是生态惯性：系统之间的兼容、插件依赖、团队经验、运维惯性，构成了路径锁定效应。
+
+因此，Airflow 的价值从不在性能。它提供的是一种结构化的可见性与可控性。适用于跨系统、异步、大批量任务的编排与追踪，不适用于高并发、低延迟的实时场景。它是后台的导演，不是前台的收银机。
+
+如果从认知框架去解析：Ni 识别边界与趋势，Te 衡量资源与产出，Fi 确认系统定位与价值，Se 记录操作层的真实表现。四个维度收束的结论是一致的——Airflow 是规模化异步系统的组织者，不是实时系统的执行单元。它的设计哲学强调秩序与可观测性，而非反应速度。
+
+Airflow 的局限不是缺陷，而是边界的自洽。一个系统能做什么，取决于它愿意为代价付出什么。Airflow 选择了延迟，换来了结构透明与运行确定性。在工程世界中，这种取舍本身就是成熟。`
   },
   {
-    date: "2025-01-xx",
-    title: "在老系统里接入新 Agent：我们常用的“最小侵入式”集成策略",
-    summary: "API 适配、鉴权与审计、逐步 rollout 的开关策略。"
+    date: "2025-02-20",
+    title: "AI 退潮后的温度：接受边界、换取确定性",
+    summary:
+      "以 Airflow 为例，系统设计选择了延迟换透明，适用跨系统异步与批量编排，不适合高并发实时；Ni/Te/Fi/Se 的取舍收敛到同一结论：成熟系统靠可观测与确定性站稳，而非追求极致反应速度。",
+    content: `当AI的热度退去，我们终于看清它真正的温度。Airflow 的体验再次验证了一个恒定的工程规律：任何系统都受制于自身的设计边界。 相同的 CPU，服务器执行同一 DAG 需十秒，本地性能模式四五秒，节能模式甚至三秒。这种反常的梯度说明瓶颈不在硬件，而在解释器调度、进程通信与 Executor 实现。系统开销主导了延迟结构，Airflow 在设计层面无法避免这种“控制面放大效应”——亚毫秒级逻辑被膨胀成秒级延迟，这是其体系固有的代价。
+
+它真正擅长的领域是批处理与数据管道。CeleryExecutor 的运行模式更接近“批量编排器”而非“实时控制器”。延迟敏感的业务（支付、订单流转、同步交易）并不需要调度层，只需数据库状态枚举即可。Airflow 的核心价值并非执行性能，而是透明性：可追溯、可观测、可统计。它在系统中承担“可见化节点”的角色，将复杂的异步过程转化为可解释的结构映射。
+
+TaskFlow API 的出现，进一步揭示了行业的结构拐点：配置文件的表达力已达极限。YAML 的简洁性与约束性在复杂逻辑下失效，代码成为新的均衡点。Airflow 选择“代码即 DAG”，是主动放弃低门槛，换取逻辑的完备性。循环、条件、依赖在语言层内天然具备抽象能力，比层层缩进的配置文件更具可维护性。系统设计从描述式转向命令式，体现出编排系统演化的必然方向——在复杂性增量面前，静态配置让位于可组合逻辑。
+
+代价是清晰的。Airflow 在单 DAG 层面友好，但当规模扩展到模块化、多依赖场景时，文档支撑不足，知识传递依赖经验。系统因此形成筛选机制：只有具备项目组织思维的用户才能留下。 对留下的人而言，Airflow 从“任务调度器”演化为“流程管理框架”，DAG 不再是任务列表，而是运行时依赖图。
+
+竞争者 Prefect 与 Dagster 的策略集中在托管云与用户体验。它们以“轻量、现代”作为入口，尝试以服务化取代生态，但技术债、生态积累与社区规模决定了优势不对称。Apache 基金会的长周期治理与十年沉淀，使 Airflow 成为事实标准。这里的壁垒不是功能，而是生态惯性：系统之间的兼容、插件依赖、团队经验、运维惯性，构成了路径锁定效应。
+
+因此，Airflow 的价值从不在性能。它提供的是一种结构化的可见性与可控性。适用于跨系统、异步、大批量任务的编排与追踪，不适用于高并发、低延迟的实时场景。它是后台的导演，不是前台的收银机。
+
+如果从认知框架去解析：Ni 识别边界与趋势，Te 衡量资源与产出，Fi 确认系统定位与价值，Se 记录操作层的真实表现。四个维度收束的结论是一致的——Airflow 是规模化异步系统的组织者，不是实时系统的执行单元。它的设计哲学强调秩序与可观测性，而非反应速度。
+
+Airflow 的局限不是缺陷，而是边界的自洽。一个系统能做什么，取决于它愿意为代价付出什么。Airflow 选择了延迟，换来了结构透明与运行确定性。在工程世界中，这种取舍本身就是成熟。`
   }
 ];
 
@@ -255,7 +293,29 @@ const heroChips = ["1–6 周交付", "￥8,000–￥60,000 典型预算", "偏�
 const timeline = ["想法 / 场景梳理", "快速试水 MVP", "小规模上线", "持续优化与监控"];
 
 const activeSection = ref("hero");
+const selectedNote = ref<NoteItem | null>(null);
 let observer: IntersectionObserver | null = null;
+
+const noteParagraphs = computed(() =>
+  selectedNote.value
+    ? selectedNote.value.content
+        .split("\n\n")
+        .map((para) => para.trim())
+        .filter(Boolean)
+    : []
+);
+
+const closeNote = () => {
+  selectedNote.value = null;
+  document.documentElement.style.overflow = "";
+  document.body.style.overflow = "";
+};
+
+const openNote = (note: NoteItem) => {
+  selectedNote.value = note;
+  document.documentElement.style.overflow = "hidden";
+  document.body.style.overflow = "hidden";
+};
 
 onMounted(() => {
   // 强制滚动到页面顶部 - 使用多种方式确保兼容性
@@ -287,6 +347,8 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   observer?.disconnect();
+  document.documentElement.style.overflow = "";
+  document.body.style.overflow = "";
 });
 </script>
 
@@ -430,9 +492,6 @@ onBeforeUnmount(() => {
               <div class="note">{{ item.outcome }}</div>
             </article>
           </div>
-          <p class="section-subtitle">
-            上线后会逐步补充真实案例和过程截图。
-          </p>
         </div>
       </section>
 
@@ -573,13 +632,22 @@ onBeforeUnmount(() => {
             记录一线落地过程中的经验和踩坑，方便你了解真实问题与解决方式。
           </p>
           <div class="cards-grid">
-            <article v-for="note in notes" :key="note.title" class="note-card">
+            <article
+              v-for="note in notes"
+              :key="note.title"
+              class="note-card"
+              role="button"
+              tabindex="0"
+              @click="openNote(note)"
+              @keydown.enter.prevent="openNote(note)"
+              @keydown.space.prevent="openNote(note)"
+            >
               <div class="badge">{{ note.date }}</div>
               <h3>{{ note.title }}</h3>
               <p class="meta">{{ note.summary }}</p>
+              <div class="note-card-cta">点击查看全文</div>
             </article>
           </div>
-          <p class="section-subtitle">上线初期可只放 1–2 条代表性内容，后续持续补充。</p>
         </div>
       </section>
 
@@ -622,5 +690,28 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </footer>
+    <div
+      v-if="selectedNote"
+      class="note-modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      :aria-label="selectedNote?.title"
+      @click.self="closeNote"
+    >
+      <div class="note-modal">
+        <div class="note-modal-header">
+          <div>
+            <div class="badge">{{ selectedNote.date }}</div>
+            <h3>{{ selectedNote.title }}</h3>
+          </div>
+          <button class="note-modal-close" type="button" aria-label="关闭" @click="closeNote">
+            ✕
+          </button>
+        </div>
+        <div class="note-modal-body">
+          <p v-for="(para, idx) in noteParagraphs" :key="idx">{{ para }}</p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
