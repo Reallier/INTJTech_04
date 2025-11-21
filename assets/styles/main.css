@@ -89,6 +89,14 @@ button {
   padding: 14px 0;
 }
 
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+
 .brand {
   display: flex;
   align-items: center;
@@ -109,6 +117,49 @@ button {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background: #ffffff;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.nav-toggle:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.14);
+}
+
+.nav-toggle .line {
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+  display: block;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.nav-toggle .line + .line {
+  margin-top: 5px;
+}
+
+.nav-toggle.open .line:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.nav-toggle.open .line:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle.open .line:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
 }
 
 .nav-link {
@@ -1313,5 +1364,191 @@ h2.hero-subtitle {
 
   .section {
     padding: 56px 0;
+  }
+}
+
+/* ===== 移动端覆盖：仅在窄屏生效，PC 样式保持不变 ===== */
+@media (max-width: 768px) {
+  body {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .container {
+    width: min(100%, calc(100% - 20px));
+  }
+
+  .section {
+    padding: 48px 0;
+  }
+
+  .top-nav .container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .nav-bar {
+    width: 100%;
+  }
+
+  .nav-toggle {
+    display: inline-flex;
+    margin-left: auto;
+  }
+
+  .nav-links {
+    width: 100%;
+    display: none;
+    overflow-x: auto;
+    gap: 8px;
+    padding: 4px 0 6px;
+  }
+
+  .nav-links.nav-open {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 8px 0 0;
+    border-top: 1px solid var(--color-border);
+    margin-top: 6px;
+  }
+
+  .nav-link {
+    white-space: nowrap;
+    padding: 10px 12px;
+    font-size: 14px;
+    width: 100%;
+    text-align: left;
+    border: 1px solid var(--color-border);
+    background: #ffffff;
+  }
+
+  .hero-section {
+    padding: 56px 0 48px;
+  }
+
+  .hero-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .hero-content {
+    order: 1;
+  }
+
+  .hero-visual {
+    order: 2;
+    height: auto;
+    max-height: none;
+  }
+
+  .engineering-illustration img {
+    max-height: 260px;
+    object-fit: contain;
+  }
+
+  h1.hero-title {
+    font-size: 34px;
+    line-height: 1.25;
+  }
+
+  h2.hero-subtitle {
+    font-size: 18px;
+  }
+
+  .hero-benefits {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .benefit-tag {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .cta-row {
+    width: 100%;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .cta-row .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .cards-grid,
+  .pricing-grid,
+  .cases-grid,
+  .advantages-grid,
+  #advantages .primary-grid,
+  #advantages .secondary-grid,
+  .team-focus-chips {
+    grid-template-columns: 1fr;
+  }
+
+  .case-effect {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .case-card,
+  .card,
+  .price-card,
+  .advantage-card {
+    padding: 16px;
+  }
+
+  .team-grid {
+    grid-template-areas:
+      "info-top"
+      "m1"
+      "m2"
+      "m3"
+      "info-bottom";
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .team-meta-row {
+    grid-template-columns: 1fr;
+  }
+
+  .member-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .case-chips {
+    flex-wrap: wrap;
+  }
+
+  .note-modal-overlay {
+    align-items: flex-end;
+    padding: 12px;
+  }
+
+  .note-modal {
+    width: calc(100% - 16px);
+    max-height: 86vh;
+    padding: 18px;
+  }
+
+  .note-modal-body {
+    max-height: 60vh;
+  }
+
+  .footer-shell {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .footer-top-btn {
+    width: 100%;
+    justify-content: center;
   }
 }

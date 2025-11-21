@@ -354,6 +354,15 @@ const timeline = ["想法 / 场景梳理", "快速试水 MVP", "小规模上线"
 const activeSection = ref("hero");
 const selectedNote = ref<NoteItem | null>(null);
 let observer: IntersectionObserver | null = null;
+const isMobileNavOpen = ref(false);
+
+const toggleMobileNav = () => {
+  isMobileNavOpen.value = !isMobileNavOpen.value;
+};
+
+const closeMobileNav = () => {
+  isMobileNavOpen.value = false;
+};
 
 const noteParagraphs = computed(() =>
   selectedNote.value
@@ -415,17 +424,32 @@ onBeforeUnmount(() => {
   <div class="page">
     <header class="top-nav">
       <div class="container">
-        <div class="brand">
-          <img src="/site-logo.png" alt="紫薯科技Logo" style="width: 40px; height: 40px; vertical-align: middle; margin-right: 8px;" />
-          紫薯科技 · AI Agent
+        <div class="nav-bar">
+          <div class="brand">
+            <img src="/site-logo.png" alt="紫薯科技Logo" style="width: 40px; height: 40px; vertical-align: middle; margin-right: 8px;" />
+            紫薯科技 · AI Agent
+          </div>
+          <button
+            type="button"
+            class="nav-toggle"
+            :class="{ open: isMobileNavOpen }"
+            :aria-expanded="isMobileNavOpen"
+            aria-label="切换导航"
+            @click="toggleMobileNav"
+          >
+            <span class="line" />
+            <span class="line" />
+            <span class="line" />
+          </button>
         </div>
-        <nav class="nav-links">
+        <nav :class="['nav-links', { 'nav-open': isMobileNavOpen }]">
           <a
             v-for="item in navItems"
             :key="item.id"
             :href="`#${item.id}`"
             class="nav-link"
             :class="{ active: activeSection === item.id }"
+            @click="closeMobileNav"
           >
             {{ item.label }}
           </a>
