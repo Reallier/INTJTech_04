@@ -492,6 +492,146 @@ h2.hero-subtitle {
   font-size: 14px;
 }
 
+/* Cases 区域 */
+.cases-section {
+  margin-top: 8px;
+}
+
+.cases-header .section-heading {
+  margin-bottom: 10px;
+}
+
+.cases-header .section-subtitle {
+  margin-bottom: 18px;
+  max-width: 860px;
+}
+
+.case-chips {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  margin-bottom: 18px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.case-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  background: #f9fafb;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  font-weight: 600;
+  color: #374151;
+  font-size: 13px;
+}
+
+.cases-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.case-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  display: grid;
+  gap: 10px;
+  box-shadow: 0 8px 24px rgba(17, 24, 39, 0.04);
+}
+
+.case-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  background: #eef2ff;
+  color: #4338ca;
+  border-radius: 10px;
+  font-weight: 700;
+  max-width: max-content;
+}
+
+.case-title {
+  margin: 0;
+  font-size: 19px;
+  line-height: 1.35;
+}
+
+.case-agent {
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.case-background {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.case-approach {
+  display: grid;
+  gap: 4px;
+}
+
+.case-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #6b7280;
+  font-weight: 700;
+}
+
+.case-approach ul {
+  margin: 0;
+  padding-left: 18px;
+  color: #1f2937;
+  display: grid;
+  gap: 4px;
+}
+
+.case-effect {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(139, 92, 246, 0.06));
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  color: #1f2937;
+}
+
+.case-effect-text {
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.cases-footer {
+  margin-top: 18px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.case-more-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: #6b7280;
+}
+
+.case-more-link svg {
+  transform: translateY(1px);
+}
+
+.case-more-link:hover {
+  color: #4b5563;
+}
+
 /* Advantages 区域 */
 #advantages .section-subtitle {
   margin-bottom: 12px;

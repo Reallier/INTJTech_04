@@ -9,10 +9,12 @@ type Service = {
   outcomes: string[];
 };
 type CaseItem = {
-  title: string;
+  tag: string;
+  result: string;
+  agent: string;
   background: string;
-  actions: string[];
-  outcome: string;
+  approach: string[];
+  effect: string;
 };
 type Advantage = {
   title: string;
@@ -90,37 +92,67 @@ const services: Service[] = [
   }
 ];
 
+const caseScopes = [
+  "客服服务",
+  "内部知识",
+  "运营自动化",
+  "销售提效",
+  "定制组合场景",
+  "知识库搭建",
+  "流程编排",
+  "多语言客服",
+  "数据质检",
+  "风险控制"
+];
+
 const cases: CaseItem[] = [
   {
-    title: "案例示意 1：客服问答 Agent（零售 + 线上咨询）",
-    background: "背景：每天大量重复问题，客服压力大，新人难培训。",
-    actions: [
-      "整理 FAQ → 搭建问答 Agent → 接入现有客服系统",
-      "通过业务约束避免“乱承诺 / 乱报价”"
+    tag: "客服 / 在线咨询",
+    result: "智能客户服务",
+    agent: "客服问答 Agent",
+    background: "重复咨询多、人力成本高，新人上手慢，服务体验不稳定。",
+    approach: [
+      "梳理 FAQ / 政策 / 价格口径，搭检索 + 规则的知识库",
+      "嵌入官网对话框与客服系统，限定报价与承诺边界",
+      "设置转人工与复盘流程，真实对话反哺知识库迭代"
     ],
-    outcome: "效果：常见问题直接引用 Agent 回答，新人培训周期明显变短。"
+    effect: "常见问题 70%+ 由 Agent 直接应答，新人独立接待时间从 3 周缩短到 3 天。"
   },
   {
-    title: "案例示意 2：内部知识问答 Agent（小团队 Onboarding）",
-    background:
-      "背景：业务流程复杂，新人怕出错，老员工经常被打断回答问题。",
-    actions: [
-      "梳理流程文档 → 搭内部问答 Agent → 嵌入协作工具",
-      "设定权限边界，避免越权回答"
+    tag: "内部知识 / Onboarding",
+    result: "内部知识自助平台",
+    agent: "内部问答 Agent",
+    background: "流程跨度大且分散，新人怕出错，老员工频繁被打断说明。",
+    approach: [
+      "收拢 Onboarding 手册、流程 SOP、政策条款，按场景拆段",
+      "接入知识库 / 协作工具，在常用入口内嵌问答",
+      "按角色做权限与回答口径，留下提问日志补文档缺口"
     ],
-    outcome:
-      "效果：新人多数问题可自助查到，老员工工作连续性提升，问题记录沉淀回文档。"
+    effect: "新人 80% 的流程问题可自助解决，重复答疑工时下降一半，文档更新路径变清晰。"
   },
   {
-    title: "案例示意 3：自动报表 Agent（运营周报自动化）",
-    background:
-      "背景：每周运营同事花半天在“导数据 → 做 PPT → 发周报”。",
-    actions: [
-      "接入业务数据 → 设计指标与模板 → 生成周报草稿",
-      "在真实数据上持续调优摘要和格式"
+    tag: "运营 / 报表自动化",
+    result: "运营数据周报自动化",
+    agent: "自动报表 Agent",
+    background: "周报制作需要多系统导出、手动拼图，耗时且易漏。",
+    approach: [
+      "对接业务数据库 / BI，明确指标口径与异常兜底规则",
+      "生成周报草稿（文字 + 表格），支持一键补充截图与备注",
+      "上线后按真实反馈迭代摘要颗粒度与格式模板"
     ],
-    outcome:
-      "效果：周报生成时间从半天缩短到几十分钟，更多精力放在分析而不是排版。"
+    effect: "周报生成时间从半天缩短到约 10 分钟，团队把精力放在分析而不是搬运数据。"
+  },
+  {
+    tag: "定制组合 / 跨流程",
+    result: "定制化 Agent 组合",
+    agent: "流程编排 + 多 Agent",
+    background: "跨部门流程多、标准不一致，想用 AI 串起线索筛选、沟通、报告。",
+    approach: [
+      "按现有流程拆节点，定义每步输入 / 责任与质量标准",
+      "组合问答、文案、报表 Agent，用编排减少人工搬运",
+      "保留人工校验点，输出可回溯的记录与通知"
+    ],
+    effect: "2–3 周拼出可运行版本，人工交接减少 40% 左右，新流程可观测、可继续扩展。"
   }
 ];
 
@@ -503,21 +535,44 @@ onBeforeUnmount(() => {
         </div>
       </section>
 
-      <section id="cases" class="section">
+      <section id="cases" class="section cases-section">
         <div class="container">
-          <h2 class="section-heading">一些我们做过和正在做的东西（Cases）</h2>
-          <p class="section-subtitle">
-            不一上来做“大而全”，更习惯从一个小场景开始，验证价值后再逐步扩展。
-          </p>
-          <div class="cards-grid">
-            <article v-for="item in cases" :key="item.title" class="card">
-              <h3>{{ item.title }}</h3>
-              <p class="meta">{{ item.background }}</p>
-              <ul>
-                <li v-for="action in item.actions" :key="action">{{ action }}</li>
-              </ul>
-              <div class="note">{{ item.outcome }}</div>
+          <div class="cases-header">
+            <h2 class="section-heading">一些我们做过和正在做的东西（Cases）</h2>
+            <p class="section-subtitle cases-subtitle">
+              3–4 个真实落地的代表场景，先讲业务问题与结果，再讲 Agent 的做法；更多案例放在单独页面。
+            </p>
+          </div>
+          <div class="case-chips" v-if="caseScopes.length">
+            <span v-for="scope in caseScopes" :key="scope" class="case-chip">{{ scope }}</span>
+          </div>
+          <div class="cases-grid">
+            <article v-for="item in cases" :key="item.result" class="case-card">
+              <div class="case-tag">{{ item.tag }}</div>
+              <h3 class="case-title">
+                <span class="case-result">{{ item.result }}</span>
+                <span class="case-agent">（{{ item.agent }}）</span>
+              </h3>
+              <p class="case-background">{{ item.background }}</p>
+              <div class="case-approach">
+                <div class="case-label">我们怎么做</div>
+                <ul>
+                  <li v-for="step in item.approach" :key="step">{{ step }}</li>
+                </ul>
+              </div>
+              <div class="case-effect">
+                <span class="case-label">效果</span>
+                <span class="case-effect-text">{{ item.effect }}</span>
+              </div>
             </article>
+          </div>
+          <div class="cases-footer">
+            <a class="case-more-link" href="/cases">
+              查看更多案例
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
           </div>
         </div>
       </section>
