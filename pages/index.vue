@@ -758,43 +758,47 @@ onBeforeUnmount(() => {
         </div>
       </section>
 
-      <section id="contact" class="section">
-        <div class="container">
-          <h2 class="section-heading">联系我们（Contact）</h2>
-          <p class="section-subtitle">
-            如果你想用 Agent 做业务自动化或已有 Demo 需要落地，都可以直接联系 —— 加微信最快。
-          </p>
-          <div class="contact-panel">
-            <div class="contact-item">
-              <span class="contact-label">微信</span>
-              <span class="contact-value">________</span>
-            </div>
-            <div class="contact-item">
-              <span class="contact-label">Email</span>
-              <span class="contact-value">________</span>
-            </div>
-            <div class="contact-item">
-              <span class="contact-label">其他链接</span>
-              <span class="contact-value">GitHub / Blog / 公众号</span>
-            </div>
-            <div class="cta-row">
-              <a class="btn btn-primary" href="#hero">回到顶部</a>
-              <a class="btn btn-secondary" href="mailto:________">发邮件沟通</a>
-            </div>
-            <div class="footnote">
-              简单介绍一下你的业务和现在遇到的问题，我们会先帮你一起找一个小而清晰的切入点。
-            </div>
-          </div>
-        </div>
-      </section>
     </main>
     <footer class="footer">
-      <div class="container">
-        <div>紫薯科技 · AI Agent 技术伙伴</div>
-        <small>小团队、重工程、追求可落地的 Agent 交付</small>
-        <div>
-          <a href="#hero">回到顶部</a>
+      <div class="container footer-shell">
+        <div class="footer-brand-compact">
+          <img class="footer-logo" src="/site-logo.png" alt="紫薯科技 Logo" />
+          <div>
+            <div class="footer-title">紫薯科技 · AI Agent 技术伙伴</div>
+            <div class="footer-slogan">小微企业的工程化 Agent 团队</div>
+          </div>
         </div>
+
+        <div class="footer-links-compact">
+          <a href="#services">我们能帮你做什么</a>
+          <a href="#cases">案例</a>
+          <a href="#advantages">为什么找我们</a>
+          <a href="#pricing">合作 / 定价</a>
+          <a href="#team">团队</a>
+        </div>
+
+        <div class="footer-contact-compact">
+          <span class="footer-label">微信</span>
+          <span class="footer-value">________</span>
+          <span class="footer-divider-dot">·</span>
+          <span class="footer-label">Email</span>
+          <span class="footer-value">________</span>
+          <span class="footer-divider-dot">·</span>
+          <span class="footer-value">GitHub / Blog / 公众号</span>
+        </div>
+
+        <a class="btn btn-primary footer-top-btn" href="#hero" aria-label="回到顶部">
+          回到顶部
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 19V5M12 5l-6 6M12 5l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="container footer-bottom">
+        <small>小团队、重工程、追求可落地的 Agent 交付</small>
+        <span class="footer-divider" />
+        <small>Copyright © 紫薯科技</small>
       </div>
     </footer>
     <div
