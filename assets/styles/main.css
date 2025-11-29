@@ -85,6 +85,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: nowrap;
   gap: 24px;
   padding: 14px 0;
 }
@@ -94,7 +95,8 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  width: 100%;
+  flex: 1;
+  min-width: 0;
 }
 
 .brand {
@@ -115,8 +117,14 @@ button {
 
 .nav-links {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.nav-links::-webkit-scrollbar {
+  display: none;
 }
 
 .nav-toggle {
@@ -1368,7 +1376,7 @@ h2.hero-subtitle {
 }
 
 /* ===== 移动端覆盖：仅在窄屏生效，PC 样式保持不变 ===== */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   body {
     font-size: 15px;
     line-height: 1.7;
