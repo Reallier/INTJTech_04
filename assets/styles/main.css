@@ -1290,6 +1290,193 @@ h2.hero-subtitle {
   color: #e0e7ff;
 }
 
+/* Flow Demo */
+.flow-demo-section {
+  background: #f8fafc;
+}
+
+.flow-demo-shell {
+  --flow-bg: #f8fafc;
+  --flow-surface: #ffffff;
+  --flow-border: #e2e8f0;
+  --flow-primary: #3b82f6;
+  --flow-primary-soft: #eff6ff;
+  --flow-success: #10b981;
+  --flow-text-main: #1e293b;
+  --flow-text-sub: #64748b;
+  background: var(--flow-bg);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.flow-demo-shell svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  background: var(--flow-surface);
+}
+
+.flow-demo-shell .path-track {
+  fill: none;
+  stroke: #cbd5e1;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.flow-demo-shell .path-active {
+  fill: none;
+  stroke: var(--flow-primary);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  opacity: 0.6;
+}
+
+.flow-demo-shell .card-rect {
+  fill: var(--flow-surface);
+  stroke: var(--flow-border);
+  stroke-width: 1;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.02));
+}
+
+.flow-demo-shell .card-title {
+  font-size: 12px;
+  font-weight: 600;
+  fill: var(--flow-text-main);
+}
+
+.flow-demo-shell .card-desc {
+  font-size: 10px;
+  fill: var(--flow-text-sub);
+}
+
+.flow-demo-shell .orch-bg {
+  fill: var(--flow-primary-soft);
+  stroke: #bfdbfe;
+  stroke-width: 1;
+}
+
+.flow-demo-shell .orch-pulse-ring {
+  fill: none;
+  stroke: var(--flow-primary);
+  stroke-width: 1;
+  opacity: 0;
+  transform-origin: center;
+}
+
+.flow-demo-shell .packet {
+  fill: var(--flow-primary);
+  filter: drop-shadow(0 0 4px rgba(59, 130, 246, 0.6));
+}
+
+.flow-demo-shell .packet-success {
+  fill: var(--flow-success);
+  filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.6));
+}
+
+.flow-demo-shell .loop-anim {
+  animation-duration: 6s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes move-in {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+    stroke-width: 2;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+    stroke-width: 0;
+  }
+}
+
+@keyframes scale-up {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes move-out {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes draw-path {
+  0% {
+    stroke-dashoffset: 300;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0.2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-demo-shell .path-active,
+  .flow-demo-shell .orch-pulse-ring,
+  .flow-demo-shell .packet,
+  .flow-demo-shell .packet-success {
+    animation: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .flow-demo-shell {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 720px) {
+  .flow-demo-shell {
+    padding: 10px;
+  }
+}
+
 @media (max-width: 900px) {
   .footer-shell {
     grid-template-columns: 1fr;

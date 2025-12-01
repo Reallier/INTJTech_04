@@ -540,6 +540,132 @@ onBeforeUnmount(() => {
         </div>
       </section>
 
+      <section id="flow-demo" class="section flow-demo-section">
+        <div class="container">
+          <div class="flow-demo-shell">
+            <svg viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg" aria-label="AI Workflow · Pulse Edition">
+              <defs>
+                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#f1f5f9" stroke-width="1" />
+                </pattern>
+              </defs>
+
+              <rect width="960" height="540" fill="url(#grid)" />
+
+              <!-- Base tracks -->
+              <path d="M 480 80 C 480 120, 480 140, 480 180" class="path-track" />
+              <path d="M 480 280 C 480 320, 280 320, 280 380" class="path-track" />
+              <path d="M 480 280 C 480 320, 680 320, 680 380" class="path-track" />
+
+              <!-- Active tracks -->
+              <path
+                d="M 480 80 C 480 120, 480 140, 480 180"
+                class="path-active loop-anim"
+                style="animation-name: draw-path; animation-delay: 0s;"
+              />
+              <path
+                d="M 480 280 C 480 320, 280 320, 280 380"
+                class="path-active loop-anim"
+                style="animation-name: draw-path; animation-delay: 2.8s;"
+              />
+              <path
+                d="M 480 280 C 480 320, 680 320, 680 380"
+                class="path-active loop-anim"
+                style="animation-name: draw-path; animation-delay: 2.9s;"
+              />
+
+              <!-- Incoming request -->
+              <g transform="translate(360, 30)">
+                <rect x="0" y="0" width="240" height="50" rx="25" class="card-rect" />
+                <circle cx="25" cy="25" r="4" fill="#3b82f6" />
+                <text x="40" y="20" class="card-desc">INCOMING REQUEST</text>
+                <text x="40" y="36" class="card-title">查询最近订单并退款</text>
+              </g>
+
+              <!-- Orchestrator -->
+              <g transform="translate(330, 180)">
+                <circle
+                  cx="150"
+                  cy="50"
+                  r="45"
+                  class="orch-pulse-ring loop-anim"
+                  style="animation-name: pulse-ring; animation-delay: 1.2s;"
+                />
+                <circle
+                  cx="150"
+                  cy="50"
+                  r="45"
+                  class="orch-pulse-ring loop-anim"
+                  style="animation-name: pulse-ring; animation-delay: 1.5s;"
+                />
+
+                <rect
+                  x="0"
+                  y="0"
+                  width="300"
+                  height="100"
+                  rx="12"
+                  class="card-rect orch-bg loop-anim"
+                  style="animation-name: scale-up; animation-delay: 1.4s;"
+                />
+
+                <text
+                  x="150"
+                  y="30"
+                  text-anchor="middle"
+                  style="font-size:10px; fill:#3b82f6; letter-spacing:1px; font-weight:700;"
+                >
+                  AI ORCHESTRATOR
+                </text>
+                <text x="150" y="55" text-anchor="middle" style="font-size:14px; font-weight:600; fill:#1e293b;">
+                  意图识别 &amp; 任务分发
+                </text>
+
+                <rect x="80" y="70" width="60" height="16" rx="4" fill="#fff" stroke="#bfdbfe" />
+                <text x="110" y="81" text-anchor="middle" style="font-size:9px; fill:#64748b;">NLP 解析</text>
+
+                <rect x="160" y="70" width="60" height="16" rx="4" fill="#fff" stroke="#bfdbfe" />
+                <text x="190" y="81" text-anchor="middle" style="font-size:9px; fill:#64748b;">权限校验</text>
+              </g>
+
+              <!-- Actions -->
+              <g transform="translate(160, 380)">
+                <rect x="0" y="0" width="240" height="80" rx="12" class="card-rect" />
+                <line x1="0" y1="0" x2="0" y2="80" stroke="#3b82f6" stroke-width="4" />
+                <text x="20" y="30" class="card-desc">ACTION 01</text>
+                <text x="20" y="50" class="card-title">调用订单查询 API</text>
+                <circle cx="210" cy="40" r="12" fill="#eff6ff" />
+                <path d="M 206 40 L 210 44 L 216 36" fill="none" stroke="#3b82f6" stroke-width="1.5" />
+              </g>
+
+              <g transform="translate(560, 380)">
+                <rect x="0" y="0" width="240" height="80" rx="12" class="card-rect" />
+                <line x1="0" y1="0" x2="0" y2="80" stroke="#10b981" stroke-width="4" />
+                <text x="20" y="30" class="card-desc">ACTION 02</text>
+                <text x="20" y="50" class="card-title">创建退款工单</text>
+                <circle cx="210" cy="40" r="12" fill="#ecfdf5" />
+                <path d="M 206 40 L 210 44 L 216 36" fill="none" stroke="#10b981" stroke-width="1.5" />
+              </g>
+
+              <!-- Packets -->
+              <circle r="5" class="packet loop-anim" style="animation-name: move-in; animation-delay: 0s;" />
+
+              <circle
+                r="5"
+                class="packet loop-anim"
+                style="animation-name: move-out; animation-delay: 2.8s; offset-path: path('M 480 280 C 480 320, 280 320, 280 380');"
+              />
+
+              <circle
+                r="5"
+                class="packet-success loop-anim"
+                style="animation-name: move-out; animation-delay: 2.9s; offset-path: path('M 480 280 C 480 320, 680 320, 680 380');"
+              />
+            </svg>
+          </div>
+        </div>
+      </section>
+
       <section id="services" class="section">
         <div class="container">
           <h2 class="section-heading">我们能帮你做什么（Services）</h2>
