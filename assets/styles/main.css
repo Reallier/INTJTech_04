@@ -1300,17 +1300,19 @@ h2.hero-subtitle {
   --flow-surface: #ffffff;
   --flow-border: #e2e8f0;
   --flow-primary: #3b82f6;
+  --flow-primary-light: #60a5fa;
   --flow-primary-soft: #eff6ff;
   --flow-success: #10b981;
+  --flow-success-soft: #ecfdf5;
   --flow-text-main: #1e293b;
   --flow-text-sub: #64748b;
   background: var(--flow-bg);
   border: 1px solid rgba(148, 163, 184, 0.35);
   border-radius: 16px;
   padding: 14px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  color: var(--flow-text-main);
+  overflow: visible;
 }
 
 .flow-demo-shell svg {
@@ -1323,7 +1325,7 @@ h2.hero-subtitle {
 
 .flow-demo-shell .path-track {
   fill: none;
-  stroke: #cbd5e1;
+  stroke: #e2e8f0;
   stroke-width: 1.5;
   stroke-linecap: round;
 }
@@ -1335,7 +1337,7 @@ h2.hero-subtitle {
   stroke-linecap: round;
   stroke-dasharray: 300;
   stroke-dashoffset: 300;
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 .flow-demo-shell .card-rect {
@@ -1343,6 +1345,7 @@ h2.hero-subtitle {
   stroke: var(--flow-border);
   stroke-width: 1;
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.02));
+  transition: fill 0.3s, stroke 0.3s;
 }
 
 .flow-demo-shell .card-title {
@@ -1364,104 +1367,293 @@ h2.hero-subtitle {
 
 .flow-demo-shell .orch-pulse-ring {
   fill: none;
-  stroke: var(--flow-primary);
-  stroke-width: 1;
+  stroke: var(--flow-primary-light);
+  stroke-width: 2;
   opacity: 0;
   transform-origin: center;
 }
 
 .flow-demo-shell .packet {
   fill: var(--flow-primary);
-  filter: drop-shadow(0 0 4px rgba(59, 130, 246, 0.6));
+  filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.8));
 }
 
 .flow-demo-shell .packet-success {
   fill: var(--flow-success);
-  filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.6));
+  filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.8));
 }
 
-.flow-demo-shell .loop-anim {
+.flow-demo-shell .check-path {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+}
+
+.flow-demo-shell .check-blue {
+  stroke: var(--flow-primary);
+}
+
+.flow-demo-shell .check-green {
+  stroke: var(--flow-success);
+}
+
+.flow-demo-shell .icon-bg {
+  transition: fill 0.3s;
+}
+
+.flow-demo-shell .gear-icon {
+  fill: #93c5fd;
+  transform-origin: center;
+}
+
+.flow-demo-shell .timeline-anim {
   animation-duration: 6s;
   animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
-@keyframes move-in {
-  0% {
-    offset-distance: 0%;
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    offset-distance: 100%;
-    opacity: 0;
-  }
-}
-
-@keyframes pulse-ring {
-  0% {
-    transform: scale(0.8);
-    opacity: 0.8;
-    stroke-width: 2;
-  }
-  100% {
-    transform: scale(1.6);
-    opacity: 0;
-    stroke-width: 0;
-  }
-}
-
-@keyframes scale-up {
+@keyframes squeeze-top {
   0%,
   100% {
     transform: scale(1);
   }
-  50% {
+  5% {
     transform: scale(1.05);
+  }
+  20% {
+    transform: scale(0.92);
+  }
+  30% {
+    transform: scale(1);
   }
 }
 
-@keyframes move-out {
-  0% {
+@keyframes travel-top {
+  0%,
+  5% {
     offset-distance: 0%;
     opacity: 0;
   }
-  20% {
+  6% {
     opacity: 1;
   }
-  80% {
+  20% {
+    offset-distance: 100%;
     opacity: 1;
+  }
+  21% {
+    opacity: 0;
   }
   100% {
-    offset-distance: 100%;
     opacity: 0;
   }
 }
 
-@keyframes draw-path {
+@keyframes process-impact {
+  0%,
+  19% {
+    transform: scale(1);
+    fill: var(--flow-primary-soft);
+    stroke: #bfdbfe;
+  }
+  20% {
+    transform: scale(1.12);
+    fill: #dbeafe;
+    stroke: var(--flow-primary);
+  }
+  45% {
+    transform: scale(1.12);
+    fill: #dbeafe;
+    stroke: var(--flow-primary);
+  }
+  55% {
+    transform: scale(1);
+    fill: var(--flow-primary-soft);
+    stroke: #bfdbfe;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes gear-spin {
+  0%,
+  20% {
+    transform: rotate(0deg);
+    opacity: 0.5;
+  }
+  25% {
+    opacity: 1;
+  }
+  50% {
+    transform: rotate(360deg);
+    opacity: 1;
+  }
+  60% {
+    transform: rotate(360deg);
+    opacity: 0.5;
+  }
+  100% {
+    transform: rotate(360deg);
+    opacity: 0.5;
+  }
+}
+
+@keyframes pulse-strong {
+  0%,
+  20% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes travel-bottom {
+  0%,
+  50% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  51% {
+    opacity: 1;
+  }
+  70% {
+    offset-distance: 100%;
+    opacity: 1;
+  }
+  71% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes result-impact {
+  0%,
+  69% {
+    transform: scale(1);
+    stroke: var(--flow-border);
+  }
+  70% {
+    transform: scale(1.05);
+    stroke: currentColor;
+  }
+  90% {
+    transform: scale(1.05);
+    stroke: currentColor;
+  }
+  100% {
+    transform: scale(1);
+    stroke: var(--flow-border);
+  }
+}
+
+@keyframes draw-check {
+  0%,
+  69% {
+    stroke-dashoffset: 30;
+    opacity: 0;
+  }
+  70% {
+    opacity: 1;
+  }
+  75% {
+    stroke-dashoffset: 0;
+  }
+  95% {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+  100% {
+    opacity: 0;
+    stroke-dashoffset: 30;
+  }
+}
+
+@keyframes icon-flash-blue {
+  0%,
+  69% {
+    fill: #f1f5f9;
+  }
+  70% {
+    fill: #eff6ff;
+  }
+  100% {
+    fill: #f1f5f9;
+  }
+}
+
+@keyframes icon-flash-green {
+  0%,
+  69% {
+    fill: #f1f5f9;
+  }
+  70% {
+    fill: var(--flow-success-soft);
+  }
+  100% {
+    fill: #f1f5f9;
+  }
+}
+
+@keyframes draw-track-top {
   0% {
     stroke-dashoffset: 300;
     opacity: 0;
   }
+  5% {
+    opacity: 0.8;
+  }
   20% {
-    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+  25% {
+    opacity: 0;
   }
   100% {
+    opacity: 0;
+  }
+}
+
+@keyframes draw-track-bottom {
+  0%,
+  50% {
+    stroke-dashoffset: 300;
+    opacity: 0;
+  }
+  51% {
+    opacity: 0.8;
+  }
+  70% {
     stroke-dashoffset: 0;
-    opacity: 0.2;
+  }
+  75% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .flow-demo-shell .path-active,
-  .flow-demo-shell .orch-pulse-ring,
-  .flow-demo-shell .packet,
-  .flow-demo-shell .packet-success {
-    animation: none;
+  .flow-demo-shell .timeline-anim {
+    animation: none !important;
   }
 }
 

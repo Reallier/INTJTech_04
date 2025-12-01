@@ -543,11 +543,16 @@ onBeforeUnmount(() => {
       <section id="flow-demo" class="section flow-demo-section">
         <div class="container">
           <div class="flow-demo-shell">
-            <svg viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg" aria-label="AI Workflow · Pulse Edition">
+            <svg viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg" aria-label="AI Workflow · Enhanced Processing Narrative">
               <defs>
                 <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
                   <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#f1f5f9" stroke-width="1" />
                 </pattern>
+                <symbol id="icon-gear" viewBox="0 0 24 24">
+                  <path
+                    d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.5.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"
+                  />
+                </symbol>
               </defs>
 
               <rect width="960" height="540" fill="url(#grid)" />
@@ -560,26 +565,28 @@ onBeforeUnmount(() => {
               <!-- Active tracks -->
               <path
                 d="M 480 80 C 480 120, 480 140, 480 180"
-                class="path-active loop-anim"
-                style="animation-name: draw-path; animation-delay: 0s;"
+                class="path-active timeline-anim"
+                style="animation-name: draw-track-top;"
               />
               <path
                 d="M 480 280 C 480 320, 280 320, 280 380"
-                class="path-active loop-anim"
-                style="animation-name: draw-path; animation-delay: 2.8s;"
+                class="path-active timeline-anim"
+                style="animation-name: draw-track-bottom;"
               />
               <path
                 d="M 480 280 C 480 320, 680 320, 680 380"
-                class="path-active loop-anim"
-                style="animation-name: draw-path; animation-delay: 2.9s;"
+                class="path-active timeline-anim"
+                style="animation-name: draw-track-bottom;"
               />
 
               <!-- Incoming request -->
               <g transform="translate(360, 30)">
-                <rect x="0" y="0" width="240" height="50" rx="25" class="card-rect" />
-                <circle cx="25" cy="25" r="4" fill="#3b82f6" />
-                <text x="40" y="20" class="card-desc">INCOMING REQUEST</text>
-                <text x="40" y="36" class="card-title">查询最近订单并退款</text>
+                <g class="timeline-anim" style="animation-name: squeeze-top;">
+                  <rect width="240" height="50" rx="25" class="card-rect" />
+                  <circle cx="25" cy="25" r="4" fill="#3b82f6" />
+                  <text x="40" y="20" class="card-desc">INCOMING</text>
+                  <text x="40" y="36" class="card-title">查询最近订单并退款</text>
+                </g>
               </g>
 
               <!-- Orchestrator -->
@@ -588,15 +595,15 @@ onBeforeUnmount(() => {
                   cx="150"
                   cy="50"
                   r="45"
-                  class="orch-pulse-ring loop-anim"
-                  style="animation-name: pulse-ring; animation-delay: 1.2s;"
+                  class="orch-pulse-ring timeline-anim"
+                  style="animation-name: pulse-strong; animation-delay: 0s;"
                 />
                 <circle
                   cx="150"
                   cy="50"
                   r="45"
-                  class="orch-pulse-ring loop-anim"
-                  style="animation-name: pulse-ring; animation-delay: 1.5s;"
+                  class="orch-pulse-ring timeline-anim"
+                  style="animation-name: pulse-strong; animation-delay: 0.4s;"
                 />
 
                 <rect
@@ -605,61 +612,65 @@ onBeforeUnmount(() => {
                   width="300"
                   height="100"
                   rx="12"
-                  class="card-rect orch-bg loop-anim"
-                  style="animation-name: scale-up; animation-delay: 1.4s;"
+                  class="card-rect orch-bg timeline-anim"
+                  style="animation-name: process-impact;"
                 />
 
-                <text
-                  x="150"
-                  y="30"
-                  text-anchor="middle"
-                  style="font-size:10px; fill:#3b82f6; letter-spacing:1px; font-weight:700;"
-                >
-                  AI ORCHESTRATOR
-                </text>
-                <text x="150" y="55" text-anchor="middle" style="font-size:14px; font-weight:600; fill:#1e293b;">
-                  意图识别 &amp; 任务分发
-                </text>
+                <g transform="translate(150, 35)">
+                  <use href="#icon-gear" x="-12" y="-28" width="24" height="24" class="gear-icon timeline-anim" style="animation-name: gear-spin;" />
+                  <text y="10" text-anchor="middle" style="font-size:14px; font-weight:600; fill:#1e293b;">意图识别 &amp; 任务分发</text>
+                </g>
 
-                <rect x="80" y="70" width="60" height="16" rx="4" fill="#fff" stroke="#bfdbfe" />
-                <text x="110" y="81" text-anchor="middle" style="font-size:9px; fill:#64748b;">NLP 解析</text>
-
-                <rect x="160" y="70" width="60" height="16" rx="4" fill="#fff" stroke="#bfdbfe" />
-                <text x="190" y="81" text-anchor="middle" style="font-size:9px; fill:#64748b;">权限校验</text>
+                <g transform="translate(0, 5)">
+                  <rect x="80" y="65" width="60" height="16" rx="4" fill="#fff" stroke="#bfdbfe" />
+                  <text x="110" y="76" text-anchor="middle" style="font-size:9px; fill:#64748b;">NLP 解析</text>
+                  <rect x="160" y="65" width="60" height="16" rx="4" fill="#fff" stroke="#bfdbfe" />
+                  <text x="190" y="76" text-anchor="middle" style="font-size:9px; fill:#64748b;">权限校验</text>
+                </g>
               </g>
 
               <!-- Actions -->
               <g transform="translate(160, 380)">
-                <rect x="0" y="0" width="240" height="80" rx="12" class="card-rect" />
-                <line x1="0" y1="0" x2="0" y2="80" stroke="#3b82f6" stroke-width="4" />
-                <text x="20" y="30" class="card-desc">ACTION 01</text>
-                <text x="20" y="50" class="card-title">调用订单查询 API</text>
-                <circle cx="210" cy="40" r="12" fill="#eff6ff" />
-                <path d="M 206 40 L 210 44 L 216 36" fill="none" stroke="#3b82f6" stroke-width="1.5" />
+                <g class="timeline-anim" style="animation-name: result-impact; color: #3b82f6;">
+                  <rect width="240" height="80" rx="12" class="card-rect" />
+                  <line x1="0" y1="0" x2="0" y2="80" stroke="#3b82f6" stroke-width="4" />
+                  <text x="20" y="30" class="card-desc">ACTION 01</text>
+                  <text x="20" y="50" class="card-title">调用订单查询 API</text>
+
+                  <circle cx="210" cy="40" r="14" class="icon-bg timeline-anim" style="animation-name: icon-flash-blue;" />
+                  <path d="M 204 40 L 208 44 L 216 34" class="check-path check-blue timeline-anim" style="animation-name: draw-check;" />
+                </g>
               </g>
 
               <g transform="translate(560, 380)">
-                <rect x="0" y="0" width="240" height="80" rx="12" class="card-rect" />
-                <line x1="0" y1="0" x2="0" y2="80" stroke="#10b981" stroke-width="4" />
-                <text x="20" y="30" class="card-desc">ACTION 02</text>
-                <text x="20" y="50" class="card-title">创建退款工单</text>
-                <circle cx="210" cy="40" r="12" fill="#ecfdf5" />
-                <path d="M 206 40 L 210 44 L 216 36" fill="none" stroke="#10b981" stroke-width="1.5" />
+                <g class="timeline-anim" style="animation-name: result-impact; color: #10b981;">
+                  <rect width="240" height="80" rx="12" class="card-rect" />
+                  <line x1="0" y1="0" x2="0" y2="80" stroke="#10b981" stroke-width="4" />
+                  <text x="20" y="30" class="card-desc">ACTION 02</text>
+                  <text x="20" y="50" class="card-title">创建退款工单</text>
+
+                  <circle cx="210" cy="40" r="14" class="icon-bg timeline-anim" style="animation-name: icon-flash-green;" />
+                  <path d="M 204 40 L 208 44 L 216 34" class="check-path check-green timeline-anim" style="animation-name: draw-check;" />
+                </g>
               </g>
 
               <!-- Packets -->
-              <circle r="5" class="packet loop-anim" style="animation-name: move-in; animation-delay: 0s;" />
-
               <circle
-                r="5"
-                class="packet loop-anim"
-                style="animation-name: move-out; animation-delay: 2.8s; offset-path: path('M 480 280 C 480 320, 280 320, 280 380');"
+                r="6"
+                class="packet timeline-anim"
+                style="animation-name: travel-top; offset-path: path('M 480 80 C 480 120, 480 140, 480 180');"
               />
 
               <circle
-                r="5"
-                class="packet-success loop-anim"
-                style="animation-name: move-out; animation-delay: 2.9s; offset-path: path('M 480 280 C 480 320, 680 320, 680 380');"
+                r="6"
+                class="packet timeline-anim"
+                style="animation-name: travel-bottom; offset-path: path('M 480 280 C 480 320, 280 320, 280 380');"
+              />
+
+              <circle
+                r="6"
+                class="packet-success timeline-anim"
+                style="animation-name: travel-bottom; offset-path: path('M 480 280 C 480 320, 680 320, 680 380');"
               />
             </svg>
           </div>
