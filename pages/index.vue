@@ -426,8 +426,8 @@ onBeforeUnmount(() => {
       <div class="container">
         <div class="nav-bar">
           <div class="brand">
-            <img src="/site-logo.png" alt="紫薯科技Logo" style="width: 40px; height: 40px; vertical-align: middle; margin-right: 8px;" />
-            紫薯科技 · AI Agent
+            <img src="/site-logo.png" alt="简序智能 Logo" style="width: 40px; height: 40px; vertical-align: middle; margin-right: 8px;" />
+            简序智能 · AI Agent
           </div>
           <button
             type="button"
@@ -464,7 +464,7 @@ onBeforeUnmount(() => {
           <div class="hero-content">
             <div class="eyebrow">
               <span class="dot" />
-              紫薯科技 · 面向小微企业的 AI Agent 技术伙伴
+              简序智能 · 面向小微企业的 AI Agent 技术伙伴
             </div>
             
             <!-- 主标题 -->
@@ -700,7 +700,7 @@ onBeforeUnmount(() => {
         <div class="container">
           <h2 class="section-heading">关于我们（Team）</h2>
           <p class="section-subtitle">
-            紫薯科技是一个核心成员仅有 3 人的小型工程团队，每个人都长期在一线写代码、做真实业务系统。
+            简序智能是一个核心成员仅有 3 人的小型工程团队，每个人都长期在一线写代码、做真实业务系统。
           </p>
           <div class="team-grid">
             <div class="info-card info-top">
@@ -794,9 +794,9 @@ onBeforeUnmount(() => {
     <footer class="footer">
       <div class="container footer-shell">
         <div class="footer-brand-compact">
-          <img class="footer-logo" src="/site-logo.png" alt="紫薯科技 Logo" />
+          <img class="footer-logo" src="/site-logo.png" alt="简序智能 Logo" />
           <div>
-            <div class="footer-title">紫薯科技 · AI Agent 技术伙伴</div>
+            <div class="footer-title">简序智能 · AI Agent 技术伙伴</div>
             <div class="footer-slogan">小微企业的工程化 Agent 团队</div>
           </div>
         </div>
@@ -830,7 +830,7 @@ onBeforeUnmount(() => {
       <div class="container footer-bottom">
         <small>小团队、重工程、追求可落地的 Agent 交付</small>
         <span class="footer-divider" />
-        <small>Copyright © 紫薯科技</small>
+        <small>Copyright © 深圳市简序智能科技有限公司</small>
       </div>
     </footer>
     <div

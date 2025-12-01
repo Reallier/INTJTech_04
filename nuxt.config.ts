@@ -1,8 +1,8 @@
-// Nuxt configuration for 紫薯科技官网 v0
+// Nuxt configuration for 简序智能官网 v0
 export default defineNuxtConfig({
   app: {
     head: {
-      title: "紫薯科技｜面向小微企业的 AI Agent 技术伙伴",
+      title: "简序智能｜面向小微企业的 AI Agent 技术伙伴",
       meta: [
         {
           name: "description",
