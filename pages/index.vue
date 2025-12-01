@@ -524,9 +524,17 @@ onBeforeUnmount(() => {
           
           <!-- 右侧视觉区域 -->
           <div class="hero-visual">
-            <!-- Agent Orchestrator 架构图 -->
             <div class="engineering-illustration">
-              <img src="/agent-diagram.svg" alt="Agent Orchestrator 架构图" style="width: 100%; height: auto;">
+              <client-only>
+                <lottie-player
+                  src="/agent-diagram-lottie.json"
+                  background="transparent"
+                  speed="1"
+                  loop
+                  autoplay
+                  style="width: 100%; height: 100%;"
+                />
+              </client-only>
             </div>
           </div>
         </div>
