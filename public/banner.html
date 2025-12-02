@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>LangGraph Agent - Banner Layout</title>
+  <style>
+    :root {
+      /* 核心调色板 */
+      --bg-color: #f8fafc;
+      --grid-color: #cbd5e1;
+      
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-sub: #64748b;
+
+      /* 节点状态颜色 */
+      --node-agent: #3b82f6; 
+      --node-tool: #f59e0b;
+      --node-grader: #10b981;
+      --node-gen: #8b5cf6;
+      
+      /* 动画总时长 */
+      --duration: 12s;
+    }
+
+    body {
+      margin: 0; padding: 0;
+      background: var(--bg-color);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Mono", "Segoe UI", Roboto, monospace;
+      display: flex; justify-content: center; align-items: center;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+
+    .container {
+      width: 100%; 
+      max-width: 2276px;
+      height: auto;
+      
+      /* 保持 32:9 比例 */
+      aspect-ratio: 32 / 9;
+      
+      background: var(--card-bg);
+      border-radius: 0;
+      box-shadow: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ---- 背景网格 ---- */
+    .bg-grid {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: 
+        linear-gradient(var(--grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.25;
+      z-index: 0;
+    }
+
+    svg { 
+      display: block; 
+      width: 100%; 
+      height: 100%; 
+      position: relative; 
+      z-index: 1; 
+    }
+
+    /* ---- 节点通用样式 ---- */
+    .node-group { cursor: default; }
+    
+    .node-card-bg {
+      fill: #fff;
+      stroke: #e2e8f0;
+      stroke-width: 3;
+      rx: 24;
+      filter: drop-shadow(0 16px 32px rgba(0,0,0,0.08));
+    }
+
+    .node-active-stroke {
+      fill: none;
+      stroke-width: 5;
+      stroke-opacity: 0;
+      rx: 24;
+    }
+
+    .node-icon-bg { fill: #f1f5f9; rx: 16; }
+    
+    text { font-family: -apple-system, BlinkMacSystemFont, "SF Mono", "Segoe UI", Roboto, monospace; }
+    .node-title { font-size: 18px; font-weight: 800; fill: var(--text-main); letter-spacing: 1px; text-transform: uppercase; font-family: sans-serif; }
+    .node-desc { font-size: 15px; fill: var(--text-sub); font-weight: 500; font-family: sans-serif; }
+
+    /* ---- 连线样式 ---- */
+    .edge-path {
+      fill: none;
+      stroke: #cbd5e1;
+      stroke-width: 5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: 0.6;
+    }
+    
+    .edge-loop {
+      fill: none;
+      stroke: #cbd5e1;
+      stroke-width: 4;
+      stroke-dasharray: 10 8;
+      opacity: 0.4;
+    }
+
+    /* ---- 粒子流 ---- */
+    .flow-particle {
+      fill: #fff;
+      stroke-width: 0;
+      r: 8;
+      opacity: 0;
+      filter: drop-shadow(0 0 6px currentColor);
+    }
+
+    /* ---- 关键帧动画 ---- */
+    @keyframes seq-flow-1 { 
+      0% { offset-distance: 0%; opacity: 0; } 
+      2% { opacity: 1; } 
+      12.5% { offset-distance: 100%; opacity: 1; } 
+      13%, 100% { offset-distance: 100%; opacity: 0; } 
+    }
+    @keyframes seq-agent { 
+      0%, 13% { stroke-opacity: 0; } 
+      13.1%, 24.5% { stroke-opacity: 1; stroke: var(--node-agent); } 
+      25%, 100% { stroke-opacity: 0; } 
+    }
+    @keyframes seq-flow-2 { 
+      0%, 25% { offset-distance: 0%; opacity: 0; } 
+      27% { opacity: 1; } 
+      37.5% { offset-distance: 100%; opacity: 1; } 
+      38%, 100% { offset-distance: 100%; opacity: 0; } 
+    }
+    @keyframes seq-tool { 
+      0%, 38% { stroke-opacity: 0; } 
+      38.1%, 49.5% { stroke-opacity: 1; stroke: var(--node-tool); } 
+      50%, 100% { stroke-opacity: 0; } 
+    }
+    @keyframes seq-flow-3 { 
+      0%, 50% { offset-distance: 0%; opacity: 0; } 
+      52% { opacity: 1; } 
+      62.5% { offset-distance: 100%; opacity: 1; } 
+      63%, 100% { offset-distance: 100%; opacity: 0; } 
+    }
+    @keyframes seq-grader { 
+      0%, 63% { stroke-opacity: 0; } 
+      63.1%, 74.5% { stroke-opacity: 1; stroke: var(--node-grader); } 
+      75%, 100% { stroke-opacity: 0; } 
+    }
+    @keyframes seq-flow-4 { 
+      0%, 75% { offset-distance: 0%; opacity: 0; } 
+      77% { opacity: 1; } 
+      87.5% { offset-distance: 100%; opacity: 1; } 
+      88%, 100% { offset-distance: 100%; opacity: 0; } 
+    }
+    @keyframes seq-gen { 
+      0%, 88% { stroke-opacity: 0; } 
+      88.1%, 99.5% { stroke-opacity: 1; stroke: var(--node-gen); } 
+      100% { stroke-opacity: 0; } 
+    }
+    
+    .p-1 { animation: seq-flow-1 var(--duration) linear infinite; fill: var(--text-sub); }
+    .a-1 { animation: seq-agent var(--duration) linear infinite; }
+    .p-2 { animation: seq-flow-2 var(--duration) linear infinite; fill: var(--node-agent); }
+    .a-2 { animation: seq-tool var(--duration) linear infinite; }
+    .p-3 { animation: seq-flow-3 var(--duration) linear infinite; fill: var(--node-tool); }
+    .a-3 { animation: seq-grader var(--duration) linear infinite; }
+    .p-4 { animation: seq-flow-4 var(--duration) linear infinite; fill: var(--node-grader); }
+    .a-4 { animation: seq-gen var(--duration) linear infinite; }
+
+    /* ---- SVG 面板样式 ---- */
+    
+    .svg-panel-bg {
+      fill: rgba(255, 255, 255, 0.9);
+      stroke: #e2e8f0;
+      stroke-width: 2;
+      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.08));
+    }
+    
+    .svg-log-title { font-size: 13px; fill: #94a3b8; font-weight: 800; letter-spacing: 2px; }
+    .svg-log-ts { font-size: 15px; fill: #cbd5e1; font-weight: 500; }
+    .svg-log-text { font-size: 15px; fill: #334155; font-weight: 500; }
+    
+    /* 动画类应用在SVG Group上 */
+    @keyframes log-appear-1 { 0%, 12.9% { opacity: 0; transform: translateY(8px); } 13.1%, 100% { opacity: 1; transform: translateY(0); } }
+    @keyframes log-appear-2 { 0%, 37.9% { opacity: 0; transform: translateY(8px); } 38.1%, 100% { opacity: 1; transform: translateY(0); } }
+    @keyframes log-appear-3 { 0%, 62.9% { opacity: 0; transform: translateY(8px); } 63.1%, 100% { opacity: 1; transform: translateY(0); } }
+    @keyframes log-appear-4 { 0%, 87.9% { opacity: 0; transform: translateY(8px); } 88.1%, 100% { opacity: 1; transform: translateY(0); } }
+
+    .g-l-1 { animation: log-appear-1 var(--duration) infinite; }
+    .g-l-2 { animation: log-appear-2 var(--duration) infinite; }
+    .g-l-3 { animation: log-appear-3 var(--duration) infinite; }
+    .g-l-4 { animation: log-appear-4 var(--duration) infinite; }
+
+    /* 输出卡片动画 */
+    @keyframes pop-right-svg {
+      0%, 92% { opacity: 0; transform: translate(1850px, 240px) scale(0.9); }
+      94%, 99% { opacity: 1; transform: translate(1850px, 220px) scale(1); }
+      100% { opacity: 0; transform: translate(1850px, 220px) scale(1); }
+    }
+    
+    .svg-output-group {
+      animation: pop-right-svg var(--duration) ease-in-out infinite;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="bg-grid"></div>
+
+  <svg viewBox="0 0 2276 640" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#cbd5e1" />
+      </marker>
+    </defs>
+
+    <!-- 左侧日志面板 -->
+    <g transform="translate(50, 190)">
+      <rect width="380" height="260" rx="20" class="svg-panel-bg" />
+      
+      <!-- Header -->
+      <line x1="0" y1="50" x2="380" y2="50" stroke="#f1f5f9" stroke-width="2" />
+      <circle cx="30" cy="25" r="6" fill="#f87171" />
+      <circle cx="50" cy="25" r="6" fill="#fbbf24" />
+      <circle cx="70" cy="25" r="6" fill="#34d399" />
+      <text x="350" y="30" text-anchor="end" class="svg-log-title">LIVE EXECUTION TRACE</text>
+      
+      <!-- Lines: 修复后的嵌套结构，外层固定位移，内层执行动画 -->
+      <g transform="translate(30, 80)">
+        
+        <!-- Line 1 -->
+        <g transform="translate(0, 0)">
+            <g class="g-l-1">
+              <text x="0" y="0" class="svg-log-ts">1.6s</text>
+              <text x="50" y="0" font-size="13" font-weight="800" fill="#3b82f6">INFO</text>
+              <text x="100" y="0" class="svg-log-text">[Agent] Analysis Start...</text>
+            </g>
+        </g>
+        
+        <!-- Line 2 -->
+        <g transform="translate(0, 40)">
+            <g class="g-l-2">
+              <text x="0" y="0" class="svg-log-ts">4.6s</text>
+              <text x="50" y="0" font-size="13" font-weight="800" fill="#f59e0b">INFO</text>
+              <text x="100" y="0" class="svg-log-text">[Tool] Vector Search...</text>
+            </g>
+        </g>
+        
+        <!-- Line 3 -->
+        <g transform="translate(0, 80)">
+            <g class="g-l-3">
+              <text x="0" y="0" class="svg-log-ts">7.6s</text>
+              <text x="50" y="0" font-size="13" font-weight="800" fill="#10b981">INFO</text>
+              <text x="100" y="0" class="svg-log-text">[Grader] Quality: 0.98</text>
+            </g>
+        </g>
+        
+        <!-- Line 4 -->
+        <g transform="translate(0, 120)">
+            <g class="g-l-4">
+              <text x="0" y="0" class="svg-log-ts">10.6s</text>
+              <text x="50" y="0" font-size="13" font-weight="800" fill="#8b5cf6">DONE</text>
+              <text x="100" y="0" class="svg-log-text">[Gen] Output Ready.</text>
+            </g>
+        </g>
+      </g>
+    </g>
+
+    <!-- 2. 连接线 -->
+    <g>
+      <line x1="525" y1="320" x2="650" y2="320" class="edge-path" marker-end="url(#arrow)" />
+      <line x1="850" y1="320" x2="950" y2="320" class="edge-path" marker-end="url(#arrow)" />
+      <line x1="1150" y1="320" x2="1250" y2="320" class="edge-path" marker-end="url(#arrow)" />
+      <line x1="1450" y1="320" x2="1550" y2="320" class="edge-path" marker-end="url(#arrow)" />
+      
+      <path d="M 1350 256 Q 1050 80 750 256" class="edge-loop" marker-end="url(#arrow)" fill="none"/>
+      
+      <rect x="1010" y="140" width="80" height="28" rx="14" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
+      <text x="1050" y="159" text-anchor="middle" font-size="11" fill="#94a3b8" font-weight="700">RETRY</text>
+      
+      <line x1="1750" y1="320" x2="1830" y2="320" stroke="#cbd5e1" stroke-width="3" stroke-dasharray="6 6" opacity="0.5" />
+    </g>
+
+    <!-- 3. 粒子层 -->
+    <g>
+      <circle r="8" class="flow-particle p-1" style="offset-path: path('M525,320 L650,320');" />
+      <circle r="8" class="flow-particle p-2" style="offset-path: path('M850,320 L950,320');" />
+      <circle r="8" class="flow-particle p-3" style="offset-path: path('M1150,320 L1250,320');" />
+      <circle r="8" class="flow-particle p-4" style="offset-path: path('M1450,320 L1550,320');" />
+    </g>
+
+    <!-- 4. 中间节点层 -->
+    <g>
+      <g transform="translate(480, 320)">
+        <circle r="45" fill="#fff" stroke="#e2e8f0" stroke-width="3"/>
+        <text x="0" y="70" text-anchor="middle" font-size="14" fill="#94a3b8" font-weight="700" letter-spacing="1px">QUERY</text>
+        <g transform="scale(1.5) translate(-12, -12)"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="#94a3b8"/></g>
+      </g>
+
+      <g transform="translate(650, 256)" class="node-group">
+        <rect width="200" height="128" class="node-card-bg" />
+        <rect width="200" height="128" class="node-active-stroke a-1" />
+        <rect x="76" y="24" width="48" height="48" class="node-icon-bg" />
+        <g transform="translate(100, 48) scale(1.5)">
+            <circle cx="0" cy="0" r="3" fill="var(--node-agent)"/>
+            <circle cx="0" cy="0" r="8" stroke="var(--node-agent)" stroke-width="1.5" fill="none" opacity="0.6"/>
+        </g>
+        <text x="100" y="95" text-anchor="middle" class="node-title">Agent</text>
+        <text x="100" y="115" text-anchor="middle" class="node-desc">Planning</text>
+      </g>
+
+      <g transform="translate(950, 256)" class="node-group">
+        <rect width="200" height="128" class="node-card-bg" />
+        <rect width="200" height="128" class="node-active-stroke a-2" />
+        <rect x="76" y="24" width="48" height="48" class="node-icon-bg" />
+        <g transform="translate(100, 48) scale(1.5)">
+            <circle cx="0" cy="0" r="6" stroke="var(--node-tool)" stroke-width="2" fill="none"/>
+            <line x1="4" y1="4" x2="8" y2="8" stroke="var(--node-tool)" stroke-width="2" stroke-linecap="round"/>
+        </g>
+        <text x="100" y="95" text-anchor="middle" class="node-title">Tool</text>
+        <text x="100" y="115" text-anchor="middle" class="node-desc">Retrieval</text>
+      </g>
+
+      <g transform="translate(1250, 256)" class="node-group">
+        <rect width="200" height="128" class="node-card-bg" />
+        <rect width="200" height="128" class="node-active-stroke a-3" />
+        <rect x="76" y="24" width="48" height="48" class="node-icon-bg" />
+        <g transform="translate(100, 48) scale(1.5)">
+            <polyline points="-6,0 -2,4 6,-4" fill="none" stroke="var(--node-grader)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        <text x="100" y="95" text-anchor="middle" class="node-title">Grader</text>
+        <text x="100" y="115" text-anchor="middle" class="node-desc">Evaluation</text>
+      </g>
+
+      <g transform="translate(1550, 256)" class="node-group">
+        <rect width="200" height="128" class="node-card-bg" />
+        <rect width="200" height="128" class="node-active-stroke a-4" />
+        <rect x="76" y="24" width="48" height="48" class="node-icon-bg" />
+        <g transform="translate(90, 40) scale(1.5)">
+            <path d="M7.5 0L8.5 4.5L13 5.5L8.5 6.5L7.5 11L6.5 6.5L2 5.5L6.5 4.5Z" fill="var(--node-gen)"/>
+        </g>
+        <text x="100" y="95" text-anchor="middle" class="node-title">LLM</text>
+        <text x="100" y="115" text-anchor="middle" class="node-desc">Synthesis</text>
+      </g>
+    </g>
+
+    <!-- 5. 右侧结果卡片 (动画弹出) -->
+    <g class="svg-output-group">
+      <rect width="350" height="200" rx="20" class="svg-panel-bg" stroke="#e2e8f0" />
+      <circle cx="175" cy="45" r="20" fill="#ecfdf5" />
+      <g transform="translate(175, 45) scale(1.5)">
+         <polyline points="-6,0 -2,4 6,-4" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+      <text x="175" y="90" text-anchor="middle" font-size="13" fill="#10b981" font-weight="800" letter-spacing="1.5px">FINAL ANSWER</text>
+      <text x="175" y="130" text-anchor="middle" font-size="20" fill="#1e293b" font-weight="700">Phase 3 Integration</text>
+      <text x="175" y="160" text-anchor="middle" font-size="15" fill="#64748b">Deployment Status: On Track</text>
+    </g>
+
+  </svg>
+</div>
+
+</body>
+</html>

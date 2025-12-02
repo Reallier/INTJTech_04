@@ -774,6 +774,17 @@ onBeforeUnmount(() => {
         </div>
       </section>
 
+      <div class="banner-section">
+        <div class="container">
+          <iframe
+            class="banner-embed"
+            src="/banner.html"
+            title="LangGraph Agent 流程示意"
+            loading="lazy"
+          ></iframe>
+        </div>
+      </div>
+
       <section id="cases" class="section cases-section">
         <div class="container">
           <div class="cases-header">

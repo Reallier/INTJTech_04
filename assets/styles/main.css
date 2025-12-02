@@ -553,7 +553,7 @@ h2.hero-subtitle {
 
 /* Cases 区域 */
 .cases-section {
-  margin-top: 8px;
+  margin-top: 0;
 }
 
 .cases-header .section-heading {
@@ -2980,4 +2980,31 @@ h2.hero-subtitle {
     width: 100%;
     justify-content: center;
   }
+}
+
+
+.banner-section {
+  padding: 12px 0;
+  background: #f8fafc;
+}
+
+.banner-embed {
+  width: 100%;
+  border: 0;
+  border-radius: 16px;
+  aspect-ratio: 32 / 9;
+  display: block;
+  box-shadow: none;
+  background: #f8fafc;
+}
+
+@media (max-width: 1024px) {
+  .banner-section {
+    padding: 12px 0;
+  }
+}
+
+/* Remove vertical spacing around the LangGraph banner */
+#services.section {
+  padding-bottom: 12px;
 }
