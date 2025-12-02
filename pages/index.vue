@@ -743,27 +743,6 @@ onBeforeUnmount(() => {
               </div>
             </div>
 
-            <div class="flow-tile">
-              <div class="flow-demo-shell">
-                <div class="lottie-wrapper">
-                  <client-only>
-                    <iframe
-                      class="lottie-frame"
-                      src="/lottie_03.html"
-                      title="LangGraph Agent - Symmetrical Layout (Synced)"
-                      loading="lazy"
-                    />
-                  </client-only>
-                </div>
-              </div>
-            </div>
-
-            <div class="flow-tile flow-placeholder">
-              <div class="flow-placeholder-body">
-                <span class="flow-index">04</span>
-                <div class="flow-placeholder-text">预留位置，可放监控 / 安全场景</div>
-              </div>
-            </div>
           </div>
         </div>
       </section>

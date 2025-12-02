@@ -1,0 +1,16 @@
+@echo off
+echo Starting deployment process...
+
+echo Building Docker image...
+docker build --no-cache -t zilshu-tech-site:latest .
+
+echo Tagging Docker image...
+docker tag zilshu-tech-site:latest ccr.ccs.tencentyun.com/reallier/zilshu-tech-site:latest
+
+echo Pushing Docker image...
+docker push ccr.ccs.tencentyun.com/reallier/zilshu-tech-site:latest
+
+echo Connecting to server and updating containers...
+ssh -i "C:\Users\admin\Downloads\reallier.pem" root@119.29.166.51 "cd /data/app-stack/intjtech && docker compose pull && docker compose up -d"
+
+echo Deployment completed successfully!
