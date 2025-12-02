@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>AI Workflow · Clear Text Edition</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --primary: #3b82f6;
+      --primary-light: #60a5fa;
+      --primary-soft: #eff6ff;
+      --success: #10b981;
+      --success-soft: #ecfdf5;
+      --text-main: #1e293b; /* 深灰，不是纯黑，更柔和 */
+      --text-sub: #64748b;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      /* 开启字体抗锯齿 */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: var(--text-main);
+    }
+
+    .container {
+      width: 960px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      border-radius: 16px;
+      background: #fff;
+    }
+
+    svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+    /* ---- 字体优化核心 ---- */
+    text {
+      /* 强制 SVG 使用几何精度渲染，防止字体发虚 */
+      text-rendering: geometricPrecision; 
+    }
+
+    .card-title { 
+      font-size: 14px; /* 增大字号 */
+      font-weight: 500; /* 降低字重，防止糊作一团 */
+      fill: #0f172a; /* 加深一点颜色提高对比度 */
+      letter-spacing: -0.01em; /* 稍微收紧一点间距显得更精致 */
+    }
+    
+    .card-desc { 
+      font-size: 11px; 
+      fill: var(--text-sub); 
+      font-weight: 400;
+      letter-spacing: 0.02em;
+    }
+
+    /* ---- 动效保持不变 ---- */
+    
+    .path-track { fill: none; stroke: #e2e8f0; stroke-width: 1.5; stroke-linecap: round; }
+    .path-active { fill: none; stroke: var(--primary); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 300; stroke-dashoffset: 300; opacity: 0.5; }
+
+    .card-rect { fill: var(--surface); stroke: var(--border); stroke-width: 1; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.02)); transition: fill 0.3s, stroke 0.3s; }
+    .orch-bg { fill: var(--primary-soft); stroke: #bfdbfe; stroke-width: 1; }
+    .orch-pulse-ring { fill: none; stroke: var(--primary-light); stroke-width: 2; opacity: 0; transform-origin: center; }
+
+    .packet { fill: var(--primary); filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.8)); }
+    .packet-success { fill: var(--success); filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.8)); }
+
+    .check-path { fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 30; stroke-dashoffset: 30; }
+    .check-blue { stroke: var(--primary); }
+    .check-green { stroke: var(--success); }
+    .icon-bg { transition: fill 0.3s; }
+    .gear-icon { fill: #93c5fd; transform-origin: center; }
+
+    .timeline-anim { animation-duration: 6s; animation-iteration-count: infinite; animation-timing-function: linear; fill-mode: both; transform-box: fill-box; transform-origin: center; }
+
+    @keyframes squeeze-top { 0%, 100% { transform: scale(1); } 5% { transform: scale(1.05); } 20% { transform: scale(0.92); } 30% { transform: scale(1); } }
+    @keyframes travel-top { 0%, 5% { offset-distance: 0%; opacity: 0; } 6% { opacity: 1; } 20% { offset-distance: 100%; opacity: 1; } 21% { opacity: 0; } 100% { opacity: 0; } }
+    @keyframes process-impact { 0%, 19% { transform: scale(1); fill: var(--primary-soft); stroke: #bfdbfe; } 20% { transform: scale(1.12); fill: #dbeafe; stroke: var(--primary); } 45% { transform: scale(1.12); fill: #dbeafe; stroke: var(--primary); } 55% { transform: scale(1); fill: var(--primary-soft); stroke: #bfdbfe; } 100% { transform: scale(1); } }
+    @keyframes gear-spin { 0%, 20% { transform: rotate(0deg); opacity: 0.5; } 25% { opacity: 1; } 50% { transform: rotate(360deg); opacity: 1; } 60% { transform: rotate(360deg); opacity: 0.5; } 100% { transform: rotate(360deg); opacity: 0.5; } }
+    @keyframes pulse-strong { 0%, 20% { transform: scale(0.8); opacity: 0; } 25% { opacity: 0.8; } 50% { transform: scale(1.8); opacity: 0; } 100% { opacity: 0; } }
+    @keyframes travel-bottom { 0%, 50% { offset-distance: 0%; opacity: 0; } 51% { opacity: 1; } 70% { offset-distance: 100%; opacity: 1; } 71% { opacity: 0; } 100% { opacity: 0; } }
+    @keyframes result-impact { 0%, 69% { transform: scale(1); stroke: var(--border); } 70% { transform: scale(1.05); stroke: currentColor; } 90% { transform: scale(1.05); stroke: currentColor; } 100% { transform: scale(1); stroke: var(--border); } }
+    @keyframes draw-check { 0%, 69% { stroke-dashoffset: 30; opacity: 0; } 70% { opacity: 1; } 75% { stroke-dashoffset: 0; } 95% { opacity: 1; stroke-dashoffset: 0; } 100% { opacity: 0; stroke-dashoffset: 30; } }
+    @keyframes icon-flash-blue { 0%, 69% { fill: #f1f5f9; } 70% { fill: #eff6ff; } 100% { fill: #f1f5f9; } }
+    @keyframes icon-flash-green { 0%, 69% { fill: #f1f5f9; } 70% { fill: #ecfdf5; } 100% { fill: #f1f5f9; } }
+    @keyframes draw-track-top { 0% { stroke-dashoffset: 300; opacity: 0; } 5% { opacity: 0.8; } 20% { stroke-dashoffset: 0; } 25% { opacity: 0; } 100% { opacity: 0; } }
+    @keyframes draw-track-bottom { 0%, 50% { stroke-dashoffset: 300; opacity: 0; } 51% { opacity: 0.8; } 70% { stroke-dashoffset: 0; } 75% { opacity: 0; } 100% { opacity: 0; } }
+
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <svg viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg">
+    
+    <defs>
+      <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#f1f5f9" stroke-width="1"/>
+      </pattern>
+      <symbol id="icon-gear" viewBox="0 0 24 24">
+        <path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.5.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/>
+      </symbol>
+    </defs>
+    <rect width="960" height="540" fill="url(#grid)" />
+
+    <path d="M 480 80 C 480 120, 480 140, 480 180" class="path-track" />
+    <path d="M 480 280 C 480 320, 280 320, 280 380" class="path-track" />
+    <path d="M 480 280 C 480 320, 680 320, 680 380" class="path-track" />
+
+    <path d="M 480 80 C 480 120, 480 140, 480 180" class="path-active timeline-anim" style="animation-name: draw-track-top;" />
+    <path d="M 480 280 C 480 320, 280 320, 280 380" class="path-active timeline-anim" style="animation-name: draw-track-bottom;" />
+    <path d="M 480 280 C 480 320, 680 320, 680 380" class="path-active timeline-anim" style="animation-name: draw-track-bottom;" />
+
+    <g transform="translate(360, 30)">
+      <g class="timeline-anim" style="animation-name: squeeze-top;">
+        <rect width="240" height="50" rx="25" class="card-rect" />
+        <circle cx="25" cy="25" r="4" fill="#3b82f6" />
+        <text x="40" y="20" class="card-desc">INCOMING</text>
+        <text x="40" y="37" class="card-title">查询最近订单并退款</text> </g>
+    </g>
+
+    <g transform="translate(330, 180)">
+      <circle cx="150" cy="50" r="45" class="orch-pulse-ring timeline-anim" style="animation-name: pulse-strong; animation-delay: 0s;" />
+      <circle cx="150" cy="50" r="45" class="orch-pulse-ring timeline-anim" style="animation-name: pulse-strong; animation-delay: 0.4s;" />
+      
+      <rect width="300" height="100" rx="12" class="card-rect orch-bg timeline-anim" style="animation-name: process-impact;" />
+      
+      <g transform="translate(150, 35)">
+        <use href="#icon-gear" x="-12" y="-28" width="24" height="24" class="gear-icon timeline-anim" style="animation-name: gear-spin;" />
+        <text y="12" text-anchor="middle" style="font-size:14px; font-weight:600; fill:#1e293b;">意图识别 & 任务分发</text>
+      </g>
+      
+      <g transform="translate(0, 5)">
+        <rect x="80" y="65" width="60" height="16" rx="4" fill="#fff" stroke="#bfdbfe" />
+        <text x="110" y="77" text-anchor="middle" style="font-size:10px; fill:#64748b;">NLP 解析</text>
+        <rect x="160" y="65" width="60" height="16" rx="4" fill="#fff" stroke="#bfdbfe" />
+        <text x="190" y="77" text-anchor="middle" style="font-size:10px; fill:#64748b;">权限校验</text>
+      </g>
+    </g>
+
+    <g transform="translate(160, 380)">
+      <g class="timeline-anim" style="animation-name: result-impact; color: #3b82f6;">
+        <rect width="240" height="80" rx="12" class="card-rect" />
+        <line x1="0" y1="0" x2="0" y2="80" stroke="#3b82f6" stroke-width="4" />
+        <text x="20" y="30" class="card-desc">ACTION 01</text>
+        <text x="20" y="52" class="card-title">调用订单查询 API</text>
+        
+        <circle cx="210" cy="40" r="14" class="icon-bg timeline-anim" style="animation-name: icon-flash-blue;" />
+        <path d="M 204 40 L 208 44 L 216 34" class="check-path check-blue timeline-anim" style="animation-name: draw-check;" />
+      </g>
+    </g>
+
+    <g transform="translate(560, 380)">
+      <g class="timeline-anim" style="animation-name: result-impact; color: #10b981;">
+        <rect width="240" height="80" rx="12" class="card-rect" />
+        <line x1="0" y1="0" x2="0" y2="80" stroke="#10b981" stroke-width="4" />
+        <text x="20" y="30" class="card-desc">ACTION 02</text>
+        <text x="20" y="52" class="card-title">创建退款工单</text>
+        
+        <circle cx="210" cy="40" r="14" class="icon-bg timeline-anim" style="animation-name: icon-flash-green;" />
+        <path d="M 204 40 L 208 44 L 216 34" class="check-path check-green timeline-anim" style="animation-name: draw-check;" />
+      </g>
+    </g>
+
+    <circle r="6" class="packet timeline-anim" style="animation-name: travel-top; offset-path: path('M 480 80 C 480 120, 480 140, 480 180');"></circle>
+
+    <circle r="6" class="packet timeline-anim" style="animation-name: travel-bottom; offset-path: path('M 480 280 C 480 320, 280 320, 280 380');"></circle>
+    <circle r="6" class="packet-success timeline-anim" style="animation-name: travel-bottom; offset-path: path('M 480 280 C 480 320, 680 320, 680 380');"></circle>
+
+  </svg>
+</div>
+
+</body>
+</html>

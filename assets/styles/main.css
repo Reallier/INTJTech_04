@@ -1389,71 +1389,72 @@ h2.hero-subtitle {
 
 .flow-demo-shell .path-track {
   fill: none;
-  stroke: #e2e8f0;
-  stroke-width: 1.5;
+  stroke: #cbd5e1;
+  stroke-width: 3;
   stroke-linecap: round;
 }
 
 .flow-demo-shell .path-active {
   fill: none;
   stroke: var(--flow-primary);
-  stroke-width: 2;
+  stroke-width: 4;
   stroke-linecap: round;
-  stroke-dasharray: 300;
-  stroke-dashoffset: 300;
-  opacity: 0.5;
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  opacity: 0.6;
 }
 
 .flow-demo-shell .card-rect {
   fill: var(--flow-surface);
   stroke: var(--flow-border);
-  stroke-width: 1;
-  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.02));
+  stroke-width: 2;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.03));
   transition: fill 0.3s, stroke 0.3s;
 }
 
 .flow-demo-shell .card-title {
-  font-size: 12px;
+  font-size: 18px;
   font-weight: 600;
   fill: var(--flow-text-main);
 }
 
 .flow-demo-shell .card-desc {
-  font-size: 10px;
+  font-size: 13px;
   fill: var(--flow-text-sub);
+  font-weight: 500;
 }
 
 .flow-demo-shell .orch-bg {
   fill: var(--flow-primary-soft);
   stroke: #bfdbfe;
-  stroke-width: 1;
+  stroke-width: 2;
 }
 
 .flow-demo-shell .orch-pulse-ring {
   fill: none;
   stroke: var(--flow-primary-light);
-  stroke-width: 2;
+  stroke-width: 3;
   opacity: 0;
   transform-origin: center;
 }
 
 .flow-demo-shell .packet {
   fill: var(--flow-primary);
-  filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.8));
+  filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.8));
 }
 
 .flow-demo-shell .packet-success {
   fill: var(--flow-success);
-  filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.8));
+  filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.8));
 }
 
 .flow-demo-shell .check-path {
   fill: none;
-  stroke-width: 2.5;
+  stroke-width: 4;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-dasharray: 30;
-  stroke-dashoffset: 30;
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
 }
 
 .flow-demo-shell .check-blue {
@@ -1470,11 +1471,6 @@ h2.hero-subtitle {
 
 .flow-demo-shell .gear-icon {
   fill: #93c5fd;
-  transform-origin: center;
-}
-
-.flow-orchestrator-svg {
-  transform: scale(1.08);
   transform-origin: center;
 }
 
@@ -1629,10 +1625,10 @@ h2.hero-subtitle {
     transform: scale(1);
   }
   5% {
-    transform: scale(1.05);
+    transform: scale(1.03);
   }
   20% {
-    transform: scale(0.92);
+    transform: scale(0.95);
   }
   30% {
     transform: scale(1);
@@ -1673,7 +1669,7 @@ h2.hero-subtitle {
     stroke: var(--flow-primary);
   }
   45% {
-    transform: scale(1.12);
+    transform: scale(1.08);
     fill: #dbeafe;
     stroke: var(--flow-primary);
   }
@@ -1720,7 +1716,7 @@ h2.hero-subtitle {
     opacity: 0.8;
   }
   50% {
-    transform: scale(1.8);
+    transform: scale(1.6);
     opacity: 0;
   }
   100% {
@@ -1756,11 +1752,11 @@ h2.hero-subtitle {
     stroke: var(--flow-border);
   }
   70% {
-    transform: scale(1.05);
+    transform: scale(1.03);
     stroke: currentColor;
   }
   90% {
-    transform: scale(1.05);
+    transform: scale(1.03);
     stroke: currentColor;
   }
   100% {
@@ -1772,7 +1768,7 @@ h2.hero-subtitle {
 @keyframes draw-check {
   0%,
   69% {
-    stroke-dashoffset: 30;
+    stroke-dashoffset: 40;
     opacity: 0;
   }
   70% {
@@ -1787,7 +1783,7 @@ h2.hero-subtitle {
   }
   100% {
     opacity: 0;
-    stroke-dashoffset: 30;
+    stroke-dashoffset: 40;
   }
 }
 
@@ -1819,7 +1815,7 @@ h2.hero-subtitle {
 
 @keyframes draw-track-top {
   0% {
-    stroke-dashoffset: 300;
+    stroke-dashoffset: 400;
     opacity: 0;
   }
   5% {
@@ -2157,10 +2153,6 @@ h2.hero-subtitle {
 @media (max-width: 900px) {
   .flow-demo-shell {
     padding: 12px;
-  }
-
-  .flow-orchestrator-svg {
-    transform: scale(1);
   }
 }
 
