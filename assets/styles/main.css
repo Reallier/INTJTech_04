@@ -1502,6 +1502,10 @@ h2.hero-subtitle {
   --lg-grader: #10b981;
   --lg-gen: #8b5cf6;
   --lg-duration: 12s;
+  --node-agent: #3b82f6;
+  --node-tool: #f59e0b;
+  --node-grader: #10b981;
+  --node-gen: #8b5cf6;
 }
 
 .langgraph-grid {
