@@ -542,137 +542,271 @@ onBeforeUnmount(() => {
 
       <section id="flow-demo" class="section flow-demo-section">
         <div class="container">
-          <div class="flow-demo-shell">
-            <svg viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg" aria-label="AI Workflow · Enhanced Processing Narrative">
-              <defs>
-                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#f1f5f9" stroke-width="1" />
-                </pattern>
-                <symbol id="icon-gear" viewBox="0 0 24 24">
+          <div class="flow-grid">
+            <div class="flow-tile">
+              <div class="flow-demo-shell">
+                <svg viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg" aria-label="AI Workflow · Enhanced Processing Narrative">
+                  <defs>
+                    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#f1f5f9" stroke-width="1" />
+                    </pattern>
+                    <symbol id="icon-gear" viewBox="0 0 24 24">
+                      <path
+                        d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.5.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"
+                      />
+                    </symbol>
+                  </defs>
+
+                  <rect width="960" height="540" fill="url(#grid)" />
+
+                  <!-- Base tracks -->
+                  <path d="M 480 80 C 480 120, 480 140, 480 180" class="path-track" />
+                  <path d="M 480 280 C 480 320, 280 320, 280 380" class="path-track" />
+                  <path d="M 480 280 C 480 320, 680 320, 680 380" class="path-track" />
+
+                  <!-- Active tracks -->
                   <path
-                    d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.5.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"
+                    d="M 480 80 C 480 120, 480 140, 480 180"
+                    class="path-active timeline-anim"
+                    style="animation-name: draw-track-top;"
                   />
-                </symbol>
-              </defs>
+                  <path
+                    d="M 480 280 C 480 320, 280 320, 280 380"
+                    class="path-active timeline-anim"
+                    style="animation-name: draw-track-bottom;"
+                  />
+                  <path
+                    d="M 480 280 C 480 320, 680 320, 680 380"
+                    class="path-active timeline-anim"
+                    style="animation-name: draw-track-bottom;"
+                  />
 
-              <rect width="960" height="540" fill="url(#grid)" />
+                  <!-- Incoming request -->
+                  <g transform="translate(360, 30)">
+                    <g class="timeline-anim" style="animation-name: squeeze-top;">
+                      <rect width="240" height="50" rx="25" class="card-rect" />
+                      <circle cx="25" cy="25" r="4" fill="#3b82f6" />
+                      <text x="40" y="20" class="card-desc">INCOMING</text>
+                      <text x="40" y="36" class="card-title">查询最近订单并退款</text>
+                    </g>
+                  </g>
 
-              <!-- Base tracks -->
-              <path d="M 480 80 C 480 120, 480 140, 480 180" class="path-track" />
-              <path d="M 480 280 C 480 320, 280 320, 280 380" class="path-track" />
-              <path d="M 480 280 C 480 320, 680 320, 680 380" class="path-track" />
+                  <!-- Orchestrator -->
+                  <g transform="translate(330, 180)">
+                    <circle
+                      cx="150"
+                      cy="50"
+                      r="45"
+                      class="orch-pulse-ring timeline-anim"
+                      style="animation-name: pulse-strong; animation-delay: 0s;"
+                    />
+                    <circle
+                      cx="150"
+                      cy="50"
+                      r="45"
+                      class="orch-pulse-ring timeline-anim"
+                      style="animation-name: pulse-strong; animation-delay: 0.4s;"
+                    />
 
-              <!-- Active tracks -->
-              <path
-                d="M 480 80 C 480 120, 480 140, 480 180"
-                class="path-active timeline-anim"
-                style="animation-name: draw-track-top;"
-              />
-              <path
-                d="M 480 280 C 480 320, 280 320, 280 380"
-                class="path-active timeline-anim"
-                style="animation-name: draw-track-bottom;"
-              />
-              <path
-                d="M 480 280 C 480 320, 680 320, 680 380"
-                class="path-active timeline-anim"
-                style="animation-name: draw-track-bottom;"
-              />
+                    <rect
+                      x="0"
+                      y="0"
+                      width="300"
+                      height="100"
+                      rx="12"
+                      class="card-rect orch-bg timeline-anim"
+                      style="animation-name: process-impact;"
+                    />
 
-              <!-- Incoming request -->
-              <g transform="translate(360, 30)">
-                <g class="timeline-anim" style="animation-name: squeeze-top;">
-                  <rect width="240" height="50" rx="25" class="card-rect" />
-                  <circle cx="25" cy="25" r="4" fill="#3b82f6" />
-                  <text x="40" y="20" class="card-desc">INCOMING</text>
-                  <text x="40" y="36" class="card-title">查询最近订单并退款</text>
-                </g>
-              </g>
+                    <g transform="translate(150, 35)">
+                      <use href="#icon-gear" x="-12" y="-28" width="24" height="24" class="gear-icon timeline-anim" style="animation-name: gear-spin;" />
+                      <text y="10" text-anchor="middle" style="font-size:14px; font-weight:600; fill:#1e293b;">意图识别 &amp; 任务分发</text>
+                    </g>
 
-              <!-- Orchestrator -->
-              <g transform="translate(330, 180)">
-                <circle
-                  cx="150"
-                  cy="50"
-                  r="45"
-                  class="orch-pulse-ring timeline-anim"
-                  style="animation-name: pulse-strong; animation-delay: 0s;"
-                />
-                <circle
-                  cx="150"
-                  cy="50"
-                  r="45"
-                  class="orch-pulse-ring timeline-anim"
-                  style="animation-name: pulse-strong; animation-delay: 0.4s;"
-                />
+                    <g transform="translate(0, 5)">
+                      <rect x="80" y="65" width="60" height="16" rx="4" fill="#fff" stroke="#bfdbfe" />
+                      <text x="110" y="76" text-anchor="middle" style="font-size:9px; fill:#64748b;">NLP 解析</text>
+                      <rect x="160" y="65" width="60" height="16" rx="4" fill="#fff" stroke="#bfdbfe" />
+                      <text x="190" y="76" text-anchor="middle" style="font-size:9px; fill:#64748b;">权限校验</text>
+                    </g>
+                  </g>
 
-                <rect
-                  x="0"
-                  y="0"
-                  width="300"
-                  height="100"
-                  rx="12"
-                  class="card-rect orch-bg timeline-anim"
-                  style="animation-name: process-impact;"
-                />
+                  <!-- Actions -->
+                  <g transform="translate(160, 380)">
+                    <g class="timeline-anim" style="animation-name: result-impact; color: #3b82f6;">
+                      <rect width="240" height="80" rx="12" class="card-rect" />
+                      <line x1="0" y1="0" x2="0" y2="80" stroke="#3b82f6" stroke-width="4" />
+                      <text x="20" y="30" class="card-desc">ACTION 01</text>
+                      <text x="20" y="50" class="card-title">调用订单查询 API</text>
 
-                <g transform="translate(150, 35)">
-                  <use href="#icon-gear" x="-12" y="-28" width="24" height="24" class="gear-icon timeline-anim" style="animation-name: gear-spin;" />
-                  <text y="10" text-anchor="middle" style="font-size:14px; font-weight:600; fill:#1e293b;">意图识别 &amp; 任务分发</text>
-                </g>
+                      <circle cx="210" cy="40" r="14" class="icon-bg timeline-anim" style="animation-name: icon-flash-blue;" />
+                      <path d="M 204 40 L 208 44 L 216 34" class="check-path check-blue timeline-anim" style="animation-name: draw-check;" />
+                    </g>
+                  </g>
 
-                <g transform="translate(0, 5)">
-                  <rect x="80" y="65" width="60" height="16" rx="4" fill="#fff" stroke="#bfdbfe" />
-                  <text x="110" y="76" text-anchor="middle" style="font-size:9px; fill:#64748b;">NLP 解析</text>
-                  <rect x="160" y="65" width="60" height="16" rx="4" fill="#fff" stroke="#bfdbfe" />
-                  <text x="190" y="76" text-anchor="middle" style="font-size:9px; fill:#64748b;">权限校验</text>
-                </g>
-              </g>
+                  <g transform="translate(560, 380)">
+                    <g class="timeline-anim" style="animation-name: result-impact; color: #10b981;">
+                      <rect width="240" height="80" rx="12" class="card-rect" />
+                      <line x1="0" y1="0" x2="0" y2="80" stroke="#10b981" stroke-width="4" />
+                      <text x="20" y="30" class="card-desc">ACTION 02</text>
+                      <text x="20" y="50" class="card-title">创建退款工单</text>
 
-              <!-- Actions -->
-              <g transform="translate(160, 380)">
-                <g class="timeline-anim" style="animation-name: result-impact; color: #3b82f6;">
-                  <rect width="240" height="80" rx="12" class="card-rect" />
-                  <line x1="0" y1="0" x2="0" y2="80" stroke="#3b82f6" stroke-width="4" />
-                  <text x="20" y="30" class="card-desc">ACTION 01</text>
-                  <text x="20" y="50" class="card-title">调用订单查询 API</text>
+                      <circle cx="210" cy="40" r="14" class="icon-bg timeline-anim" style="animation-name: icon-flash-green;" />
+                      <path d="M 204 40 L 208 44 L 216 34" class="check-path check-green timeline-anim" style="animation-name: draw-check;" />
+                    </g>
+                  </g>
 
-                  <circle cx="210" cy="40" r="14" class="icon-bg timeline-anim" style="animation-name: icon-flash-blue;" />
-                  <path d="M 204 40 L 208 44 L 216 34" class="check-path check-blue timeline-anim" style="animation-name: draw-check;" />
-                </g>
-              </g>
+                  <!-- Packets -->
+                  <circle
+                    r="6"
+                    class="packet timeline-anim"
+                    style="animation-name: travel-top; offset-path: path('M 480 80 C 480 120, 480 140, 480 180');"
+                  />
 
-              <g transform="translate(560, 380)">
-                <g class="timeline-anim" style="animation-name: result-impact; color: #10b981;">
-                  <rect width="240" height="80" rx="12" class="card-rect" />
-                  <line x1="0" y1="0" x2="0" y2="80" stroke="#10b981" stroke-width="4" />
-                  <text x="20" y="30" class="card-desc">ACTION 02</text>
-                  <text x="20" y="50" class="card-title">创建退款工单</text>
+                  <circle
+                    r="6"
+                    class="packet timeline-anim"
+                    style="animation-name: travel-bottom; offset-path: path('M 480 280 C 480 320, 280 320, 280 380');"
+                  />
 
-                  <circle cx="210" cy="40" r="14" class="icon-bg timeline-anim" style="animation-name: icon-flash-green;" />
-                  <path d="M 204 40 L 208 44 L 216 34" class="check-path check-green timeline-anim" style="animation-name: draw-check;" />
-                </g>
-              </g>
+                  <circle
+                    r="6"
+                    class="packet-success timeline-anim"
+                    style="animation-name: travel-bottom; offset-path: path('M 480 280 C 480 320, 680 320, 680 380');"
+                  />
+                </svg>
+              </div>
+            </div>
 
-              <!-- Packets -->
-              <circle
-                r="6"
-                class="packet timeline-anim"
-                style="animation-name: travel-top; offset-path: path('M 480 80 C 480 120, 480 140, 480 180');"
-              />
+            <div class="flow-tile">
+              <div class="flow-demo-shell data-pipeline-shell">
+                <svg viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg" aria-label="Data Agent · High Impact Animation">
+                  <defs>
+                    <pattern id="data-dot-grid" width="30" height="30" patternUnits="userSpaceOnUse">
+                      <circle cx="2" cy="2" r="1.5" fill="#e2e8f0" />
+                    </pattern>
+                    <clipPath id="data-agent-clip">
+                      <rect width="320" height="140" rx="24" />
+                    </clipPath>
+                  </defs>
 
-              <circle
-                r="6"
-                class="packet timeline-anim"
-                style="animation-name: travel-bottom; offset-path: path('M 480 280 C 480 320, 280 320, 280 380');"
-              />
+                  <rect width="960" height="540" fill="url(#data-dot-grid)" />
 
-              <circle
-                r="6"
-                class="packet-success timeline-anim"
-                style="animation-name: travel-bottom; offset-path: path('M 480 280 C 480 320, 680 320, 680 380');"
-              />
-            </svg>
+                  <defs>
+                    <path id="data-path-left" d="M 210 110 C 210 160, 420 140, 460 180" />
+                    <path id="data-path-mid" d="M 480 110 C 480 140, 480 150, 480 180" />
+                    <path id="data-path-right" d="M 750 110 C 750 160, 540 140, 500 180" />
+                    <path id="data-path-down" d="M 480 320 L 480 370" />
+                  </defs>
+
+                  <use href="#data-path-left" class="data-track" />
+                  <use href="#data-path-mid" class="data-track" />
+                  <use href="#data-path-right" class="data-track" />
+                  <use href="#data-path-down" class="data-track" />
+
+                  <use href="#data-path-left" class="data-flow-line data-timeline" style="animation-name: flow-down-dash; animation-delay: -2.5s;" />
+                  <use href="#data-path-down" class="data-flow-line data-timeline" style="animation-name: flow-down-dash;" />
+
+                  <g transform="translate(120, 40)">
+                    <g class="data-timeline anim-source">
+                      <rect width="180" height="70" rx="16" class="data-card-base" />
+                      <circle cx="35" cy="35" r="8" fill="#94a3b8" />
+                      <text x="60" y="32" class="data-label-tag">SOURCE 01</text>
+                      <text x="60" y="52" class="data-label-title">SQL DB</text>
+                    </g>
+                  </g>
+
+                  <g transform="translate(390, 40)">
+                    <g class="data-timeline anim-source" style="animation-delay: 0.1s;">
+                      <rect width="180" height="70" rx="16" class="data-card-base" />
+                      <circle cx="35" cy="35" r="8" fill="#22c55e" />
+                      <text x="60" y="32" class="data-label-tag" style="fill:#86efac;">SOURCE 02</text>
+                      <text x="60" y="52" class="data-label-title">Excel Files</text>
+                    </g>
+                  </g>
+
+                  <g transform="translate(660, 40)">
+                    <g class="data-timeline anim-source" style="animation-delay: 0.2s;">
+                      <rect width="180" height="70" rx="16" class="data-card-base" />
+                      <circle cx="35" cy="35" r="8" fill="#0ea5e9" />
+                      <text x="60" y="32" class="data-label-tag" style="fill:#7dd3fc;">SOURCE 03</text>
+                      <text x="60" y="52" class="data-label-title">Cloud API</text>
+                    </g>
+                  </g>
+
+                  <g transform="translate(320, 180)">
+                    <g class="data-timeline anim-agent-process">
+                      <rect width="320" height="140" rx="24" class="data-card-base" style="stroke: #a78bfa; stroke-width: 3;" />
+                      <text x="160" y="45" text-anchor="middle" class="data-label-tag" style="font-size: 12px; fill: #7c3aed;">Data Intelligence Agent</text>
+                      <text x="160" y="80" text-anchor="middle" class="data-label-title" style="font-size: 24px;">数据清洗 &amp; 结构化</text>
+
+                      <g transform="translate(160, 110)">
+                        <circle cx="0" cy="0" r="18" fill="none" stroke="#ddd6fe" stroke-width="4" stroke-dasharray="12 12" class="data-timeline" style="animation-name: ring-spin;" />
+                        <circle cx="0" cy="0" r="6" fill="#7c3aed" />
+                      </g>
+
+                      <g clip-path="url(#data-agent-clip)">
+                        <line x1="20" y1="70" x2="300" y2="70" stroke="#a78bfa" stroke-width="4" stroke-opacity="0.6" class="data-timeline" style="animation-name: scan-active;" />
+                      </g>
+                    </g>
+                  </g>
+
+                  <g transform="translate(180, 370)">
+                    <rect width="600" height="140" rx="20" class="data-card-base data-timeline" style="animation-name: report-feedback;" />
+
+                    <g transform="translate(30, 30)">
+                      <circle cx="8" cy="8" r="6" fill="#10b981" />
+                      <text x="24" y="14" class="data-label-title" style="font-size: 18px;">Q3 销售与转化分析报表.pdf</text>
+                      <rect x="500" y="4" width="40" height="20" rx="6" fill="#f1f5f9" />
+                      <text x="520" y="18" text-anchor="middle" class="data-label-tag" style="fill:#64748b;">PDF</text>
+
+                      <g transform="translate(40, 50)">
+                        <text x="0" y="-10" class="data-label-desc">Revenue Trend</text>
+                        <line x1="0" y1="50" x2="160" y2="50" stroke="#e2e8f0" stroke-width="3" />
+                        <path d="M 10 50 L 10 20 Q 10 16 14 16 L 36 16 Q 40 16 40 20 L 40 50 Z" class="bar-path data-timeline" style="fill: var(--data-primary); animation-name: bar-grow;" />
+                        <path d="M 60 50 L 60 10 Q 60 6 64 6 L 86 6 Q 90 6 90 10 L 90 50 Z" class="bar-path data-timeline" style="fill: var(--data-secondary); animation-name: bar-grow; animation-delay: 0.05s;" />
+                        <path d="M 110 50 L 110 25 Q 110 21 114 21 L 136 21 Q 140 21 140 25 L 140 50 Z" class="bar-path data-timeline" style="fill: #10b981; animation-name: bar-grow; animation-delay: 0.1s;" />
+                      </g>
+
+                      <g transform="translate(340, 50)">
+                        <text x="0" y="-10" class="data-label-desc">Key Metrics</text>
+                        <g transform="translate(40, 30)">
+                          <circle cx="0" cy="0" r="26" fill="#f1f5f9" />
+                          <path d="M 0 0 L 0 -26 A 26 26 0 0 1 26 0 Z" class="pie-purple data-timeline anim-pie" />
+                          <path d="M 0 0 L 26 0 A 26 26 0 0 1 -18 18 Z" class="pie-blue data-timeline anim-pie" style="animation-delay: 0.1s;" />
+                        </g>
+
+                        <g transform="translate(90, 10)">
+                          <circle cx="0" cy="0" r="4" fill="#7c3aed" />
+                          <text x="12" y="4" class="data-label-tag" style="fill:#64748b; font-size:10px;">Sales</text>
+                          <circle cx="0" cy="20" r="4" fill="#0ea5e9" />
+                          <text x="12" y="24" class="data-label-tag" style="fill:#64748b; font-size:10px;">Leads</text>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+
+                  <circle r="6" class="data-particle data-timeline" style="animation-name: move-in-left; offset-path: path('M 210 110 C 210 160, 420 140, 460 180');" />
+                  <circle r="6" class="data-particle data-timeline" style="animation-name: move-in-mid; offset-path: path('M 480 110 C 480 140, 480 150, 480 180');" />
+                  <circle r="6" class="data-particle data-timeline" style="animation-name: move-in-right; offset-path: path('M 750 110 C 750 160, 540 140, 500 180');" />
+                  <circle r="8" class="data-particle data-timeline" style="fill:#10b981; animation-name: move-down; offset-path: path('M 480 320 L 480 370');" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="flow-tile flow-placeholder">
+              <div class="flow-placeholder-body">
+                <span class="flow-index">03</span>
+                <div class="flow-placeholder-text">预留位置，可放数据同步等场景</div>
+              </div>
+            </div>
+
+            <div class="flow-tile flow-placeholder">
+              <div class="flow-placeholder-body">
+                <span class="flow-index">04</span>
+                <div class="flow-placeholder-text">预留位置，可放监控 / 安全场景</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

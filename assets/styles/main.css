@@ -1295,6 +1295,70 @@ h2.hero-subtitle {
   background: #f8fafc;
 }
 
+.flow-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 16px;
+}
+
+.flow-tile {
+  display: grid;
+  gap: 10px;
+}
+
+.flow-tile-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.flow-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #eef2ff;
+  color: #4338ca;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.flow-title {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.flow-sub {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.flow-placeholder {
+  border: 1.5px dashed var(--color-border);
+  border-radius: 16px;
+  min-height: 240px;
+  display: grid;
+  align-content: center;
+  background: #f9fafb;
+  padding: 16px;
+  color: var(--color-text-muted);
+}
+
+.flow-placeholder-body {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.flow-placeholder-text {
+  font-weight: 700;
+}
+
 .flow-demo-shell {
   --flow-bg: #f8fafc;
   --flow-surface: #ffffff;
@@ -1416,6 +1480,142 @@ h2.hero-subtitle {
   animation-fill-mode: both;
   transform-box: fill-box;
   transform-origin: center;
+}
+
+.data-pipeline-shell {
+  --data-surface: #ffffff;
+  --data-border: #cbd5e1;
+  --data-primary: #7c3aed;
+  --data-secondary: #0ea5e9;
+  --data-tertiary: #f43f5e;
+  --data-text-main: #0f172a;
+  --data-text-sub: #64748b;
+  --data-raw: #94a3b8;
+  background: #f8fafc;
+}
+
+.data-pipeline-shell svg {
+  background: var(--data-surface);
+  overflow: visible;
+}
+
+.data-pipeline-shell text {
+  text-rendering: geometricPrecision;
+}
+
+.data-pipeline-shell .data-track {
+  fill: none;
+  stroke: #cbd5e1;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.data-pipeline-shell .data-flow-line {
+  fill: none;
+  stroke: var(--data-primary);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 20 300;
+  stroke-dashoffset: 300;
+  opacity: 0.4;
+}
+
+.data-pipeline-shell .data-card-base {
+  fill: var(--data-surface);
+  stroke: var(--data-border);
+  stroke-width: 2;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.03));
+}
+
+.data-pipeline-shell .data-label-title {
+  font-size: 18px;
+  font-weight: 700;
+  fill: var(--data-text-main);
+}
+
+.data-pipeline-shell .data-label-desc {
+  font-size: 13px;
+  font-weight: 500;
+  fill: var(--data-text-sub);
+}
+
+.data-pipeline-shell .data-label-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  fill: #a78bfa;
+}
+
+.data-pipeline-shell .data-label-sub {
+  font-size: 13px;
+  font-weight: 500;
+  fill: var(--data-text-sub);
+}
+
+.data-pipeline-shell .data-label-big {
+  font-size: 24px;
+  font-weight: 700;
+  fill: var(--data-text-main);
+}
+
+.data-pipeline-shell .data-label-tiny {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  fill: #7c3aed;
+}
+
+.data-pipeline-shell .bar-path {
+  fill: var(--data-secondary);
+  transform-box: fill-box;
+  transform-origin: bottom;
+}
+
+.data-pipeline-shell .data-pie-segment {
+  fill: var(--data-primary);
+  transform-origin: center;
+}
+
+.data-pipeline-shell .data-timeline {
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.data-pipeline-shell .anim-source {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation-name: source-pop;
+}
+
+.data-pipeline-shell .anim-agent-process {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation-name: agent-process;
+}
+
+.data-pipeline-shell .anim-pie {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation-name: pie-enter;
+}
+
+.data-pipeline-shell .data-particle {
+  fill: var(--data-primary);
+  filter: drop-shadow(0 0 6px rgba(124, 58, 237, 0.6));
+}
+
+.data-pipeline-shell .pie-purple {
+  fill: var(--data-primary);
+}
+
+.data-pipeline-shell .pie-blue {
+  fill: var(--data-secondary);
 }
 
 @keyframes squeeze-top {
@@ -1651,8 +1851,300 @@ h2.hero-subtitle {
   }
 }
 
+@keyframes move-in-left {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  5% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  25% {
+    offset-distance: 100%;
+    opacity: 1;
+    transform: scale(1);
+  }
+  25.1% {
+    opacity: 0;
+    transform: scale(0.1);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes move-in-mid {
+  0%,
+  3% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  25% {
+    offset-distance: 100%;
+    opacity: 1;
+  }
+  25.1% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes move-in-right {
+  0%,
+  6% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  11% {
+    opacity: 1;
+  }
+  25% {
+    offset-distance: 100%;
+    opacity: 1;
+  }
+  25.1% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes agent-process {
+  0%,
+  24% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  25% {
+    transform: scale(1.02);
+  }
+  35% {
+    transform: scale(1.08);
+    filter: brightness(1.03) drop-shadow(0 20px 30px rgba(124, 58, 237, 0.2));
+  }
+  49% {
+    transform: scale(1.02);
+    filter: brightness(1.01);
+  }
+  50% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes scan-active {
+  0%,
+  25% {
+    transform: translateY(-70px);
+    opacity: 0;
+  }
+  28% {
+    opacity: 1;
+  }
+  47% {
+    transform: translateY(70px);
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes ring-spin {
+  0%,
+  25% {
+    transform: rotate(0deg);
+    opacity: 0.3;
+  }
+  28% {
+    opacity: 1;
+  }
+  50% {
+    transform: rotate(180deg);
+    opacity: 1;
+  }
+  75% {
+    transform: rotate(270deg);
+    opacity: 0.3;
+  }
+  100% {
+    transform: rotate(360deg);
+    opacity: 0.3;
+  }
+}
+
+@keyframes flow-down-dash {
+  0%,
+  50% {
+    stroke-dashoffset: 300;
+    opacity: 0;
+  }
+  55% {
+    opacity: 1;
+  }
+  75% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes move-down {
+  0%,
+  50% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  51% {
+    opacity: 1;
+  }
+  75% {
+    offset-distance: 100%;
+    opacity: 1;
+  }
+  75.1%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes bar-grow {
+  0%,
+  74% {
+    transform: scaleY(0);
+  }
+  75% {
+    transform: scaleY(0);
+  }
+  85% {
+    transform: scaleY(1.1);
+  }
+  95%,
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes pie-enter {
+  0%,
+  74% {
+    transform: scale(0) rotate(-90deg);
+    opacity: 0;
+  }
+  85% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes report-feedback {
+  0%,
+  74% {
+    transform: translateY(0);
+    filter: brightness(1);
+  }
+  80% {
+    transform: translateY(-4px);
+    filter: brightness(1.02);
+  }
+  95%,
+  100% {
+    transform: translateY(0);
+    filter: brightness(1);
+  }
+}
+
+@keyframes source-pop {
+  0% {
+    transform: translateY(0) scale(1);
+    filter: brightness(1);
+  }
+  8% {
+    transform: translateY(-10px) scale(1.12);
+    filter: brightness(1.05) drop-shadow(0 15px 25px rgba(0, 0, 0, 0.1));
+  }
+  20% {
+    transform: translateY(0) scale(1);
+    filter: brightness(1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes agent-breathe {
+  0%,
+  25% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  35% {
+    transform: scale(1.08);
+    filter: brightness(1.02) drop-shadow(0 20px 40px rgba(124, 58, 237, 0.15));
+  }
+  45%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+@keyframes move-down {
+  0%,
+  50% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  55% {
+    opacity: 1;
+  }
+  75% {
+    offset-distance: 100%;
+    opacity: 1;
+  }
+  76%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes pie-enter {
+  0%,
+  75% {
+    transform: scale(0) rotate(-90deg);
+    opacity: 0;
+  }
+  85% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .flow-demo-shell .timeline-anim {
+  .flow-demo-shell .timeline-anim,
+  .data-pipeline-shell .data-timeline {
     animation: none !important;
   }
 }
