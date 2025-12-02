@@ -535,6 +535,12 @@ onBeforeUnmount(() => {
                   style="width: 100%; height: 100%;"
                 />
               </client-only>
+              <img
+                class="hero-visual-fallback"
+                src="/agent-diagram.svg"
+                alt="Agent 流程示意"
+                loading="lazy"
+              />
             </div>
           </div>
         </div>
@@ -547,17 +553,12 @@ onBeforeUnmount(() => {
               <div class="flow-demo-shell">
                 <svg viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg" aria-label="AI Workflow · Enlarged Bold Edition">
                   <defs>
-                    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#f1f5f9" stroke-width="1" />
-                    </pattern>
                     <symbol id="icon-gear" viewBox="0 0 24 24">
                       <path
                         d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.5.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"
                       />
                     </symbol>
                   </defs>
-
-                  <rect width="960" height="540" fill="url(#grid)" />
 
                   <path d="M 480 100 C 480 140, 480 160, 480 200" class="path-track" />
                   <path d="M 480 340 C 480 370, 240 370, 240 400" class="path-track" />
@@ -631,15 +632,10 @@ onBeforeUnmount(() => {
               <div class="flow-demo-shell data-pipeline-shell">
                 <svg viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg" aria-label="Data Agent · High Impact Animation">
                   <defs>
-                    <pattern id="data-dot-grid" width="30" height="30" patternUnits="userSpaceOnUse">
-                      <circle cx="2" cy="2" r="1.5" fill="#e2e8f0" />
-                    </pattern>
                     <clipPath id="data-agent-clip">
                       <rect width="320" height="140" rx="24" />
                     </clipPath>
                   </defs>
-
-                  <rect width="960" height="540" fill="url(#data-dot-grid)" />
 
                   <defs>
                     <path id="data-path-left" d="M 210 110 C 210 160, 420 140, 460 180" />
@@ -910,6 +906,21 @@ onBeforeUnmount(() => {
                 实际价格会在了解具体场景后给出清晰报价，不会“做完才知道多少钱”。
               </div>
             </article>
+          </div>
+          <div class="pricing-banner">
+            <div class="pricing-banner-icon">
+              <i class="fa-solid fa-bullseye" aria-hidden="true"></i>
+            </div>
+            <div class="pricing-banner-body">
+              <p class="pricing-banner-text">
+                提交你的使用场景，我们将在数小时内交付一版定制 Demo，完全免费，无风险试用。
+              </p>
+            </div>
+            <div class="pricing-banner-cta">
+              <a class="btn btn-primary pricing-banner-btn" href="#contact">
+                体验免费 Demo
+              </a>
+            </div>
           </div>
         </div>
       </section>

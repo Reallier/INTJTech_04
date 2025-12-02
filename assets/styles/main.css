@@ -421,12 +421,31 @@ h2.hero-subtitle {
   z-index: 1;
   opacity: 0;
   animation: fadeIn 400ms ease-in 700ms forwards;
+  overflow: hidden;
+  width: 100%;
 }
 
 .engineering-illustration {
   width: 100%;
   height: 100%;
   position: relative;
+}
+
+.hero-visual lottie-player {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  display: block;
+}
+
+.hero-visual-fallback {
+  display: none;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
 }
 
 /* 动画定义 */
@@ -811,6 +830,62 @@ h2.hero-subtitle {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 18px;
+}
+
+.pricing-banner {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    120deg,
+    rgba(124, 58, 237, 0.08),
+    rgba(14, 165, 233, 0.08)
+  );
+  border: 1px dashed rgba(124, 58, 237, 0.35);
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.08);
+}
+
+.pricing-banner-icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: 20px;
+}
+
+.pricing-banner-body {
+  display: grid;
+  gap: 4px;
+}
+
+.pricing-banner-cta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.pricing-banner-btn {
+  opacity: 1;
+  box-shadow: none;
+}
+
+.pricing-banner-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+.pricing-banner-text {
+  margin: 0;
+  color: var(--color-text);
 }
 
 .price-card {
@@ -1381,7 +1456,7 @@ h2.hero-subtitle {
   --flow-success-soft: #ecfdf5;
   --flow-text-main: #1e293b;
   --flow-text-sub: #64748b;
-  background: var(--flow-bg);
+  background: transparent;
   border: 1px solid rgba(148, 163, 184, 0.35);
   border-radius: 16px;
   padding: 14px;
@@ -1407,7 +1482,7 @@ h2.hero-subtitle {
   height: auto;
   display: block;
   border-radius: 12px;
-  background: var(--flow-surface);
+  background: transparent;
 }
 
 .flow-demo-shell .path-track {
@@ -1827,11 +1902,11 @@ h2.hero-subtitle {
   --data-text-main: #0f172a;
   --data-text-sub: #64748b;
   --data-raw: #94a3b8;
-  background: #f8fafc;
+  background: transparent;
 }
 
 .data-pipeline-shell svg {
-  background: var(--data-surface);
+  background: transparent;
   overflow: visible;
 }
 
@@ -2871,6 +2946,26 @@ h2.hero-subtitle {
     order: 2;
     height: auto;
     max-height: none;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .engineering-illustration {
+    height: auto;
+    aspect-ratio: 4 / 3;
+    max-height: 260px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .hero-visual lottie-player {
+    display: none !important;
+  }
+
+  .hero-visual-fallback {
+    display: block !important;
+    width: 100%;
+    height: auto;
   }
 
   .engineering-illustration img {
@@ -2906,6 +3001,35 @@ h2.hero-subtitle {
   .cta-row .btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .pricing-banner {
+    grid-template-columns: 1fr;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .pricing-banner-icon {
+    width: 46px;
+    height: 46px;
+  }
+
+  .pricing-banner-cta {
+    width: 100%;
+  }
+
+  .pricing-banner-cta .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* 移动端关闭动画-heavy 的板块，避免横向滚动与性能开销 */
+  #flow-demo.section {
+    display: none;
+  }
+
+  .banner-section {
+    display: none;
   }
 
   .cards-grid,
