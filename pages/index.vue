@@ -744,9 +744,124 @@ onBeforeUnmount(() => {
             </div>
 
             <div class="flow-tile flow-placeholder">
-              <div class="flow-placeholder-body">
-                <span class="flow-index">03</span>
-                <div class="flow-placeholder-text">预留位置，可放数据同步等场景</div>
+              <div class="langgraph-shell">
+                <div class="langgraph-grid" />
+                <div class="langgraph-log-panel">
+                  <div class="lg-log-header">
+                    <div class="lg-log-dots">
+                      <span class="lg-log-dot lg-dot-r" />
+                      <span class="lg-log-dot lg-dot-y" />
+                      <span class="lg-log-dot lg-dot-g" />
+                    </div>
+                    <div class="lg-log-title">LANGGRAPH::TRACE</div>
+                  </div>
+                  <div class="lg-log-content">
+                    <div class="lg-log-line lg-l1">
+                      <span class="lg-ts">1.6s</span>
+                      <span><strong class="lg-log-strong lg-agent">INFO</strong> [Agent] Analyzing user intent...</span>
+                    </div>
+                    <div class="lg-log-line lg-l2">
+                      <span class="lg-ts">4.6s</span>
+                      <span><strong class="lg-log-strong lg-tool">INFO</strong> [Tool] Searching VectorDB...</span>
+                    </div>
+                    <div class="lg-log-line lg-l3">
+                      <span class="lg-ts">7.6s</span>
+                      <span><strong class="lg-log-strong lg-grader">INFO</strong> [Grader] Relevance: 0.98 (Pass)</span>
+                    </div>
+                    <div class="lg-log-line lg-l4">
+                      <span class="lg-ts">10.6s</span>
+                      <span><strong class="lg-log-strong lg-gen">DONE</strong> [Gen] Response synthesized.</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="langgraph-output">
+                  <div class="lg-glass-card">
+                    <div class="lg-output-label">FINAL ANSWER</div>
+                    <div class="lg-output-title">Phase 3 Integration</div>
+                    <div class="lg-output-sub">Status: On Track</div>
+                  </div>
+                </div>
+
+                <svg viewBox="0 0 1000 640" class="langgraph-svg" xmlns="http://www.w3.org/2000/svg" aria-label="LangGraph Agent · Strict Timeline Sync">
+                  <defs>
+                    <marker id="lg-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                      <path d="M 0 0 L 10 5 L 0 10 z" fill="#cbd5e1" />
+                    </marker>
+                  </defs>
+
+                  <g>
+                    <line x1="185" y1="278" x2="230" y2="278" class="lg-edge" marker-end="url(#lg-arrow)" />
+                    <line x1="380" y1="278" x2="425" y2="278" class="lg-edge" marker-end="url(#lg-arrow)" />
+                    <line x1="575" y1="278" x2="620" y2="278" class="lg-edge" marker-end="url(#lg-arrow)" />
+                    <line x1="770" y1="278" x2="815" y2="278" class="lg-edge" marker-end="url(#lg-arrow)" />
+
+                    <path d="M 695 230 Q 500 100 305 230" class="lg-edge-loop" marker-end="url(#lg-arrow)" fill="none" />
+                    <rect x="460" y="145" width="80" height="24" rx="12" class="lg-loop-label-bg" />
+                    <text x="500" y="161" text-anchor="middle" class="lg-loop-label">REWRITE</text>
+                  </g>
+
+                  <g>
+                    <circle r="5" class="lg-flow-particle lg-p1" style="offset-path: path('M185,278 L230,278');" />
+                    <circle r="5" class="lg-flow-particle lg-p2" style="offset-path: path('M380,278 L425,278');" />
+                    <circle r="5" class="lg-flow-particle lg-p3" style="offset-path: path('M575,278 L620,278');" />
+                    <circle r="5" class="lg-flow-particle lg-p4" style="offset-path: path('M770,278 L815,278');" />
+                  </g>
+
+                  <g>
+                    <g transform="translate(150, 278)">
+                      <circle r="35" fill="#fff" stroke="#e2e8f0" stroke-width="3" />
+                      <text x="0" y="55" text-anchor="middle" class="lg-loop-label" style="letter-spacing:1px;">QUERY</text>
+                      <g transform="scale(1.2) translate(-12, -12)"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="#94a3b8"/></g>
+                    </g>
+
+                    <g transform="translate(230, 230)" class="lg-node">
+                      <rect width="150" height="96" class="lg-node-bg" />
+                      <rect width="150" height="96" class="lg-node-active lg-a1" />
+                      <rect x="55" y="16" width="40" height="40" class="lg-node-icon-bg" />
+                      <g transform="translate(75, 36) scale(1.2)">
+                        <circle cx="0" cy="0" r="3" fill="var(--node-agent)" />
+                        <circle cx="0" cy="0" r="8" stroke="var(--node-agent)" stroke-width="1.5" fill="none" opacity="0.6" />
+                      </g>
+                      <text x="75" y="70" text-anchor="middle" class="lg-node-title">Agent</text>
+                      <text x="75" y="86" text-anchor="middle" class="lg-node-desc">Router</text>
+                    </g>
+
+                    <g transform="translate(425, 230)" class="lg-node">
+                      <rect width="150" height="96" class="lg-node-bg" />
+                      <rect width="150" height="96" class="lg-node-active lg-a2" />
+                      <rect x="55" y="16" width="40" height="40" class="lg-node-icon-bg" />
+                      <g transform="translate(75, 36) scale(1.2)">
+                        <circle cx="0" cy="0" r="6" stroke="var(--node-tool)" stroke-width="2" fill="none" />
+                        <line x1="4" y1="4" x2="8" y2="8" stroke="var(--node-tool)" stroke-width="2" stroke-linecap="round" />
+                      </g>
+                      <text x="75" y="70" text-anchor="middle" class="lg-node-title">Tool</text>
+                      <text x="75" y="86" text-anchor="middle" class="lg-node-desc">Retriever</text>
+                    </g>
+
+                    <g transform="translate(620, 230)" class="lg-node">
+                      <rect width="150" height="96" class="lg-node-bg" />
+                      <rect width="150" height="96" class="lg-node-active lg-a3" />
+                      <rect x="55" y="16" width="40" height="40" class="lg-node-icon-bg" />
+                      <g transform="translate(75, 36) scale(1.2)">
+                        <polyline points="-6,0 -2,4 6,-4" fill="none" stroke="var(--node-grader)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                      </g>
+                      <text x="75" y="70" text-anchor="middle" class="lg-node-title">Grader</text>
+                      <text x="75" y="86" text-anchor="middle" class="lg-node-desc">Evaluator</text>
+                    </g>
+
+                    <g transform="translate(815, 230)" class="lg-node">
+                      <rect width="150" height="96" class="lg-node-bg" />
+                      <rect width="150" height="96" class="lg-node-active lg-a4" />
+                      <rect x="55" y="16" width="40" height="40" class="lg-node-icon-bg" />
+                      <g transform="translate(66, 28) scale(1.2)">
+                        <path d="M7.5 0L8.5 4.5L13 5.5L8.5 6.5L7.5 11L6.5 6.5L2 5.5L6.5 4.5Z" fill="var(--node-gen)" />
+                      </g>
+                      <text x="75" y="70" text-anchor="middle" class="lg-node-title">LLM</text>
+                      <text x="75" y="86" text-anchor="middle" class="lg-node-desc">Generate</text>
+                    </g>
+                  </g>
+                </svg>
               </div>
             </div>
 
