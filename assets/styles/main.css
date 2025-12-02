@@ -1473,6 +1473,11 @@ h2.hero-subtitle {
   transform-origin: center;
 }
 
+.flow-orchestrator-svg {
+  transform: scale(1.08);
+  transform-origin: center;
+}
+
 .flow-demo-shell .timeline-anim {
   animation-duration: 6s;
   animation-iteration-count: infinite;
@@ -2152,6 +2157,10 @@ h2.hero-subtitle {
 @media (max-width: 900px) {
   .flow-demo-shell {
     padding: 12px;
+  }
+
+  .flow-orchestrator-svg {
+    transform: scale(1);
   }
 }
 

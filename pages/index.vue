@@ -545,7 +545,12 @@ onBeforeUnmount(() => {
           <div class="flow-grid">
             <div class="flow-tile">
               <div class="flow-demo-shell">
-                <svg viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg" aria-label="AI Workflow · Enhanced Processing Narrative">
+                <svg
+                  class="flow-orchestrator-svg"
+                  viewBox="0 0 960 540"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-label="AI Workflow · Enhanced Processing Narrative"
+                >
                   <defs>
                     <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
                       <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#f1f5f9" stroke-width="1" />
