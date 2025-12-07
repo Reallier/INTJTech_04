@@ -1,24 +1,50 @@
 <script setup lang="ts">
-const { user } = useAuth();
+const { user, fetchUser } = useAuth();
+
 // If already logged in, redirect home
 if (user.value) {
     navigateTo('/');
 }
 
-const handleWeChatLogin = async () => {
-    try {
-        const { data } = await useFetch('/api/auth/wechat/url');
-        if (data.value?.url) {
-            window.location.href = data.value.url;
-        }
-    } catch (e) {
-        alert("Failed to get login URL");
-    }
-};
+const form = ref({
+    username: '',
+    password: ''
+});
 
-const handleMockLogin = () => {
-    // Direct bypass for testing
-    window.location.href = '/api/auth/wechat/callback?code=TEST_MOCK_CODE';
+const loading = ref(false);
+const error = ref('');
+
+const handleLogin = async () => {
+    if (!form.value.username || !form.value.password) {
+        error.value = '请输入用户名和密码';
+        return;
+    }
+    
+    loading.value = true;
+    error.value = '';
+    
+    try {
+        const response = await $fetch('/api/auth/login', {
+            method: 'POST',
+            body: {
+                username: form.value.username,
+                password: form.value.password
+            }
+        });
+        
+        if (response.success) {
+            // 登录成功，刷新用户状态并跳转
+            await fetchUser();
+            navigateTo('/');
+        } else {
+            error.value = response.message || '登录失败';
+        }
+    } catch (e: any) {
+        console.error('Login error:', e);
+        error.value = e.data?.message || '登录失败，请稍后重试';
+    } finally {
+        loading.value = false;
+    }
 };
 </script>
 
@@ -28,24 +54,43 @@ const handleMockLogin = () => {
       <div class="logo">
          <img src="/site-logo.png" alt="Logo" />
       </div>
-      <h1>Welcome Back</h1>
-      <p class="subtitle">Sign in to your intelligent workspace</p>
+      <h1>欢迎回来</h1>
+      <p class="subtitle">登录您的智能工作空间</p>
 
-      <div class="actions">
-        <button @click="handleWeChatLogin" class="btn btn-wechat">
-          <i class="fa-brands fa-weixin"></i>
-          <span>WeChat Login</span>
-        </button>
-
-        <div class="divider">
-            <span>Development Mode</span>
+      <form @submit.prevent="handleLogin" class="login-form">
+        <div class="form-group">
+          <input 
+            v-model="form.username" 
+            type="text" 
+            placeholder="用户名"
+            :disabled="loading"
+            autocomplete="username"
+          />
         </div>
-
-        <button @click="handleMockLogin" class="btn btn-mock">
-          <i class="fa-solid fa-code"></i>
-          <span>Mock Login (No WeChat Required)</span>
+        
+        <div class="form-group">
+          <input 
+            v-model="form.password" 
+            type="password" 
+            placeholder="密码"
+            :disabled="loading"
+            autocomplete="current-password"
+          />
+        </div>
+        
+        <div v-if="error" class="error-message">
+          {{ error }}
+        </div>
+        
+        <button type="submit" class="btn btn-primary" :disabled="loading">
+          <span v-if="loading">登录中...</span>
+          <span v-else>登录</span>
         </button>
-      </div>
+      </form>
+      
+      <p class="register-hint">
+        暂不支持自助注册，请联系管理员开通账号
+      </p>
     </div>
   </div>
 </template>
@@ -56,15 +101,16 @@ const handleMockLogin = () => {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     font-family: 'Inter', sans-serif;
+    padding: 20px;
 }
 
 .login-card {
     background: white;
     padding: 3rem;
     border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
     width: 100%;
     max-width: 420px;
     text-align: center;
@@ -85,60 +131,76 @@ h1 {
 
 .subtitle {
     color: #666;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
     font-size: 0.95rem;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group input:disabled {
+    background: #f5f5f5;
+    cursor: not-allowed;
+}
+
+.error-message {
+    padding: 12px;
+    background: #fff2f0;
+    border: 1px solid #ffccc7;
+    border-radius: 8px;
+    color: #ff4d4f;
+    font-size: 14px;
 }
 
 .btn {
     width: 100%;
-    padding: 12px;
+    padding: 14px;
     border: none;
     border-radius: 12px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
     transition: all 0.2s;
 }
 
-.btn-wechat {
-    background: #07c160;
+.btn-primary {
+    background: linear-gradient(135deg, #667eea, #764ba2);
     color: white;
 }
 
-.btn-wechat:hover {
-    background: #06ad56;
+.btn-primary:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(7, 193, 96, 0.3);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
 }
 
-.btn-mock {
-    background: #f0f0f0;
-    color: #666;
-    border: 1px dashed #ccc;
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
-.btn-mock:hover {
-    background: #e5e5e5;
-    color: #333;
-}
-
-.divider {
-    margin: 1.5rem 0;
-    font-size: 0.8rem;
+.register-hint {
+    margin-top: 24px;
+    font-size: 13px;
     color: #999;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.divider::before, .divider::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: #eee;
 }
 
 @keyframes slideUp {
