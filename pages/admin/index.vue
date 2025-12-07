@@ -3,7 +3,7 @@
     <!-- 顶部导航 -->
     <header class="admin-header">
       <div class="header-left">
-        <div class="brand-mark"></div>
+        <img src="/site-logo.png" alt="简序智能 Logo" class="brand-logo" />
         <span class="brand-title">简序智能 管理后台</span>
       </div>
       <div class="header-right">
@@ -386,9 +386,9 @@ const handleCreateUser = async () => {
     } else {
       alert(response.message || '创建失败');
     }
-  } catch (e: any) {
+  } catch (e) {
     console.error('Create user failed:', e);
-    alert(e.data?.message || '创建失败，请稍后重试');
+    alert('创建失败，请稍后重试');
   } finally {
     creatingUser.value = false;
   }
@@ -448,11 +448,11 @@ onMounted(() => {
   gap: 12px;
 }
 
-.brand-mark {
+.brand-logo {
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  object-fit: contain;
 }
 
 .brand-title {
