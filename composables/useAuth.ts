@@ -22,10 +22,16 @@ export const useAuth = () => {
         }
     };
 
-    const logout = () => {
-        const token = useCookie('auth_token');
-        token.value = null;
+    const logout = async () => {
+        try {
+            // 调用服务端 API 清除跨子域 Cookie
+            await $fetch('/api/auth/logout', { method: 'POST' });
+        } catch (e) {
+            console.error('[useAuth] Logout API error:', e);
+        }
+        // 清除前端状态
         user.value = null;
+        // 跳转到首页
         location.href = '/';
     };
 
