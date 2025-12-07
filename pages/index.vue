@@ -466,6 +466,15 @@ onBeforeUnmount(() => {
           >
             🧲 简历匹配
           </a>
+          <!-- 智能客服入口 -->
+          <a 
+            href="https://cs.reallier.top:5443" 
+            target="_blank"
+            class="nav-link nav-link-highlight"
+            @click="closeMobileNav"
+          >
+            💬 智能客服
+          </a>
         </nav>
         <div class="header-auth">
             <template v-if="user">
