@@ -458,12 +458,23 @@ onBeforeUnmount(() => {
           >
             {{ item.label }}
           </a>
+          <!-- 简历匹配服务入口 -->
+          <a 
+            href="/api/services/hirestream-redirect" 
+            class="nav-link nav-link-highlight"
+            @click="closeMobileNav"
+          >
+            🧲 简历匹配
+          </a>
         </nav>
         <div class="header-auth">
-            <div v-if="user" class="user-profile" @click="logout" title="Logout">
-                <img :src="user.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=Guest'" alt="Avatar" />
-                <span>{{ user.name }}</span>
-            </div>
+            <template v-if="user">
+                <!-- 用户头像 -->
+                <div class="user-profile" @click="logout" title="点击登出">
+                    <img :src="user.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=Guest'" alt="Avatar" />
+                    <span>{{ user.name }}</span>
+                </div>
+            </template>
             <a v-else href="/login" class="btn-login-header">控制台 Login</a>
         </div>
       </div>

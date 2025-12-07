@@ -154,7 +154,7 @@ button {
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-.nav-toggle .line + .line {
+.nav-toggle .line+.line {
   margin-top: 5px;
 }
 
@@ -188,6 +188,20 @@ button {
   color: var(--color-primary);
   border-color: var(--color-primary);
   background: rgba(124, 58, 237, 0.06);
+}
+
+/* 高亮导航链接（服务入口） */
+.nav-link-highlight {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+  border-color: rgba(99, 102, 241, 0.3) !important;
+  color: var(--color-primary) !important;
+  font-weight: 700;
+}
+
+.nav-link-highlight:hover {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.18), rgba(139, 92, 246, 0.18));
+  border-color: var(--color-primary) !important;
+  transform: translateY(-1px);
 }
 
 .section {
@@ -230,9 +244,12 @@ button {
   display: inline-block;
   padding: 8px 16px;
   font-size: 14px;
-  font-weight: 700; /* 加粗字体 */
-  color: #7C3AED; /* 更深的紫色 */
-  background-color: rgba(124, 58, 237, 0.1); /* 更深紫色的背景 */
+  font-weight: 700;
+  /* 加粗字体 */
+  color: #7C3AED;
+  /* 更深的紫色 */
+  background-color: rgba(124, 58, 237, 0.1);
+  /* 更深紫色的背景 */
   border-radius: 9999px;
   margin-bottom: 20px;
   opacity: 0;
@@ -245,7 +262,8 @@ button {
   display: inline-block;
   width: 8px;
   height: 8px;
-  background-color: #7C3AED; /* 更深的紫色 */
+  background-color: #7C3AED;
+  /* 更深的紫色 */
   border-radius: 50%;
   margin-right: 8px;
   vertical-align: middle;
@@ -282,7 +300,8 @@ h1.hero-title {
 
 /* 高亮文字 */
 h1.hero-title .highlight {
-  color: #6366F1; /* fallback */
+  color: #6366F1;
+  /* fallback */
   background-image: linear-gradient(135deg, #6366f1, #8b5cf6);
   -webkit-background-clip: text;
   background-clip: text;
@@ -371,7 +390,8 @@ h2.hero-subtitle {
 
 .btn-primary:hover {
   background: linear-gradient(135deg, #7c3aed, #6366f1);
-  color: #ffffff; /* 保持高对比度，避免继承链接悬停色 */
+  color: #ffffff;
+  /* 保持高对比度，避免继承链接悬停色 */
   transform: translateY(-2px) scale(1.01);
   box-shadow:
     0 10px 26px rgba(99, 102, 241, 0.34),
@@ -450,19 +470,38 @@ h2.hero-subtitle {
 
 /* 动画定义 */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes underlineSlide {
-  from { width: 0; }
-  to { width: 100%; }
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
 }
 
 /* 从右侧滑入动画 */
 @keyframes slideInFromRight {
-  from { opacity: 0; transform: translateX(30px); }
-  to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 /* 打字机动画定义已在上方 */
@@ -840,11 +879,9 @@ h2.hero-subtitle {
   gap: 14px;
   padding: 18px;
   border-radius: var(--radius-lg);
-  background: linear-gradient(
-    120deg,
-    rgba(124, 58, 237, 0.08),
-    rgba(14, 165, 233, 0.08)
-  );
+  background: linear-gradient(120deg,
+      rgba(124, 58, 237, 0.08),
+      rgba(14, 165, 233, 0.08));
   border: 1px dashed rgba(124, 58, 237, 0.35);
   box-shadow: 0 8px 24px rgba(124, 58, 237, 0.08);
 }
@@ -1042,9 +1079,17 @@ h2.hero-subtitle {
   font-size: 14px;
 }
 
-.member-slot-0 { grid-area: m1; }
-.member-slot-1 { grid-area: m2; }
-.member-slot-2 { grid-area: m3; }
+.member-slot-0 {
+  grid-area: m1;
+}
+
+.member-slot-1 {
+  grid-area: m2;
+}
+
+.member-slot-2 {
+  grid-area: m3;
+}
 
 .member-card {
   position: relative;
@@ -1682,9 +1727,11 @@ h2.hero-subtitle {
 .lg-dot-r {
   background: #f87171;
 }
+
 .lg-dot-y {
   background: #fbbf24;
 }
+
 .lg-dot-g {
   background: #34d399;
 }
@@ -1727,12 +1774,15 @@ h2.hero-subtitle {
 .lg-agent {
   color: var(--lg-agent);
 }
+
 .lg-tool {
   color: var(--lg-tool);
 }
+
 .lg-grader {
   color: var(--lg-grader);
 }
+
 .lg-gen {
   color: var(--lg-gen);
 }
@@ -1740,12 +1790,15 @@ h2.hero-subtitle {
 .lg-l1 {
   animation-name: lg-log-appear-1;
 }
+
 .lg-l2 {
   animation-name: lg-log-appear-2;
 }
+
 .lg-l3 {
   animation-name: lg-log-appear-3;
 }
+
 .lg-l4 {
   animation-name: lg-log-appear-4;
 }
@@ -1869,30 +1922,38 @@ h2.hero-subtitle {
   animation: seq-flow-1 var(--lg-duration) linear infinite;
   color: var(--lg-text-sub);
 }
+
 .lg-a1 {
   animation: seq-agent var(--lg-duration) linear infinite;
 }
+
 .lg-p2 {
   animation: seq-flow-2 var(--lg-duration) linear infinite;
   color: var(--lg-agent);
 }
+
 .lg-a2 {
   animation: seq-tool var(--lg-duration) linear infinite;
 }
+
 .lg-p3 {
   animation: seq-flow-3 var(--lg-duration) linear infinite;
   color: var(--lg-tool);
 }
+
 .lg-a3 {
   animation: seq-grader var(--lg-duration) linear infinite;
 }
+
 .lg-p4 {
   animation: seq-flow-4 var(--lg-duration) linear infinite;
   color: var(--lg-grader);
 }
+
 .lg-a4 {
   animation: seq-gen var(--lg-duration) linear infinite;
 }
+
 .data-pipeline-shell {
   --data-surface: #ffffff;
   --data-border: #cbd5e1;
@@ -2030,86 +2091,105 @@ h2.hero-subtitle {
 }
 
 @keyframes squeeze-top {
+
   0%,
   100% {
     transform: scale(1);
   }
+
   5% {
     transform: scale(1.03);
   }
+
   20% {
     transform: scale(0.95);
   }
+
   30% {
     transform: scale(1);
   }
 }
 
 @keyframes travel-top {
+
   0%,
   5% {
     offset-distance: 0%;
     opacity: 0;
   }
+
   6% {
     opacity: 1;
   }
+
   20% {
     offset-distance: 100%;
     opacity: 1;
   }
+
   21% {
     opacity: 0;
   }
+
   100% {
     opacity: 0;
   }
 }
 
 @keyframes process-impact {
+
   0%,
   19% {
     transform: scale(1);
     fill: var(--flow-primary-soft);
     stroke: #bfdbfe;
   }
+
   20% {
     transform: scale(1.12);
     fill: #dbeafe;
     stroke: var(--flow-primary);
   }
+
   45% {
     transform: scale(1.08);
     fill: #dbeafe;
     stroke: var(--flow-primary);
   }
+
   55% {
     transform: scale(1);
     fill: var(--flow-primary-soft);
     stroke: #bfdbfe;
   }
+
   100% {
     transform: scale(1);
   }
 }
 
 @keyframes gear-spin {
+
   0%,
   20% {
     transform: rotate(0deg);
     opacity: 0.5;
   }
+
   25% {
     opacity: 1;
   }
+
   50% {
     transform: rotate(360deg);
     opacity: 1;
   }
+
   60% {
     transform: rotate(360deg);
     opacity: 0.5;
   }
+
   100% {
     transform: rotate(360deg);
     opacity: 0.5;
@@ -2117,58 +2197,71 @@ h2.hero-subtitle {
 }
 
 @keyframes pulse-strong {
+
   0%,
   20% {
     transform: scale(0.8);
     opacity: 0;
   }
+
   25% {
     opacity: 0.8;
   }
+
   50% {
     transform: scale(1.6);
     opacity: 0;
   }
+
   100% {
     opacity: 0;
   }
 }
 
 @keyframes travel-bottom {
+
   0%,
   50% {
     offset-distance: 0%;
     opacity: 0;
   }
+
   51% {
     opacity: 1;
   }
+
   70% {
     offset-distance: 100%;
     opacity: 1;
   }
+
   71% {
     opacity: 0;
   }
+
   100% {
     opacity: 0;
   }
 }
 
 @keyframes result-impact {
+
   0%,
   69% {
     transform: scale(1);
     stroke: var(--flow-border);
   }
+
   70% {
     transform: scale(1.03);
     stroke: currentColor;
   }
+
   90% {
     transform: scale(1.03);
     stroke: currentColor;
   }
+
   100% {
     transform: scale(1);
     stroke: var(--flow-border);
@@ -2176,21 +2269,26 @@ h2.hero-subtitle {
 }
 
 @keyframes draw-check {
+
   0%,
   69% {
     stroke-dashoffset: 40;
     opacity: 0;
   }
+
   70% {
     opacity: 1;
   }
+
   75% {
     stroke-dashoffset: 0;
   }
+
   95% {
     opacity: 1;
     stroke-dashoffset: 0;
   }
+
   100% {
     opacity: 0;
     stroke-dashoffset: 40;
@@ -2198,26 +2296,32 @@ h2.hero-subtitle {
 }
 
 @keyframes icon-flash-blue {
+
   0%,
   69% {
     fill: #f1f5f9;
   }
+
   70% {
     fill: #eff6ff;
   }
+
   100% {
     fill: #f1f5f9;
   }
 }
 
 @keyframes icon-flash-green {
+
   0%,
   69% {
     fill: #f1f5f9;
   }
+
   70% {
     fill: var(--flow-success-soft);
   }
+
   100% {
     fill: #f1f5f9;
   }
@@ -2228,35 +2332,44 @@ h2.hero-subtitle {
     stroke-dashoffset: 400;
     opacity: 0;
   }
+
   5% {
     opacity: 0.8;
   }
+
   20% {
     stroke-dashoffset: 0;
   }
+
   25% {
     opacity: 0;
   }
+
   100% {
     opacity: 0;
   }
 }
 
 @keyframes draw-track-bottom {
+
   0%,
   50% {
     stroke-dashoffset: 300;
     opacity: 0;
   }
+
   51% {
     opacity: 0.8;
   }
+
   70% {
     stroke-dashoffset: 0;
   }
+
   75% {
     opacity: 0;
   }
+
   100% {
     opacity: 0;
   }
@@ -2267,13 +2380,16 @@ h2.hero-subtitle {
     offset-distance: 0%;
     opacity: 0;
   }
+
   2% {
     opacity: 1;
   }
+
   12.5% {
     offset-distance: 100%;
     opacity: 1;
   }
+
   13%,
   100% {
     offset-distance: 100%;
@@ -2282,15 +2398,18 @@ h2.hero-subtitle {
 }
 
 @keyframes seq-agent {
+
   0%,
   13% {
     stroke-opacity: 0;
   }
+
   13.1%,
   24.5% {
     stroke-opacity: 1;
     stroke: var(--node-agent);
   }
+
   25%,
   100% {
     stroke-opacity: 0;
@@ -2298,18 +2417,22 @@ h2.hero-subtitle {
 }
 
 @keyframes seq-flow-2 {
+
   0%,
   25% {
     offset-distance: 0%;
     opacity: 0;
   }
+
   27% {
     opacity: 1;
   }
+
   37.5% {
     offset-distance: 100%;
     opacity: 1;
   }
+
   38%,
   100% {
     offset-distance: 100%;
@@ -2318,15 +2441,18 @@ h2.hero-subtitle {
 }
 
 @keyframes seq-tool {
+
   0%,
   38% {
     stroke-opacity: 0;
   }
+
   38.1%,
   49.5% {
     stroke-opacity: 1;
     stroke: var(--node-tool);
   }
+
   50%,
   100% {
     stroke-opacity: 0;
@@ -2334,18 +2460,22 @@ h2.hero-subtitle {
 }
 
 @keyframes seq-flow-3 {
+
   0%,
   50% {
     offset-distance: 0%;
     opacity: 0;
   }
+
   52% {
     opacity: 1;
   }
+
   62.5% {
     offset-distance: 100%;
     opacity: 1;
   }
+
   63%,
   100% {
     offset-distance: 100%;
@@ -2354,15 +2484,18 @@ h2.hero-subtitle {
 }
 
 @keyframes seq-grader {
+
   0%,
   63% {
     stroke-opacity: 0;
   }
+
   63.1%,
   74.5% {
     stroke-opacity: 1;
     stroke: var(--node-grader);
   }
+
   75%,
   100% {
     stroke-opacity: 0;
@@ -2370,18 +2503,22 @@ h2.hero-subtitle {
 }
 
 @keyframes seq-flow-4 {
+
   0%,
   75% {
     offset-distance: 0%;
     opacity: 0;
   }
+
   77% {
     opacity: 1;
   }
+
   87.5% {
     offset-distance: 100%;
     opacity: 1;
   }
+
   88%,
   100% {
     offset-distance: 100%;
@@ -2390,26 +2527,31 @@ h2.hero-subtitle {
 }
 
 @keyframes seq-gen {
+
   0%,
   88% {
     stroke-opacity: 0;
   }
+
   88.1%,
   99.5% {
     stroke-opacity: 1;
     stroke: var(--node-gen);
   }
+
   100% {
     stroke-opacity: 0;
   }
 }
 
 @keyframes lg-log-appear-1 {
+
   0%,
   12.9% {
     opacity: 0;
     transform: translateY(5px);
   }
+
   13.1%,
   100% {
     opacity: 1;
@@ -2418,11 +2560,13 @@ h2.hero-subtitle {
 }
 
 @keyframes lg-log-appear-2 {
+
   0%,
   37.9% {
     opacity: 0;
     transform: translateY(5px);
   }
+
   38.1%,
   100% {
     opacity: 1;
@@ -2431,11 +2575,13 @@ h2.hero-subtitle {
 }
 
 @keyframes lg-log-appear-3 {
+
   0%,
   62.9% {
     opacity: 0;
     transform: translateY(5px);
   }
+
   63.1%,
   100% {
     opacity: 1;
@@ -2444,11 +2590,13 @@ h2.hero-subtitle {
 }
 
 @keyframes lg-log-appear-4 {
+
   0%,
   87.9% {
     opacity: 0;
     transform: translateY(5px);
   }
+
   88.1%,
   100% {
     opacity: 1;
@@ -2457,126 +2605,154 @@ h2.hero-subtitle {
 }
 
 @keyframes lg-pop-center {
+
   0%,
   92% {
     transform: translate(-50%, 20px) scale(0.95);
     opacity: 0;
   }
+
   94%,
   99% {
     transform: translate(-50%, 0) scale(1);
     opacity: 1;
   }
+
   100% {
     transform: translate(-50%, 0) scale(1);
     opacity: 0;
   }
 }
+
 @keyframes move-in-left {
   0% {
     offset-distance: 0%;
     opacity: 0;
     transform: scale(0.5);
   }
+
   5% {
     opacity: 1;
     transform: scale(1);
   }
+
   25% {
     offset-distance: 100%;
     opacity: 1;
     transform: scale(1);
   }
+
   25.1% {
     opacity: 0;
     transform: scale(0.1);
   }
+
   100% {
     opacity: 0;
   }
 }
 
 @keyframes move-in-mid {
+
   0%,
   3% {
     offset-distance: 0%;
     opacity: 0;
   }
+
   8% {
     opacity: 1;
   }
+
   25% {
     offset-distance: 100%;
     opacity: 1;
   }
+
   25.1% {
     opacity: 0;
   }
+
   100% {
     opacity: 0;
   }
 }
 
 @keyframes move-in-right {
+
   0%,
   6% {
     offset-distance: 0%;
     opacity: 0;
   }
+
   11% {
     opacity: 1;
   }
+
   25% {
     offset-distance: 100%;
     opacity: 1;
   }
+
   25.1% {
     opacity: 0;
   }
+
   100% {
     opacity: 0;
   }
 }
 
 @keyframes agent-process {
+
   0%,
   24% {
     transform: scale(1);
     filter: brightness(1);
   }
+
   25% {
     transform: scale(1.02);
   }
+
   35% {
     transform: scale(1.08);
     filter: brightness(1.03) drop-shadow(0 20px 30px rgba(124, 58, 237, 0.2));
   }
+
   49% {
     transform: scale(1.02);
     filter: brightness(1.01);
   }
+
   50% {
     transform: scale(1);
     filter: brightness(1);
   }
+
   100% {
     transform: scale(1);
   }
 }
 
 @keyframes scan-active {
+
   0%,
   25% {
     transform: translateY(-70px);
     opacity: 0;
   }
+
   28% {
     opacity: 1;
   }
+
   47% {
     transform: translateY(70px);
     opacity: 1;
   }
+
   50%,
   100% {
     opacity: 0;
@@ -2584,22 +2760,27 @@ h2.hero-subtitle {
 }
 
 @keyframes ring-spin {
+
   0%,
   25% {
     transform: rotate(0deg);
     opacity: 0.3;
   }
+
   28% {
     opacity: 1;
   }
+
   50% {
     transform: rotate(180deg);
     opacity: 1;
   }
+
   75% {
     transform: rotate(270deg);
     opacity: 0.3;
   }
+
   100% {
     transform: rotate(360deg);
     opacity: 0.3;
@@ -2607,36 +2788,44 @@ h2.hero-subtitle {
 }
 
 @keyframes flow-down-dash {
+
   0%,
   50% {
     stroke-dashoffset: 300;
     opacity: 0;
   }
+
   55% {
     opacity: 1;
   }
+
   75% {
     stroke-dashoffset: 0;
     opacity: 0;
   }
+
   100% {
     opacity: 0;
   }
 }
 
 @keyframes move-down {
+
   0%,
   50% {
     offset-distance: 0%;
     opacity: 0;
   }
+
   51% {
     opacity: 1;
   }
+
   75% {
     offset-distance: 100%;
     opacity: 1;
   }
+
   75.1%,
   100% {
     opacity: 0;
@@ -2644,16 +2833,20 @@ h2.hero-subtitle {
 }
 
 @keyframes bar-grow {
+
   0%,
   74% {
     transform: scaleY(0);
   }
+
   75% {
     transform: scaleY(0);
   }
+
   85% {
     transform: scaleY(1.1);
   }
+
   95%,
   100% {
     transform: scaleY(1);
@@ -2661,15 +2854,18 @@ h2.hero-subtitle {
 }
 
 @keyframes pie-enter {
+
   0%,
   74% {
     transform: scale(0) rotate(-90deg);
     opacity: 0;
   }
+
   85% {
     transform: scale(1) rotate(0deg);
     opacity: 1;
   }
+
   100% {
     transform: scale(1);
     opacity: 1;
@@ -2677,15 +2873,18 @@ h2.hero-subtitle {
 }
 
 @keyframes report-feedback {
+
   0%,
   74% {
     transform: translateY(0);
     filter: brightness(1);
   }
+
   80% {
     transform: translateY(-4px);
     filter: brightness(1.02);
   }
+
   95%,
   100% {
     transform: translateY(0);
@@ -2698,29 +2897,35 @@ h2.hero-subtitle {
     transform: translateY(0) scale(1);
     filter: brightness(1);
   }
+
   8% {
     transform: translateY(-10px) scale(1.12);
     filter: brightness(1.05) drop-shadow(0 15px 25px rgba(0, 0, 0, 0.1));
   }
+
   20% {
     transform: translateY(0) scale(1);
     filter: brightness(1);
   }
+
   100% {
     transform: scale(1);
   }
 }
 
 @keyframes agent-breathe {
+
   0%,
   25% {
     transform: scale(1);
     filter: brightness(1);
   }
+
   35% {
     transform: scale(1.08);
     filter: brightness(1.02) drop-shadow(0 20px 40px rgba(124, 58, 237, 0.15));
   }
+
   45%,
   100% {
     transform: scale(1);
@@ -2729,18 +2934,22 @@ h2.hero-subtitle {
 }
 
 @keyframes move-down {
+
   0%,
   50% {
     offset-distance: 0%;
     opacity: 0;
   }
+
   55% {
     opacity: 1;
   }
+
   75% {
     offset-distance: 100%;
     opacity: 1;
   }
+
   76%,
   100% {
     opacity: 0;
@@ -2748,15 +2957,18 @@ h2.hero-subtitle {
 }
 
 @keyframes pie-enter {
+
   0%,
   75% {
     transform: scale(0) rotate(-90deg);
     opacity: 0;
   }
+
   85% {
     transform: scale(1) rotate(0deg);
     opacity: 1;
   }
+
   100% {
     transform: scale(1);
     opacity: 1;
@@ -2764,6 +2976,7 @@ h2.hero-subtitle {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .flow-demo-shell .timeline-anim,
   .data-pipeline-shell .data-timeline,
   .langgraph-shell .lg-log-line,
@@ -2796,11 +3009,13 @@ h2.hero-subtitle {
     width: fit-content;
   }
 }
+
 /* Services 部分 */
 #services .section-heading,
 #services .section-subtitle {
   opacity: 0;
-  animation: fadeIn 300ms ease-out forwards; /* 迅速浮现效果 */
+  animation: fadeIn 300ms ease-out forwards;
+  /* 迅速浮现效果 */
 }
 
 #services .section-heading {
@@ -2813,7 +3028,8 @@ h2.hero-subtitle {
 
 #services .cards-grid .card {
   opacity: 0;
-  animation: slideInFromRight 400ms ease-out forwards; /* 从右侧推进效果 */
+  animation: slideInFromRight 400ms ease-out forwards;
+  /* 从右侧推进效果 */
 }
 
 #services .cards-grid .card:nth-child(1) {
@@ -2827,6 +3043,7 @@ h2.hero-subtitle {
 #services .cards-grid .card:nth-child(3) {
   animation-delay: 500ms;
 }
+
 @media (max-width: 900px) {
   .hero {
     grid-template-columns: 1fr;
@@ -3131,4 +3348,95 @@ h2.hero-subtitle {
 /* Remove vertical spacing around the LangGraph banner */
 #services.section {
   padding-bottom: 72px;
+}
+
+/* Header Auth 区域 */
+.header-auth {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.btn-login-header {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 200ms ease;
+}
+
+.btn-login-header:hover {
+  background: linear-gradient(135deg, #7c3aed, #6366f1);
+  transform: translateY(-1px);
+  color: #ffffff;
+}
+
+.btn-service-entry {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: rgba(99, 102, 241, 0.08);
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 13px;
+  border-radius: 8px;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  text-decoration: none;
+  transition: all 200ms ease;
+}
+
+.btn-service-entry:hover {
+  background: rgba(99, 102, 241, 0.14);
+  border-color: rgba(99, 102, 241, 0.4);
+  color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.btn-service-entry svg {
+  flex-shrink: 0;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: #f3f4f6;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: background 200ms ease;
+}
+
+.user-profile:hover {
+  background: #e5e7eb;
+}
+
+.user-profile img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-profile span {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--color-text);
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .header-auth {
+    display: none;
+  }
 }
