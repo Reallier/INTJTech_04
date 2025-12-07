@@ -4,7 +4,7 @@
     <header class="admin-header">
       <div class="header-left">
         <div class="brand-mark"></div>
-        <span class="brand-title">HireStream 管理后台</span>
+        <span class="brand-title">简序智能 管理后台</span>
       </div>
       <div class="header-right">
         <button class="btn-logout" @click="handleLogout">退出登录</button>
@@ -49,13 +49,18 @@
       <section class="users-section">
         <div class="section-header">
           <h2>用户管理</h2>
-          <div class="search-box">
-            <input 
-              v-model="searchQuery" 
-              type="text" 
-              placeholder="搜索用户ID或昵称..."
-              @input="debouncedSearch"
-            />
+          <div class="header-actions">
+            <div class="search-box">
+              <input 
+                v-model="searchQuery" 
+                type="text" 
+                placeholder="搜索用户ID或昵称..."
+                @input="debouncedSearch"
+              />
+            </div>
+            <button class="btn-create" @click="showCreateUserModal = true">
+              + 创建用户
+            </button>
           </div>
         </div>
         
@@ -147,6 +152,56 @@
         </div>
       </div>
     </div>
+    
+    <!-- 创建用户弹窗 -->
+    <div v-if="showCreateUserModal" class="modal-overlay" @click.self="closeCreateUserModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>创建新用户</h3>
+          <button class="modal-close" @click="closeCreateUserModal">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>昵称 *</label>
+            <input 
+              v-model="newUserNickname" 
+              type="text" 
+              placeholder="请输入用户昵称"
+            />
+          </div>
+          <p class="hint">用户名和密码将自动生成</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-cancel" @click="closeCreateUserModal">取消</button>
+          <button class="btn-confirm" @click="handleCreateUser" :disabled="creatingUser">
+            {{ creatingUser ? '创建中...' : '创建用户' }}
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 显示新用户凭证弹窗 -->
+    <div v-if="showCredentialsModal" class="modal-overlay">
+      <div class="modal-content credentials-modal">
+        <div class="modal-header">
+          <h3>✅ 用户创建成功</h3>
+        </div>
+        <div class="modal-body">
+          <p class="warning">⚠️ 请妥善保存以下凭证，密码只显示一次！</p>
+          <div class="credential-item">
+            <label>用户名</label>
+            <div class="credential-value">{{ newCredentials.username }}</div>
+          </div>
+          <div class="credential-item">
+            <label>密码</label>
+            <div class="credential-value password">{{ newCredentials.password }}</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-confirm" @click="closeCredentialsModal">我已保存，关闭</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -176,6 +231,15 @@ const selectedUser = ref(null);
 const rechargeAmount = ref(null);
 const rechargeRemark = ref('');
 const recharging = ref(false);
+
+// 创建用户弹窗状态
+const showCreateUserModal = ref(false);
+const newUserNickname = ref('');
+const creatingUser = ref(false);
+
+// 显示凭证弹窗状态
+const showCredentialsModal = ref(false);
+const newCredentials = ref({ username: '', password: '' });
 
 // 获取 token
 const getToken = () => {
@@ -283,6 +347,57 @@ const handleRecharge = async () => {
   } finally {
     recharging.value = false;
   }
+};
+
+// 关闭创建用户弹窗
+const closeCreateUserModal = () => {
+  showCreateUserModal.value = false;
+  newUserNickname.value = '';
+};
+
+// 处理创建用户
+const handleCreateUser = async () => {
+  if (!newUserNickname.value.trim()) {
+    alert('请输入用户昵称');
+    return;
+  }
+  
+  creatingUser.value = true;
+  try {
+    const response = await $fetch('/api/admin/users', {
+      method: 'POST',
+      headers: {
+        Cookie: `admin_token=${getToken()}`
+      },
+      body: {
+        nickname: newUserNickname.value
+      }
+    });
+    
+    if (response.success) {
+      // 显示凭证弹窗
+      newCredentials.value = {
+        username: response.user.username,
+        password: response.password
+      };
+      closeCreateUserModal();
+      showCredentialsModal.value = true;
+      fetchStats();
+    } else {
+      alert(response.message || '创建失败');
+    }
+  } catch (e: any) {
+    console.error('Create user failed:', e);
+    alert(e.data?.message || '创建失败，请稍后重试');
+  } finally {
+    creatingUser.value = false;
+  }
+};
+
+// 关闭凭证弹窗
+const closeCredentialsModal = () => {
+  showCredentialsModal.value = false;
+  newCredentials.value = { username: '', password: '' };
 };
 
 // 登出
@@ -653,5 +768,72 @@ onMounted(() => {
 .btn-confirm:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* 创建用户按钮 */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-create {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-create:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+/* 凭证弹窗 */
+.credentials-modal .modal-body {
+  text-align: center;
+}
+
+.warning {
+  color: #dc2626;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.hint {
+  color: #6b7280;
+  font-size: 13px;
+  margin: 0;
+}
+
+.credential-item {
+  margin: 16px 0;
+  text-align: left;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.credential-item label {
+  display: block;
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.credential-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+  font-family: monospace;
+}
+
+.credential-value.password {
+  color: #059669;
 }
 </style>
