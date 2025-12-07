@@ -52,5 +52,10 @@ export default defineNuxtConfig({
   nitro: {
     preset: "node-server"
   },
+  runtimeConfig: {
+    public: {
+      hirestreamApiUrl: process.env.HIRESTREAM_API_URL || 'https://app.reallier.top:5443'
+    }
+  },
   devtools: { enabled: false }
 });
