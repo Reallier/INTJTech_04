@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { useAuth } from "~/composables/useAuth";
+
+const { user, fetchUser, logout } = useAuth();
 
 type NavItem = { id: string; label: string };
 type Service = {
@@ -385,7 +388,10 @@ const openNote = (note: NoteItem) => {
   document.body.style.overflow = "hidden";
 };
 
-onMounted(() => {
+onMounted(async () => {
+  console.log('[Index Page] onMounted');
+  await fetchUser();
+  console.log('[Index Page] fetchUser done');
   // 强制滚动到页面顶部 - 使用多种方式确保兼容性
   window.scrollTo({ top: 0, behavior: 'auto' });
   document.documentElement.scrollTop = 0;
@@ -439,7 +445,6 @@ onBeforeUnmount(() => {
           >
             <span class="line" />
             <span class="line" />
-            <span class="line" />
           </button>
         </div>
         <nav :class="['nav-links', { 'nav-open': isMobileNavOpen }]">
@@ -454,6 +459,13 @@ onBeforeUnmount(() => {
             {{ item.label }}
           </a>
         </nav>
+        <div class="header-auth">
+            <div v-if="user" class="user-profile" @click="logout" title="Logout">
+                <img :src="user.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=Guest'" alt="Avatar" />
+                <span>{{ user.name }}</span>
+            </div>
+            <a v-else href="/login" class="btn-login-header">控制台 Login</a>
+        </div>
       </div>
     </header>
 
