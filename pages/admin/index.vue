@@ -85,9 +85,12 @@
                 <td class="free-quota">¥{{ formatNumber(user.free_quota) }}</td>
                 <td class="total">¥{{ formatNumber(user.total_available) }}</td>
                 <td class="date">{{ formatDate(user.created_at) }}</td>
-                <td>
+                <td class="action-buttons">
                   <button class="btn-recharge" @click="openRechargeModal(user)">
                     充值
+                  </button>
+                  <button class="btn-delete" @click="openDeleteModal(user)">
+                    删除
                   </button>
                 </td>
               </tr>
@@ -202,6 +205,26 @@
         </div>
       </div>
     </div>
+    
+    <!-- 删除用户确认弹窗 -->
+    <div v-if="showDeleteModal" class="modal-overlay" @click.self="closeDeleteModal">
+      <div class="modal-content delete-modal">
+        <div class="modal-header">
+          <h3>⚠️ 确认删除</h3>
+          <button class="modal-close" @click="closeDeleteModal">×</button>
+        </div>
+        <div class="modal-body">
+          <p class="delete-warning">确定要删除用户 <strong>{{ userToDelete?.nickname || userToDelete?.user_id }}</strong> 吗？</p>
+          <p class="delete-info">此操作将同时删除该用户的所有使用记录和交易记录，且不可恢复。</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-cancel" @click="closeDeleteModal">取消</button>
+          <button class="btn-danger" @click="handleDeleteUser" :disabled="deleting">
+            {{ deleting ? '删除中...' : '确认删除' }}
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -240,6 +263,11 @@ const creatingUser = ref(false);
 // 显示凭证弹窗状态
 const showCredentialsModal = ref(false);
 const newCredentials = ref({ username: '', password: '' });
+
+// 删除用户弹窗状态
+const showDeleteModal = ref(false);
+const userToDelete = ref(null);
+const deleting = ref(false);
 
 // 获取 token
 const getToken = () => {
@@ -398,6 +426,50 @@ const handleCreateUser = async () => {
 const closeCredentialsModal = () => {
   showCredentialsModal.value = false;
   newCredentials.value = { username: '', password: '' };
+};
+
+// 打开删除确认弹窗
+const openDeleteModal = (user) => {
+  userToDelete.value = user;
+  showDeleteModal.value = true;
+};
+
+// 关闭删除确认弹窗
+const closeDeleteModal = () => {
+  showDeleteModal.value = false;
+  userToDelete.value = null;
+};
+
+// 处理删除用户
+const handleDeleteUser = async () => {
+  if (!userToDelete.value) return;
+  
+  deleting.value = true;
+  try {
+    const response = await $fetch(
+      `${ADMIN_API_BASE}/api/admin/users/${userToDelete.value.user_id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${getToken()}`
+        }
+      }
+    );
+    
+    if (response.success) {
+      alert(response.message);
+      closeDeleteModal();
+      fetchUsers();
+      fetchStats();
+    } else {
+      alert(response.message || '删除失败');
+    }
+  } catch (e) {
+    console.error('Delete user failed:', e);
+    alert('删除失败，请稍后重试');
+  } finally {
+    deleting.value = false;
+  }
 };
 
 // 登出
@@ -624,6 +696,61 @@ onMounted(() => {
 
 .btn-recharge:hover {
   opacity: 0.9;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-delete {
+  padding: 6px 12px;
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-delete:hover {
+  background: #fecaca;
+  border-color: #f87171;
+}
+
+.btn-danger {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-danger:hover {
+  opacity: 0.9;
+}
+
+.btn-danger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.delete-modal .modal-body {
+  text-align: center;
+}
+
+.delete-warning {
+  font-size: 16px;
+  color: #1f2937;
+  margin-bottom: 12px;
+}
+
+.delete-info {
+  font-size: 14px;
+  color: #6b7280;
 }
 
 .empty-row {
