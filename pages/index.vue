@@ -475,6 +475,14 @@ onBeforeUnmount(() => {
           >
             💬 智能客服
           </a>
+          <!-- MBTI判型入口 -->
+          <a 
+            href="/api/services/mindai-redirect" 
+            class="nav-link nav-link-highlight"
+            @click="closeMobileNav"
+          >
+            🌟 MBTI判型
+          </a>
         </nav>
         <div class="header-auth">
             <template v-if="user">

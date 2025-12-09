@@ -1,9 +1,23 @@
 <script setup lang="ts">
+const route = useRoute();
 const { user, fetchUser } = useAuth();
 
-// If already logged in, redirect home
+// Get redirect target from query params
+const redirectTarget = computed(() => route.query.redirect as string || '');
+
+// Redirect mapping
+const redirectUrls: Record<string, string> = {
+    'hirestream': '/api/services/hirestream-redirect',
+    'mindai': '/api/services/mindai-redirect',
+};
+
+// If already logged in, redirect to target or home
 if (user.value) {
-    navigateTo('/');
+    if (redirectTarget.value && redirectUrls[redirectTarget.value]) {
+        navigateTo(redirectUrls[redirectTarget.value], { external: true });
+    } else {
+        navigateTo('/');
+    }
 }
 
 const form = ref({
@@ -33,9 +47,15 @@ const handleLogin = async () => {
         });
         
         if (response.success) {
-            // 登录成功，刷新用户状态并跳转
+            // 登录成功，刷新用户状态
             await fetchUser();
-            navigateTo('/');
+            
+            // 跳转到目标服务或首页
+            if (redirectTarget.value && redirectUrls[redirectTarget.value]) {
+                navigateTo(redirectUrls[redirectTarget.value], { external: true });
+            } else {
+                navigateTo('/');
+            }
         } else {
             error.value = response.message || '登录失败';
         }

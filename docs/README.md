@@ -8,13 +8,19 @@
 |------|------|
 | [整体架构](architecture/overview.md) | Nuxt 架构、页面结构、技术栈 |
 
+### 🚀 部署配置
+
+| 文档 | 说明 |
+|------|------|
+| [部署说明](deployment.md) | 服务器配置、端口映射、**重要注意事项** |
+
 ### 📦 模块文档 (`modules/`)
 
 | 文档 | 说明 |
 |------|------|
 | [登录认证](modules/auth.md) | 微信登录、密码登录、JWT |
 | [管理后台](modules/admin.md) | 用户管理、充值、统计 |
-| [服务跳转](modules/services.md) | 简历匹配、客服等入口 |
+| [服务跳转](modules/services.md) | 简历匹配、MBTI判型等入口 |
 
 ### 📋 路线规划 (`roadmap/`)
 
