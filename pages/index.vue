@@ -358,6 +358,7 @@ const activeSection = ref("hero");
 const selectedNote = ref<NoteItem | null>(null);
 let observer: IntersectionObserver | null = null;
 const isMobileNavOpen = ref(false);
+const isServicesDropdownOpen = ref(false);
 
 const toggleMobileNav = () => {
   isMobileNavOpen.value = !isMobileNavOpen.value;
@@ -365,6 +366,16 @@ const toggleMobileNav = () => {
 
 const closeMobileNav = () => {
   isMobileNavOpen.value = false;
+  isServicesDropdownOpen.value = false;
+};
+
+const toggleServicesDropdown = () => {
+  isServicesDropdownOpen.value = !isServicesDropdownOpen.value;
+};
+
+const closeAllDropdowns = () => {
+  isServicesDropdownOpen.value = false;
+  closeMobileNav();
 };
 
 const noteParagraphs = computed(() =>
@@ -458,31 +469,83 @@ onBeforeUnmount(() => {
           >
             {{ item.label }}
           </a>
-          <!-- 简历匹配服务入口 -->
-          <a 
-            href="/api/services/hirestream-redirect" 
-            class="nav-link nav-link-highlight"
-            @click="closeMobileNav"
+          <!-- 服务平台下拉菜单 -->
+          <div 
+            class="nav-dropdown"
+            @mouseenter="isServicesDropdownOpen = true"
+            @mouseleave="isServicesDropdownOpen = false"
           >
-            🧲 简历匹配
-          </a>
-          <!-- 智能客服入口 -->
-          <a 
-            href="https://cs.reallier.top:5443" 
-            target="_blank"
-            class="nav-link nav-link-highlight"
-            @click="closeMobileNav"
-          >
-            💬 智能客服
-          </a>
-          <!-- MBTI判型入口 -->
-          <a 
-            href="/api/services/mindai-redirect" 
-            class="nav-link nav-link-highlight"
-            @click="closeMobileNav"
-          >
-            🌟 MBTI判型
-          </a>
+            <button 
+              type="button"
+              class="nav-link nav-link-highlight nav-dropdown-trigger"
+              :class="{ 'dropdown-open': isServicesDropdownOpen }"
+              @click="toggleServicesDropdown"
+            >
+              🚀 服务平台
+              <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="nav-dropdown-menu" :class="{ 'show': isServicesDropdownOpen }">
+              <a 
+                href="/api/services/hirestream-redirect" 
+                class="dropdown-item"
+                @click="closeAllDropdowns"
+              >
+                <span class="dropdown-icon">🧲</span>
+                <div class="dropdown-content">
+                  <span class="dropdown-title">简历匹配</span>
+                  <span class="dropdown-desc">智能简历与JD匹配分析</span>
+                </div>
+              </a>
+              <a 
+                href="https://cs.reallier.top:5443" 
+                target="_blank"
+                class="dropdown-item"
+                @click="closeAllDropdowns"
+              >
+                <span class="dropdown-icon">💬</span>
+                <div class="dropdown-content">
+                  <span class="dropdown-title">智能客服</span>
+                  <span class="dropdown-desc">7×24 自动化客户问答</span>
+                </div>
+              </a>
+              <a 
+                href="/api/services/mindai-redirect" 
+                class="dropdown-item"
+                @click="closeAllDropdowns"
+              >
+                <span class="dropdown-icon">🌟</span>
+                <div class="dropdown-content">
+                  <span class="dropdown-title">MBTI判型</span>
+                  <span class="dropdown-desc">16型人格智能判定</span>
+                </div>
+              </a>
+              <a 
+                href="/api/services/contract-redirect" 
+                class="dropdown-item"
+                @click="closeAllDropdowns"
+              >
+                <span class="dropdown-icon">📝</span>
+                <div class="dropdown-content">
+                  <span class="dropdown-title">合同审查</span>
+                  <span class="dropdown-desc">AI合同风险智能分析</span>
+                </div>
+              </a>
+              <div class="dropdown-divider"></div>
+              <a 
+                href="#services" 
+                class="dropdown-item dropdown-item-more"
+                @click="closeAllDropdowns"
+              >
+                <span class="dropdown-icon">📋</span>
+                <div class="dropdown-content">
+                  <span class="dropdown-title">了解更多服务</span>
+                  <span class="dropdown-desc">查看完整服务介绍</span>
+                </div>
+              </a>
+            </div>
+          </div>
         </nav>
         <div class="header-auth">
             <template v-if="user">

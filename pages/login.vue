@@ -9,6 +9,7 @@ const redirectTarget = computed(() => route.query.redirect as string || '');
 const redirectUrls: Record<string, string> = {
     'hirestream': '/api/services/hirestream-redirect',
     'mindai': '/api/services/mindai-redirect',
+    'contract': '/api/services/contract-redirect',
 };
 
 // If already logged in, redirect to target or home
