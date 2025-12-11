@@ -3580,3 +3580,241 @@ h2.hero-subtitle {
     display: none;
   }
 }
+
+/* =============================================
+   开发动态信息板 Dev Board
+   ============================================= */
+.dev-board {
+  background: #fefefe;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dev-board.collapsed {
+  border-bottom-color: transparent;
+}
+
+.dev-board-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dev-board-header:hover {
+  opacity: 0.85;
+}
+
+.dev-board-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.dev-board-title svg {
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.dev-board-count {
+  padding: 2px 8px;
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--color-primary);
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.dev-board-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dev-board-toggle:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.dev-board-toggle svg {
+  transition: transform 0.2s ease;
+}
+
+.dev-board-toggle svg.rotated {
+  transform: rotate(-90deg);
+}
+
+.dev-board-content {
+  padding-bottom: 16px;
+}
+
+.dev-board-list {
+  display: grid;
+  gap: 12px;
+}
+
+.dev-item {
+  padding: 14px 16px;
+  background: #f9fafb;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  border-left: 4px solid #94a3b8;
+}
+
+.dev-item-功能上线 {
+  border-left-color: #22c55e;
+  background: rgba(34, 197, 94, 0.04);
+}
+
+.dev-item-功能优化 {
+  border-left-color: #6366f1;
+  background: rgba(99, 102, 241, 0.04);
+}
+
+.dev-item-开发中 {
+  border-left-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.04);
+}
+
+.dev-item-已修复 {
+  border-left-color: #0ea5e9;
+  background: rgba(14, 165, 233, 0.04);
+}
+
+.dev-item-待办 {
+  border-left-color: #94a3b8;
+  background: rgba(148, 163, 184, 0.04);
+}
+
+.dev-item-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.dev-item-date {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+}
+
+.dev-item-category {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.category-功能上线 {
+  background: rgba(34, 197, 94, 0.15);
+  color: #16a34a;
+}
+
+.category-功能优化 {
+  background: rgba(99, 102, 241, 0.15);
+  color: #4f46e5;
+}
+
+.category-开发中 {
+  background: rgba(245, 158, 11, 0.15);
+  color: #d97706;
+}
+
+.category-已修复 {
+  background: rgba(14, 165, 233, 0.15);
+  color: #0284c7;
+}
+
+.category-待办 {
+  background: rgba(148, 163, 184, 0.15);
+  color: #64748b;
+}
+
+.dev-item-project {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  padding: 2px 8px;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+}
+
+.dev-item-author {
+  font-size: 12px;
+  color: var(--color-primary);
+  font-weight: 500;
+  margin-left: auto;
+}
+
+.dev-item-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1.4;
+}
+
+.dev-item-details {
+  margin: 8px 0 0 0;
+  padding-left: 18px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.dev-item-details li {
+  margin-bottom: 2px;
+}
+
+.dev-item-details li::marker {
+  color: var(--color-primary);
+}
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+  .dev-board-header {
+    padding: 10px 0;
+  }
+
+  .dev-board-title {
+    font-size: 13px;
+  }
+
+  .dev-board-count {
+    display: none;
+  }
+
+  .dev-item {
+    padding: 12px;
+  }
+
+  .dev-item-header {
+    gap: 6px;
+  }
+
+  .dev-item-author {
+    display: none;
+  }
+
+  .dev-item-title {
+    font-size: 14px;
+  }
+
+  .dev-item-details {
+    font-size: 12px;
+  }
+}

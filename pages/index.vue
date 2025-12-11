@@ -42,6 +42,104 @@ type Member = {
 };
 type NoteItem = { date: string; title: string; summary: string; content: string };
 
+// 公告栏数据 - 实用型信息板
+type AnnouncementItem = { 
+  date: string;
+  category: '功能上线' | '功能优化' | '开发中' | '已修复' | '待办';
+  project: string;  // 所属项目
+  title: string;
+  details?: string[];  // 详细说明
+  author?: string;
+};
+
+const announcements: AnnouncementItem[] = [
+  { 
+    date: "2025-12-11",
+    category: "功能上线",
+    project: "合同审查 (app04)",
+    title: "合同审查 Agent 正式上线",
+    details: [
+      "支持 PDF/图片格式合同上传",
+      "智能识别合同类型、甲乙方信息",
+      "自动分析违约条款、费用条款风险点",
+      "生成 Markdown 格式审查报告"
+    ],
+    author: "Reallier"
+  },
+  { 
+    date: "2025-12-11",
+    category: "功能优化",
+    project: "官网 (official-site)",
+    title: "服务平台下拉菜单 UI 改版",
+    details: [
+      "新增下拉菜单整合四个服务入口",
+      "改善移动端导航适配"
+    ],
+    author: "Reallier"
+  },
+  { 
+    date: "2025-12-10",
+    category: "功能上线",
+    project: "MBTI判型 (app03)",
+    title: "16题情景剧本 v5.0 上线",
+    details: [
+      "重构测试引擎，优化认知功能信号映射",
+      "新增竞争性评分机制，提高判型准确率",
+      "更自然的对话式题目呈现"
+    ],
+    author: "Reallier"
+  },
+  { 
+    date: "2025-12-08",
+    category: "功能优化",
+    project: "智能客服 (app02)",
+    title: "FastAPI 前端迁移完成",
+    details: [
+      "从 Streamlit 迁移到 FastAPI + 静态 HTML",
+      "白色主题 UI，消息气泡左右分列",
+      "Router 日志面板右侧展示"
+    ],
+    author: "Reallier"
+  },
+  { 
+    date: "2025-12-07",
+    category: "功能上线",
+    project: "简历匹配 (app01)",
+    title: "用户模块与计费系统上线",
+    details: [
+      "JWT SSO 登录集成",
+      "Token 用量追踪与分层定价",
+      "免费额度 + 预付费余额扣减"
+    ],
+    author: "Reallier"
+  },
+  {
+    date: "进行中",
+    category: "开发中",
+    project: "MBTI判型 (app03)",
+    title: "MBTI 2.0 版本开发",
+    details: [
+      "新增更多情景模拟题型",
+      "增强 Si/Ni、Te/Fe 区分度",
+      "优化结果展示页面"
+    ]
+  },
+  {
+    date: "待定",
+    category: "待办",
+    project: "全局",
+    title: "管理后台数据看板",
+    details: [
+      "用户使用统计",
+      "Token 消耗趋势图",
+      "各服务调用量监控"
+    ]
+  }
+];
+
+// 公告栏状态
+const isAnnouncementExpanded = ref(true);
+
 const navItems: NavItem[] = [
   { id: "hero", label: "Hero" },
   { id: "services", label: "我们能帮你做什么" },
@@ -559,6 +657,56 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </header>
+
+    <!-- 开发动态信息板 -->
+    <div class="dev-board" :class="{ collapsed: !isAnnouncementExpanded }">
+      <div class="container">
+        <div class="dev-board-header" @click="isAnnouncementExpanded = !isAnnouncementExpanded">
+          <div class="dev-board-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>📋 开发动态 · 内部信息板</span>
+            <span class="dev-board-count">{{ announcements.length }} 条更新</span>
+          </div>
+          <button type="button" class="dev-board-toggle" :title="isAnnouncementExpanded ? '收起' : '展开'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" :class="{ rotated: !isAnnouncementExpanded }">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+        
+        <div class="dev-board-content" v-show="isAnnouncementExpanded">
+          <div class="dev-board-list">
+            <div 
+              v-for="(item, index) in announcements" 
+              :key="index"
+              class="dev-item"
+              :class="'dev-item-' + item.category.replace(/\s+/g, '')"
+            >
+              <div class="dev-item-header">
+                <span class="dev-item-date">{{ item.date }}</span>
+                <span 
+                  class="dev-item-category"
+                  :class="'category-' + item.category.replace(/\s+/g, '')"
+                >
+                  {{ item.category }}
+                </span>
+                <span class="dev-item-project">{{ item.project }}</span>
+                <span v-if="item.author" class="dev-item-author">@{{ item.author }}</span>
+              </div>
+              <div class="dev-item-title">{{ item.title }}</div>
+              <ul v-if="item.details && item.details.length" class="dev-item-details">
+                <li v-for="(detail, dIndex) in item.details" :key="dIndex">{{ detail }}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <main>
       <section id="hero" class="section hero-section">
