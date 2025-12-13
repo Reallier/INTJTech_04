@@ -8,7 +8,7 @@
 
 | 服务 | 入口 API | 跳转地址（完整） |
 |------|------|----------|
-| 简历匹配 | `/api/services/hirestream-redirect` | `https://app.reallier.top:5443` |
+| 简历匹配 (TalentAI) | `/api/services/hirestream-redirect` | `https://talentai.reallier.top:5443` |
 | MBTI判型 | `/api/services/mindai-redirect` | `https://mbti.reallier.top:5443` |
 | 智能客服 | 直接链接 | `https://cs.reallier.top:5443` |
 
@@ -60,6 +60,6 @@ sequenceDiagram
 
 | 变量名 | 作用 | 示例值 |
 |-------|------|--------|
-| `HIRESTREAM_URL` | HireStream 跳转地址 | `https://app.reallier.top:5443` |
+| `HIRESTREAM_URL` | TalentAI 跳转地址 | `https://talentai.reallier.top:5443` |
 | `MINDAI_URL` | MindAI 跳转地址 | `https://mbti.reallier.top:5443` |
 | `JWT_SECRET` | Token 签名密钥 | `5Sf4IrUfOLVQ7ul46zfg_w-...` |

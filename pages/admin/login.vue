@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-const ADMIN_API_BASE = useRuntimeConfig().public.hirestreamApiUrl || 'https://app.reallier.top:5443';
+const ADMIN_API_BASE = useRuntimeConfig().public.hirestreamApiUrl || 'https://api.talentai.reallier.top:5443';
 
 const form = ref({
   username: '',

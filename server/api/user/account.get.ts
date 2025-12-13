@@ -1,12 +1,12 @@
 /**
  * 用户账户信息 API
  * 
- * 从 HireStream 服务获取用户的账户余额和用量信息
+ * 从 TalentAI 服务获取用户的账户余额和用量信息
  */
 import { verifyUserToken, signUserToken } from '~/server/utils/jwt';
 import prisma from '~/server/utils/prisma';
 
-const HIRESTREAM_API_URL = process.env.HIRESTREAM_API_URL || 'https://app.reallier.top:5443';
+const HIRESTREAM_API_URL = process.env.HIRESTREAM_API_URL || 'https://api.talentai.reallier.top:5443';
 
 export default defineEventHandler(async (event) => {
     // 1. 验证用户身份
