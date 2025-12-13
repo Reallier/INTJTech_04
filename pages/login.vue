@@ -10,14 +10,15 @@ const redirectUrls: Record<string, string> = {
     'hirestream': '/api/services/hirestream-redirect',
     'mindai': '/api/services/mindai-redirect',
     'contract': '/api/services/contract-redirect',
+    'console': '/console',
 };
 
-// If already logged in, redirect to target or home
+// If already logged in, redirect to target or console (default)
 if (user.value) {
     if (redirectTarget.value && redirectUrls[redirectTarget.value]) {
         navigateTo(redirectUrls[redirectTarget.value], { external: true });
     } else {
-        navigateTo('/');
+        navigateTo('/console');
     }
 }
 
@@ -51,11 +52,11 @@ const handleLogin = async () => {
             // 登录成功，刷新用户状态
             await fetchUser();
             
-            // 跳转到目标服务或首页
+            // 跳转到目标服务或控制台
             if (redirectTarget.value && redirectUrls[redirectTarget.value]) {
                 navigateTo(redirectUrls[redirectTarget.value], { external: true });
             } else {
-                navigateTo('/');
+                navigateTo('/console');
             }
         } else {
             error.value = response.message || '登录失败';

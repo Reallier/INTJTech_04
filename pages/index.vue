@@ -141,14 +141,12 @@ const announcements: AnnouncementItem[] = [
 const isAnnouncementExpanded = ref(true);
 
 const navItems: NavItem[] = [
-  { id: "hero", label: "Hero" },
-  { id: "services", label: "我们能帮你做什么" },
+  { id: "hero", label: "首页" },
+  { id: "services", label: "服务" },
   { id: "cases", label: "案例" },
-  { id: "advantages", label: "为什么找我们" },
-  { id: "pricing", label: "合作方式/定价" },
-  { id: "team", label: "团队" },
-  { id: "notes", label: "更新日志" },
-  { id: "contact", label: "联系我们" }
+  { id: "advantages", label: "优势" },
+  { id: "pricing", label: "定价" },
+  { id: "contact", label: "联系" }
 ];
 
 const services: Service[] = [
@@ -646,19 +644,14 @@ onBeforeUnmount(() => {
           </div>
         </nav>
         <div class="header-auth">
-            <template v-if="user">
-                <!-- 用户头像 -->
-                <div class="user-profile" @click="logout" title="点击登出">
-                    <img :src="user.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=Guest'" alt="Avatar" />
-                    <span>{{ user.name }}</span>
-                </div>
-            </template>
-            <a v-else href="/login" class="btn-login-header">控制台 Login</a>
+            <a v-if="user" href="/console" class="btn-console">进入控制台</a>
+            <a v-else href="/login" class="btn-login-header">登录</a>
         </div>
       </div>
     </header>
 
-    <!-- 开发动态信息板 -->
+    <!-- 开发动态信息板 - SaaS 平台版本隐藏 -->
+    <!-- 如需恢复，请取消以下注释
     <div class="dev-board" :class="{ collapsed: !isAnnouncementExpanded }">
       <div class="container">
         <div class="dev-board-header" @click="isAnnouncementExpanded = !isAnnouncementExpanded">
@@ -707,6 +700,7 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </div>
+    -->
 
     <main>
       <section id="hero" class="section hero-section">
@@ -1176,7 +1170,8 @@ onBeforeUnmount(() => {
         </div>
       </section>
 
-      <section id="team" class="section">
+      <!-- 团队和日志 section 已移至 /about 页面 -->
+      <section v-if="false" id="team" class="section">
         <div class="container">
           <h2 class="section-heading">关于我们（Team）</h2>
           <p class="section-subtitle">
@@ -1244,7 +1239,7 @@ onBeforeUnmount(() => {
         </div>
       </section>
 
-      <section id="notes" class="section">
+      <section v-if="false" id="notes" class="section">
         <div class="container">
           <h2 class="section-heading">更新日志 / 笔记（Changelog / Notes）</h2>
           <p class="section-subtitle">
@@ -1282,11 +1277,12 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="footer-links-compact">
-          <a href="#services">我们能帮你做什么</a>
+          <a href="#services">服务</a>
           <a href="#cases">案例</a>
-          <a href="#advantages">为什么找我们</a>
-          <a href="#pricing">合作 / 定价</a>
-          <a href="#team">团队</a>
+          <a href="#advantages">优势</a>
+          <a href="#pricing">定价</a>
+          <a href="/about">关于我们</a>
+          <a href="/console">控制台</a>
         </div>
 
         <div class="footer-contact-compact">

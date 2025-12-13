@@ -57,13 +57,13 @@ export default defineEventHandler(async (event) => {
     // 生成 JWT
     const token = signUserToken(user);
 
-    // 设置 Cookie（跨子域共享）
+    // 设置 Cookie（根据环境配置）
+    const isDev = process.env.NODE_ENV !== 'production';
     setCookie(event, 'auth_token', token, {
         httpOnly: false,
         maxAge: 60 * 60 * 24 * 7, // 7 天
         path: '/',
-        domain: '.reallier.top',
-        secure: true,
+        ...(isDev ? {} : { domain: '.reallier.top', secure: true }),
         sameSite: 'lax'
     });
 

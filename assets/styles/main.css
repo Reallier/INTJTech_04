@@ -3517,6 +3517,25 @@ h2.hero-subtitle {
   color: #ffffff;
 }
 
+.btn-console {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 200ms ease;
+}
+
+.btn-console:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+  transform: translateY(-1px);
+  color: #ffffff;
+}
+
 .btn-service-entry {
   display: inline-flex;
   align-items: center;

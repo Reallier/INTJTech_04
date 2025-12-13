@@ -2,16 +2,28 @@ export const useAuth = () => {
     const user = useState<any>('user', () => null);
 
     const fetchUser = async () => {
-        console.log('[useAuth] fetchUser called');
-        // Use $fetch for direct API call (not useFetch which is for SSR/hydration)
+        console.log('[useAuth] fetchUser called, isServer:', import.meta.server);
+
         try {
+            // 在 SSR 环境中，需要手动传递请求头中的 Cookie
+            const headers: Record<string, string> = {};
+            if (import.meta.server) {
+                const requestHeaders = useRequestHeaders(['cookie']);
+                if (requestHeaders.cookie) {
+                    headers.cookie = requestHeaders.cookie;
+                }
+                console.log('[useAuth] SSR mode, cookie header:', headers.cookie ? 'present' : 'missing');
+            }
+
             const result = await $fetch('/api/user/me', {
-                credentials: 'include' // Ensure cookies are sent
+                credentials: 'include',
+                headers
             });
+
             console.log('[useAuth] API result:', result);
             if (result && result.user) {
                 user.value = result.user;
-                console.log('[useAuth] User set:', user.value);
+                console.log('[useAuth] User set:', user.value?.name);
             } else {
                 user.value = null;
                 console.log('[useAuth] No user in response');
@@ -37,3 +49,4 @@ export const useAuth = () => {
 
     return { user, fetchUser, logout };
 };
+
