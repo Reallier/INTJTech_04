@@ -60,6 +60,26 @@ const services = [
     gradient: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
     href: '/api/services/contract-redirect',
     stats: '风险点识别'
+  },
+  {
+    id: 'zhihu',
+    title: '知乎知识库',
+    icon: '📚',
+    description: '智能文章收藏与语义搜索，打造个人知识库',
+    color: '#0ea5e9',
+    gradient: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
+    href: '/api/services/zhihu-redirect',
+    stats: '语义检索'
+  },
+  {
+    id: 'boss',
+    title: '求职助手',
+    icon: '💼',
+    description: 'Boss直聘智能求职Agent，自动化投递管理',
+    color: '#8b5cf6',
+    gradient: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+    href: '/api/services/boss-redirect',
+    stats: '自动打招呼'
   }
 ];
 
@@ -87,6 +107,43 @@ const formatMoney = (amount: number) => {
 const handleLogout = async () => {
   await logout();
   navigateTo('/');
+};
+
+// 终端公告数据
+type TerminalLog = {
+  time: string;
+  type: 'deploy' | 'feature' | 'fix' | 'update' | 'info';
+  message: string;
+};
+
+const terminalLogs: TerminalLog[] = [
+  { time: '12-14 01:20', type: 'deploy', message: '[app05] 知乎知识库接入官网控制台' },
+  { time: '12-14 01:15', type: 'deploy', message: '[app06] 求职助手接入官网控制台' },
+  { time: '12-13 21:50', type: 'fix', message: '[app04] 修复合同审查 PDF 解析问题' },
+  { time: '12-13 17:00', type: 'feature', message: '[app05] 新增分类智能标签功能' },
+  { time: '12-12 18:30', type: 'update', message: '[app05] 爬虫仪表盘分类饼图改版' },
+  { time: '12-11 20:00', type: 'deploy', message: '[app04] 合同审查服务正式上线' },
+  { time: '12-11 15:30', type: 'feature', message: '[官网] 服务平台下拉菜单整合6个入口' },
+  { time: '12-10 22:00', type: 'update', message: '[app03] 16题情景剧本 v5.0 发布' },
+];
+
+const isTerminalExpanded = ref(true);
+const terminalInput = ref('');
+
+const typeColors: Record<string, string> = {
+  deploy: '#10b981',
+  feature: '#6366f1', 
+  fix: '#ef4444',
+  update: '#f59e0b',
+  info: '#94a3b8'
+};
+
+const typeLabels: Record<string, string> = {
+  deploy: 'DEPLOY',
+  feature: 'FEATURE',
+  fix: 'FIX',
+  update: 'UPDATE',
+  info: 'INFO'
 };
 
 onMounted(() => {
@@ -130,6 +187,48 @@ onMounted(() => {
             👋 欢迎回来，<span class="user-highlight">{{ user?.name || '用户' }}</span>
           </h1>
           <p class="welcome-subtitle">选择一个服务开始使用，或查看您的账户信息</p>
+        </div>
+      </section>
+
+      <!-- 终端样式开发动态 -->
+      <section class="terminal-section">
+        <div class="terminal-window">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="dot red"></span>
+              <span class="dot yellow"></span>
+              <span class="dot green"></span>
+            </div>
+            <div class="terminal-title">dev-changelog — bash</div>
+            <button 
+              type="button" 
+              class="terminal-toggle"
+              @click="isTerminalExpanded = !isTerminalExpanded"
+            >
+              {{ isTerminalExpanded ? '−' : '+' }}
+            </button>
+          </div>
+          <div class="terminal-body" v-show="isTerminalExpanded">
+            <div class="terminal-output">
+              <div class="terminal-line welcome-line">
+                <span class="prompt">$</span>
+                <span class="command">cat /var/log/dev-changelog.log</span>
+              </div>
+              <div 
+                v-for="(log, index) in terminalLogs" 
+                :key="index"
+                class="terminal-line log-line"
+              >
+                <span class="log-time">{{ log.time }}</span>
+                <span class="log-type" :style="{ color: typeColors[log.type] }">[{{ typeLabels[log.type] }}]</span>
+                <span class="log-message">{{ log.message }}</span>
+              </div>
+              <div class="terminal-line input-line">
+                <span class="prompt">$</span>
+                <span class="cursor">_</span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -618,6 +717,168 @@ onMounted(() => {
   
   .user-name {
     display: none;
+  }
+}
+
+/* Terminal Styles */
+.terminal-section {
+  margin-bottom: 40px;
+}
+
+.terminal-window {
+  background: #1e1e2e;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
+  font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Consolas', monospace;
+}
+
+.terminal-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  background: #313244;
+  border-bottom: 1px solid #45475a;
+}
+
+.terminal-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.terminal-dots .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.terminal-dots .dot.red { background: #f38ba8; }
+.terminal-dots .dot.yellow { background: #f9e2af; }
+.terminal-dots .dot.green { background: #a6e3a1; }
+
+.terminal-title {
+  flex: 1;
+  text-align: center;
+  font-size: 13px;
+  color: #6c7086;
+  font-weight: 500;
+}
+
+.terminal-toggle {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #6c7086;
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.terminal-toggle:hover {
+  background: #45475a;
+  color: #cdd6f4;
+}
+
+.terminal-body {
+  padding: 16px 20px;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.terminal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.terminal-body::-webkit-scrollbar-track {
+  background: #1e1e2e;
+}
+
+.terminal-body::-webkit-scrollbar-thumb {
+  background: #45475a;
+  border-radius: 4px;
+}
+
+.terminal-output {
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.terminal-line {
+  display: flex;
+  gap: 8px;
+  color: #cdd6f4;
+}
+
+.terminal-line.welcome-line {
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed #45475a;
+}
+
+.terminal-line .prompt {
+  color: #a6e3a1;
+  font-weight: bold;
+}
+
+.terminal-line .command {
+  color: #89b4fa;
+}
+
+.log-line {
+  padding: 2px 0;
+}
+
+.log-time {
+  color: #6c7086;
+  min-width: 85px;
+}
+
+.log-type {
+  font-weight: 600;
+  min-width: 80px;
+}
+
+.log-message {
+  color: #bac2de;
+}
+
+.input-line {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #45475a;
+}
+
+.cursor {
+  color: #a6e3a1;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+@media (max-width: 768px) {
+  .terminal-body {
+    padding: 12px 16px;
+    max-height: 200px;
+  }
+  
+  .terminal-output {
+    font-size: 11px;
+  }
+  
+  .log-time {
+    min-width: 70px;
+  }
+  
+  .log-type {
+    min-width: 65px;
   }
 }
 </style>

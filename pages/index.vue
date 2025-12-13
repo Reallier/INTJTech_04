@@ -628,6 +628,28 @@ onBeforeUnmount(() => {
                   <span class="dropdown-desc">AI合同风险智能分析</span>
                 </div>
               </a>
+              <a 
+                href="/api/services/zhihu-redirect" 
+                class="dropdown-item"
+                @click="closeAllDropdowns"
+              >
+                <span class="dropdown-icon">📚</span>
+                <div class="dropdown-content">
+                  <span class="dropdown-title">知乎知识库</span>
+                  <span class="dropdown-desc">智能文章收藏与搜索</span>
+                </div>
+              </a>
+              <a 
+                href="/api/services/boss-redirect" 
+                class="dropdown-item"
+                @click="closeAllDropdowns"
+              >
+                <span class="dropdown-icon">💼</span>
+                <div class="dropdown-content">
+                  <span class="dropdown-title">求职助手</span>
+                  <span class="dropdown-desc">Boss直聘智能求职Agent</span>
+                </div>
+              </a>
               <div class="dropdown-divider"></div>
               <a 
                 href="#services" 
