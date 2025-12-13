@@ -233,8 +233,6 @@ definePageMeta({
   middleware: 'admin'
 });
 
-const ADMIN_API_BASE = useRuntimeConfig().public.hirestreamApiUrl || 'https://api.talentai.reallier.top:5443';
-
 // 状态
 const loading = ref(false);
 const users = ref([]);
@@ -275,21 +273,17 @@ const getToken = () => {
   return token.value;
 };
 
-// 获取统计数据
+// 获取统计数据 - 使用官网 API
 const fetchStats = async () => {
   try {
-    const response = await $fetch(`${ADMIN_API_BASE}/api/admin/stats`, {
-      headers: {
-        Authorization: `Bearer ${getToken()}`
-      }
-    });
+    const response = await $fetch('/api/admin/stats');
     stats.value = response;
   } catch (e) {
     console.error('Failed to fetch stats:', e);
   }
 };
 
-// 获取用户列表
+// 获取用户列表 - 使用官网 API
 const fetchUsers = async () => {
   loading.value = true;
   try {
@@ -301,11 +295,7 @@ const fetchUsers = async () => {
       params.append('search', searchQuery.value);
     }
     
-    const response = await $fetch(`${ADMIN_API_BASE}/api/admin/users?${params}`, {
-      headers: {
-        Authorization: `Bearer ${getToken()}`
-      }
-    });
+    const response = await $fetch(`/api/admin/users?${params}`);
     users.value = response.users;
   } catch (e) {
     console.error('Failed to fetch users:', e);

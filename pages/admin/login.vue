@@ -52,8 +52,6 @@
 </template>
 
 <script setup>
-const ADMIN_API_BASE = useRuntimeConfig().public.hirestreamApiUrl || 'https://api.talentai.reallier.top:5443';
-
 const form = ref({
   username: '',
   password: ''
@@ -67,7 +65,7 @@ const handleLogin = async () => {
   error.value = '';
   
   try {
-    const response = await $fetch(`${ADMIN_API_BASE}/api/admin/login`, {
+    const response = await $fetch('/api/admin/login', {
       method: 'POST',
       body: {
         username: form.value.username,
@@ -89,7 +87,7 @@ const handleLogin = async () => {
     }
   } catch (e) {
     console.error('Login error:', e);
-    error.value = '网络错误，请稍后重试';
+    error.value = e.data?.message || '网络错误，请稍后重试';
   } finally {
     loading.value = false;
   }

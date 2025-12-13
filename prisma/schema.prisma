@@ -18,4 +18,5 @@ model User {
   updatedAt DateTime @updatedAt
   password  String?
   username  String?  @unique
+  role      String   @default("user") // user, admin
 }
