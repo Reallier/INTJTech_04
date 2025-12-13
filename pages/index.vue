@@ -54,6 +54,19 @@ type AnnouncementItem = {
 
 const announcements: AnnouncementItem[] = [
   { 
+    date: "2025-12-14",
+    category: "功能上线",
+    project: "简历优化 (app07)",
+    title: "简历修改 Agent 正式上线",
+    details: [
+      "支持 DOCX/PDF/TXT 格式简历上传",
+      "三种优化策略：信息密度、表达术语、信息广度",
+      "一键重写全文功能",
+      "原文与优化后对比预览"
+    ],
+    author: "Reallier"
+  },
+  { 
     date: "2025-12-11",
     category: "功能上线",
     project: "合同审查 (app04)",
@@ -648,6 +661,17 @@ onBeforeUnmount(() => {
                 <div class="dropdown-content">
                   <span class="dropdown-title">求职助手</span>
                   <span class="dropdown-desc">Boss直聘智能求职Agent</span>
+                </div>
+              </a>
+              <a 
+                href="/api/services/resume-redirect" 
+                class="dropdown-item"
+                @click="closeAllDropdowns"
+              >
+                <span class="dropdown-icon">📄</span>
+                <div class="dropdown-content">
+                  <span class="dropdown-title">简历优化</span>
+                  <span class="dropdown-desc">AI智能简历精修Agent</span>
                 </div>
               </a>
               <div class="dropdown-divider"></div>

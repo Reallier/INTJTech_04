@@ -80,6 +80,16 @@ const services = [
     gradient: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
     href: '/api/services/boss-redirect',
     stats: '自动打招呼'
+  },
+  {
+    id: 'resume',
+    title: '简历优化',
+    icon: '📄',
+    description: 'AI智能简历精修，提升信息密度与表达效果',
+    color: '#ec4899',
+    gradient: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)',
+    href: '/api/services/resume-redirect',
+    stats: '三维优化'
   }
 ];
 
@@ -117,6 +127,7 @@ type TerminalLog = {
 };
 
 const terminalLogs: TerminalLog[] = [
+  { time: '12-14 02:40', type: 'deploy', message: '[app07] 简历优化 Agent 正式上线' },
   { time: '12-14 01:20', type: 'deploy', message: '[app05] 知乎知识库接入官网控制台' },
   { time: '12-14 01:15', type: 'deploy', message: '[app06] 求职助手接入官网控制台' },
   { time: '12-13 21:50', type: 'fix', message: '[app04] 修复合同审查 PDF 解析问题' },
@@ -292,7 +303,7 @@ onMounted(() => {
             v-for="service in services" 
             :key="service.id"
             :href="service.href"
-            :target="service.external ? '_blank' : undefined"
+            target="_blank"
             class="service-card"
             :style="{ '--card-color': service.color, '--card-gradient': service.gradient }"
           >
