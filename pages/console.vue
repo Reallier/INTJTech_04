@@ -90,6 +90,16 @@ const services = [
     gradient: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)',
     href: '/api/services/resume-redirect',
     stats: '三维优化'
+  },
+  {
+    id: 'monitor',
+    title: '资源监控',
+    icon: '📊',
+    description: '智能资源监控Agent，实时监控服务器状态',
+    color: '#14b8a6',
+    gradient: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)',
+    href: '/api/services/monitor-redirect',
+    stats: '实时监控'
   }
 ];
 
