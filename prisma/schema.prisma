@@ -17,7 +17,6 @@ model User {
   openid    String?  @unique
   unionid   String?  @unique
   role      String   @default("user")
-  // 计费字段（与 hirestream 共享）
   balance   Decimal  @default(0) @db.Decimal(12, 6)
   freeQuota Decimal  @default(0) @db.Decimal(12, 6) @map("free_quota")
   createdAt DateTime @default(now()) @map("created_at")
