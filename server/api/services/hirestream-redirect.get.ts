@@ -4,7 +4,7 @@
  * 为已登录用户生成带 JWT token 的跳转链接
  * 跳转到 talentai.reallier.top:5443（智能招聘匹配系统）
  */
-import { verifyUserToken, signUserToken } from '~/server/utils/jwt';
+import { verifyUserToken, signRedirectToken } from '~/server/utils/jwt';
 import prisma from '~/server/utils/prisma';
 
 const HIRESTREAM_URL = process.env.HIRESTREAM_URL || 'https://talentai.reallier.top:5443';
@@ -34,11 +34,11 @@ export default defineEventHandler(async (event) => {
         return sendRedirect(event, '/login?redirect=hirestream');
     }
 
-    // 3. 生成新的 token（包含完整的用户信息供 hirestream 使用）
-    const newToken = signUserToken(user);
+    // 3. 生成短期跳转 token（5分钟有效，减少 URL 泄露风险）
+    const redirectToken = signRedirectToken(user);
 
     // 4. 重定向到 HireStream 服务，携带 token
-    const redirectUrl = `${HIRESTREAM_URL}?token=${encodeURIComponent(newToken)}`;
+    const redirectUrl = `${HIRESTREAM_URL}?token=${encodeURIComponent(redirectToken)}`;
 
     console.log(`[HireStream Redirect] User ${user.id} redirecting to HireStream`);
 
