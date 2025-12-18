@@ -137,6 +137,9 @@ type TerminalLog = {
 };
 
 const terminalLogs: TerminalLog[] = [
+  { time: '12-19 05:45', type: 'deploy', message: '[架构] 🎉 统一数据库架构上线，官网与服务共享 PostgreSQL' },
+  { time: '12-19 05:30', type: 'feature', message: '[安全] JWT 跳转 Token 改为 5 分钟短期有效' },
+  { time: '12-19 05:20', type: 'update', message: '[数据库] 用户表合并，计费字段统一管理' },
   { time: '12-14 02:40', type: 'deploy', message: '[app07] 简历优化 Agent 正式上线' },
   { time: '12-14 01:20', type: 'deploy', message: '[app05] 知乎知识库接入官网控制台' },
   { time: '12-14 01:15', type: 'deploy', message: '[app06] 求职助手接入官网控制台' },
@@ -144,8 +147,6 @@ const terminalLogs: TerminalLog[] = [
   { time: '12-13 17:00', type: 'feature', message: '[app05] 新增分类智能标签功能' },
   { time: '12-12 18:30', type: 'update', message: '[app05] 爬虫仪表盘分类饼图改版' },
   { time: '12-11 20:00', type: 'deploy', message: '[app04] 合同审查服务正式上线' },
-  { time: '12-11 15:30', type: 'feature', message: '[官网] 服务平台下拉菜单整合6个入口' },
-  { time: '12-10 22:00', type: 'update', message: '[app03] 16题情景剧本 v5.0 发布' },
 ];
 
 const isTerminalExpanded = ref(true);
