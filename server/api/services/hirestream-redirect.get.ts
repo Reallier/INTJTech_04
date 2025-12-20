@@ -7,7 +7,7 @@
 import { verifyUserToken, signRedirectToken } from '~/server/utils/jwt';
 import prisma from '~/server/utils/prisma';
 
-const HIRESTREAM_URL = process.env.HIRESTREAM_URL || 'https://talentai.reallier.top:5443';
+const HIRESTREAM_URL = process.env.HIRESTREAM_URL || 'https://talentai.reallier.top:5443/match';
 
 export default defineEventHandler(async (event) => {
     // 1. 验证用户身份
