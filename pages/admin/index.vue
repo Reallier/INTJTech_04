@@ -338,12 +338,9 @@ const handleRecharge = async () => {
   recharging.value = true;
   try {
     const response = await $fetch(
-      `${ADMIN_API_BASE}/api/admin/users/${selectedUser.value.user_id}/recharge`,
+      `/api/admin/users/${selectedUser.value.user_id}/recharge`,
       {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${getToken()}`
-        },
         body: {
           amount: rechargeAmount.value,
           remark: rechargeRemark.value || undefined
@@ -437,12 +434,9 @@ const handleDeleteUser = async () => {
   deleting.value = true;
   try {
     const response = await $fetch(
-      `${ADMIN_API_BASE}/api/admin/users/${userToDelete.value.user_id}`,
+      `/api/admin/users/${userToDelete.value.user_id}`,
       {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${getToken()}`
-        }
+        method: 'DELETE'
       }
     );
     
