@@ -165,14 +165,22 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label>昵称 *</label>
+            <label>用户名 *</label>
+            <input 
+              v-model="newUsername" 
+              type="text" 
+              placeholder="请输入登录用户名"
+            />
+          </div>
+          <div class="form-group">
+            <label>昵称（可选）</label>
             <input 
               v-model="newUserNickname" 
               type="text" 
-              placeholder="请输入用户昵称"
+              placeholder="请输入显示昵称"
             />
           </div>
-          <p class="hint">用户名和密码将自动生成</p>
+          <p class="hint">密码将自动生成</p>
         </div>
         <div class="modal-footer">
           <button class="btn-cancel" @click="closeCreateUserModal">取消</button>
@@ -255,6 +263,7 @@ const recharging = ref(false);
 
 // 创建用户弹窗状态
 const showCreateUserModal = ref(false);
+const newUsername = ref('');
 const newUserNickname = ref('');
 const creatingUser = ref(false);
 
@@ -367,13 +376,14 @@ const handleRecharge = async () => {
 // 关闭创建用户弹窗
 const closeCreateUserModal = () => {
   showCreateUserModal.value = false;
+  newUsername.value = '';
   newUserNickname.value = '';
 };
 
 // 处理创建用户
 const handleCreateUser = async () => {
-  if (!newUserNickname.value.trim()) {
-    alert('请输入用户昵称');
+  if (!newUsername.value.trim()) {
+    alert('请输入用户名');
     return;
   }
   
@@ -381,11 +391,9 @@ const handleCreateUser = async () => {
   try {
     const response = await $fetch('/api/admin/users', {
       method: 'POST',
-      headers: {
-        Cookie: `admin_token=${getToken()}`
-      },
       body: {
-        nickname: newUserNickname.value
+        username: newUsername.value,
+        nickname: newUserNickname.value || newUsername.value
       }
     });
     
@@ -398,6 +406,7 @@ const handleCreateUser = async () => {
       closeCreateUserModal();
       showCredentialsModal.value = true;
       fetchStats();
+      fetchUsers();
     } else {
       alert(response.message || '创建失败');
     }

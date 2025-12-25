@@ -43,14 +43,21 @@ export default defineEventHandler(async (event) => {
     verifyAdminToken(event);
 
     const body = await readBody(event);
-    const { nickname, initialBalance = 0, initialFreeQuota = 1.0 } = body;
+    const { username, nickname, initialBalance = 0, initialFreeQuota = 1.0 } = body;
 
-    if (!nickname) {
-        throw createError({ statusCode: 400, message: '请提供用户昵称' });
+    if (!username) {
+        throw createError({ statusCode: 400, message: '请提供用户名' });
     }
 
-    // 生成用户名和密码
-    const username = generateUsername();
+    // 检查用户名是否已存在
+    const existingUser = await prisma.user.findUnique({
+        where: { username }
+    });
+    if (existingUser) {
+        throw createError({ statusCode: 400, message: '用户名已存在' });
+    }
+
+    // 生成密码
     const password = generatePassword();
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -62,7 +69,7 @@ export default defineEventHandler(async (event) => {
             data: {
                 username,
                 password: hashedPassword,
-                name: nickname,
+                name: nickname || username,
             }
         });
 
