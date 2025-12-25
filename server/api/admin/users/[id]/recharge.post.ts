@@ -19,10 +19,14 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 401, message: '无效的 Token' });
     }
 
-    // 获取用户 ID
-    const userId = event.context.params?.id;
-    if (!userId) {
+    // 获取用户 ID 并转换为整数
+    const userIdParam = event.context.params?.id;
+    if (!userIdParam) {
         throw createError({ statusCode: 400, message: '缺少用户 ID' });
+    }
+    const userId = parseInt(userIdParam, 10);
+    if (isNaN(userId)) {
+        throw createError({ statusCode: 400, message: '无效的用户 ID' });
     }
 
     // 获取充值信息
