@@ -23,7 +23,7 @@ const services = [
   {
     id: 'hirestream',
     title: '简历匹配',
-    icon: '🧲',
+    icon: 'fa-magnet',
     description: '智能简历与JD匹配分析，快速筛选候选人',
     color: '#6366f1',
     gradient: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
@@ -33,7 +33,7 @@ const services = [
   {
     id: 'customerservice',
     title: '智能客服',
-    icon: '💬',
+    icon: 'fa-comments',
     description: '7×24 自动化客户问答，提升服务效率',
     color: '#10b981',
     gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
@@ -44,7 +44,7 @@ const services = [
   {
     id: 'mindai',
     title: 'MBTI判型',
-    icon: '🌟',
+    icon: 'fa-star',
     description: '16型人格智能判定，情景化测试体验',
     color: '#f59e0b',
     gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
@@ -54,7 +54,7 @@ const services = [
   {
     id: 'contract',
     title: '合同审查',
-    icon: '📝',
+    icon: 'fa-file-signature',
     description: 'AI合同风险智能分析，识别潜在问题',
     color: '#ef4444',
     gradient: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
@@ -64,7 +64,7 @@ const services = [
   {
     id: 'zhihu',
     title: '知乎知识库',
-    icon: '📚',
+    icon: 'fa-book',
     description: '智能文章收藏与语义搜索，打造个人知识库',
     color: '#0ea5e9',
     gradient: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
@@ -74,7 +74,7 @@ const services = [
   {
     id: 'boss',
     title: '求职助手',
-    icon: '💼',
+    icon: 'fa-briefcase',
     description: 'Boss直聘智能求职Agent，自动化投递管理',
     color: '#8b5cf6',
     gradient: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
@@ -84,7 +84,7 @@ const services = [
   {
     id: 'resume',
     title: '简历优化',
-    icon: '📄',
+    icon: 'fa-file-alt',
     description: 'AI智能简历精修，提升信息密度与表达效果',
     color: '#ec4899',
     gradient: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)',
@@ -94,7 +94,7 @@ const services = [
   {
     id: 'monitor',
     title: '资源监控',
-    icon: '📊',
+    icon: 'fa-chart-bar',
     description: '智能资源监控Agent，实时监控服务器状态',
     color: '#14b8a6',
     gradient: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)',
@@ -137,7 +137,7 @@ type TerminalLog = {
 };
 
 const terminalLogs: TerminalLog[] = [
-  { time: '12-19 05:45', type: 'deploy', message: '[架构] 🎉 统一数据库架构上线，官网与服务共享 PostgreSQL' },
+  { time: '12-19 05:45', type: 'deploy', message: '[架构] 统一数据库架构上线，官网与服务共享 PostgreSQL' },
   { time: '12-19 05:30', type: 'feature', message: '[安全] JWT 跳转 Token 改为 5 分钟短期有效' },
   { time: '12-19 05:20', type: 'update', message: '[数据库] 用户表合并，计费字段统一管理' },
   { time: '12-14 02:40', type: 'deploy', message: '[app07] 简历优化 Agent 正式上线' },
@@ -206,7 +206,7 @@ onMounted(() => {
       <section class="welcome-section">
         <div class="welcome-content">
           <h1 class="welcome-title">
-            👋 欢迎回来，<span class="user-highlight">{{ user?.name || '用户' }}</span>
+            <FaIcon icon="hand" style="margin-right: 8px;" /> 欢迎回来，<span class="user-highlight">{{ user?.name || '用户' }}</span>
           </h1>
           <p class="welcome-subtitle">选择一个服务开始使用，或查看您的账户信息</p>
         </div>
@@ -266,28 +266,28 @@ onMounted(() => {
         </div>
         <div class="account-cards" :class="{ loading: loading }">
           <div class="account-card balance-card">
-            <div class="card-icon">💰</div>
+            <div class="card-icon"><FaIcon icon="wallet" /></div>
             <div class="card-content">
               <div class="card-value">¥{{ formatMoney(accountInfo.balance) }}</div>
               <div class="card-label">账户余额</div>
             </div>
           </div>
           <div class="account-card quota-card">
-            <div class="card-icon">🎁</div>
+            <div class="card-icon"><FaIcon icon="gift" /></div>
             <div class="card-content">
               <div class="card-value">¥{{ formatMoney(accountInfo.free_quota) }}</div>
               <div class="card-label">免费额度</div>
             </div>
           </div>
           <div class="account-card total-card">
-            <div class="card-icon">📊</div>
+            <div class="card-icon"><FaIcon icon="chart-bar" /></div>
             <div class="card-content">
               <div class="card-value">¥{{ formatMoney(accountInfo.total_available) }}</div>
               <div class="card-label">可用总额</div>
             </div>
           </div>
           <div class="account-card usage-card">
-            <div class="card-icon">📈</div>
+            <div class="card-icon"><FaIcon icon="chart-line" /></div>
             <div class="card-content">
               <div class="card-value">¥{{ formatMoney(accountInfo.usage_this_month) }}</div>
               <div class="card-label">本月消费</div>
@@ -318,7 +318,7 @@ onMounted(() => {
             class="service-card"
             :style="{ '--card-color': service.color, '--card-gradient': service.gradient }"
           >
-            <div class="service-icon">{{ service.icon }}</div>
+            <div class="service-icon"><FaIcon :icon="service.icon.replace('fa-', '')" /></div>
             <div class="service-content">
               <h3 class="service-title">{{ service.title }}</h3>
               <p class="service-description">{{ service.description }}</p>

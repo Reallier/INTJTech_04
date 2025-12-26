@@ -16,28 +16,28 @@
       <!-- 统计卡片 -->
       <section class="stats-section">
         <div class="stat-card">
-          <div class="stat-icon users-icon">👥</div>
+          <div class="stat-icon users-icon"><FaIcon icon="users" /></div>
           <div class="stat-info">
             <div class="stat-value">{{ stats.total_users }}</div>
             <div class="stat-label">总用户数</div>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon balance-icon">💰</div>
+          <div class="stat-icon balance-icon"><FaIcon icon="wallet" /></div>
           <div class="stat-info">
             <div class="stat-value">¥{{ formatNumber(stats.total_balance) }}</div>
             <div class="stat-label">总余额</div>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon today-icon">📈</div>
+          <div class="stat-icon today-icon"><FaIcon icon="chart-line" /></div>
           <div class="stat-info">
             <div class="stat-value">{{ stats.today_new_users }}</div>
             <div class="stat-label">今日新增</div>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon trans-icon">📊</div>
+          <div class="stat-icon trans-icon"><FaIcon icon="chart-bar" /></div>
           <div class="stat-info">
             <div class="stat-value">{{ stats.total_transactions }}</div>
             <div class="stat-label">交易记录</div>
@@ -195,10 +195,10 @@
     <div v-if="showCredentialsModal" class="modal-overlay">
       <div class="modal-content credentials-modal">
         <div class="modal-header">
-          <h3>✅ 用户创建成功</h3>
+          <h3><FaIcon icon="check-circle" style="margin-right: 8px; color: #22c55e;" />用户创建成功</h3>
         </div>
         <div class="modal-body">
-          <p class="warning">⚠️ 请妥善保存以下凭证，密码只显示一次！</p>
+          <p class="warning"><FaIcon icon="exclamation-triangle" style="margin-right: 6px;" />请妥善保存以下凭证，密码只显示一次！</p>
           <div class="credential-item">
             <label>用户名</label>
             <div class="credential-value">{{ newCredentials.username }}</div>
@@ -218,7 +218,7 @@
     <div v-if="showDeleteModal" class="modal-overlay" @click.self="closeDeleteModal">
       <div class="modal-content delete-modal">
         <div class="modal-header">
-          <h3>⚠️ 确认删除</h3>
+          <h3><FaIcon icon="exclamation-triangle" style="margin-right: 8px; color: #ef4444;" />确认删除</h3>
           <button class="modal-close" @click="closeDeleteModal">×</button>
         </div>
         <div class="modal-body">

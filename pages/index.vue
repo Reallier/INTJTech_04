@@ -590,7 +590,7 @@ onBeforeUnmount(() => {
               :class="{ 'dropdown-open': isServicesDropdownOpen }"
               @click="toggleServicesDropdown"
             >
-              🚀 服务平台
+              <FaIcon icon="rocket" style="margin-right: 8px;" />服务平台
               <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
@@ -601,7 +601,7 @@ onBeforeUnmount(() => {
                 class="dropdown-item"
                 @click="closeAllDropdowns"
               >
-                <span class="dropdown-icon">🧲</span>
+                <span class="dropdown-icon"><FaIcon icon="magnet" /></span>
                 <div class="dropdown-content">
                   <span class="dropdown-title">简历匹配</span>
                   <span class="dropdown-desc">智能简历与JD匹配分析</span>
@@ -613,7 +613,7 @@ onBeforeUnmount(() => {
                 class="dropdown-item"
                 @click="closeAllDropdowns"
               >
-                <span class="dropdown-icon">💬</span>
+                <span class="dropdown-icon"><FaIcon icon="comments" /></span>
                 <div class="dropdown-content">
                   <span class="dropdown-title">智能客服</span>
                   <span class="dropdown-desc">7×24 自动化客户问答</span>
@@ -624,7 +624,7 @@ onBeforeUnmount(() => {
                 class="dropdown-item"
                 @click="closeAllDropdowns"
               >
-                <span class="dropdown-icon">🌟</span>
+                <span class="dropdown-icon"><FaIcon icon="star" /></span>
                 <div class="dropdown-content">
                   <span class="dropdown-title">MBTI判型</span>
                   <span class="dropdown-desc">16型人格智能判定</span>
@@ -635,7 +635,7 @@ onBeforeUnmount(() => {
                 class="dropdown-item"
                 @click="closeAllDropdowns"
               >
-                <span class="dropdown-icon">📝</span>
+                <span class="dropdown-icon"><FaIcon icon="file-signature" /></span>
                 <div class="dropdown-content">
                   <span class="dropdown-title">合同审查</span>
                   <span class="dropdown-desc">AI合同风险智能分析</span>
@@ -646,7 +646,7 @@ onBeforeUnmount(() => {
                 class="dropdown-item"
                 @click="closeAllDropdowns"
               >
-                <span class="dropdown-icon">📚</span>
+                <span class="dropdown-icon"><FaIcon icon="book" /></span>
                 <div class="dropdown-content">
                   <span class="dropdown-title">知乎知识库</span>
                   <span class="dropdown-desc">智能文章收藏与搜索</span>
@@ -657,7 +657,7 @@ onBeforeUnmount(() => {
                 class="dropdown-item"
                 @click="closeAllDropdowns"
               >
-                <span class="dropdown-icon">💼</span>
+                <span class="dropdown-icon"><FaIcon icon="briefcase" /></span>
                 <div class="dropdown-content">
                   <span class="dropdown-title">求职助手</span>
                   <span class="dropdown-desc">Boss直聘智能求职Agent</span>
@@ -668,7 +668,7 @@ onBeforeUnmount(() => {
                 class="dropdown-item"
                 @click="closeAllDropdowns"
               >
-                <span class="dropdown-icon">📄</span>
+                <span class="dropdown-icon"><FaIcon icon="file-alt" /></span>
                 <div class="dropdown-content">
                   <span class="dropdown-title">简历优化</span>
                   <span class="dropdown-desc">AI智能简历精修Agent</span>
@@ -679,7 +679,7 @@ onBeforeUnmount(() => {
                 class="dropdown-item"
                 @click="closeAllDropdowns"
               >
-                <span class="dropdown-icon">📊</span>
+                <span class="dropdown-icon"><FaIcon icon="chart-bar" /></span>
                 <div class="dropdown-content">
                   <span class="dropdown-title">资源监控</span>
                   <span class="dropdown-desc">智能资源监控Agent</span>
@@ -691,7 +691,7 @@ onBeforeUnmount(() => {
                 class="dropdown-item dropdown-item-more"
                 @click="closeAllDropdowns"
               >
-                <span class="dropdown-icon">📋</span>
+                <span class="dropdown-icon"><FaIcon icon="clipboard-list" /></span>
                 <div class="dropdown-content">
                   <span class="dropdown-title">了解更多服务</span>
                   <span class="dropdown-desc">查看完整服务介绍</span>
@@ -719,7 +719,7 @@ onBeforeUnmount(() => {
               <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <span>📋 开发动态 · 内部信息板</span>
+            <span><FaIcon icon="clipboard-list" style="margin-right: 8px;" />开发动态 · 内部信息板</span>
             <span class="dev-board-count">{{ announcements.length }} 条更新</span>
           </div>
           <button type="button" class="dev-board-toggle" :title="isAnnouncementExpanded ? '收起' : '展开'">

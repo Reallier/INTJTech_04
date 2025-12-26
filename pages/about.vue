@@ -58,19 +58,19 @@ const advantages = [
     title: "安全可控，数据在你们手里",
     tag: "安全",
     detail: "支持私有化 / 专有云部署；权限控制、操作审计、数据脱敏齐备，数据留在你们环境。",
-    icon: "🛡️"
+    icon: "fa-shield-alt"
   },
   {
     title: "易集成、少侵入，方便维护",
     tag: "对接",
     detail: "对接 IM / CRM / 工单 / 知识库 / OA；通过 API / 中间层 / Agent 二开，降低侵入并可版本管理关键逻辑。",
-    icon: "🔌"
+    icon: "fa-plug"
   },
   {
     title: "可观测、可接手，避免锁定",
     tag: "可控",
     detail: "代码、脚本、配置优先放在你们仓库；命中率、转人工、覆盖率等指标可观测可导出，附文档与培训便于自查。",
-    icon: "📊"
+    icon: "fa-chart-bar"
   }
 ];
 </script>
@@ -104,7 +104,7 @@ const advantages = [
       <section class="team-section">
         <div class="container">
           <h2 class="section-title">
-            <span class="title-icon">👥</span>
+            <span class="title-icon"><FaIcon icon="users" /></span>
             核心团队
           </h2>
           <div class="team-grid">
@@ -127,12 +127,12 @@ const advantages = [
       <section class="advantages-section">
         <div class="container">
           <h2 class="section-title">
-            <span class="title-icon">✨</span>
+            <span class="title-icon"><FaIcon icon="magic" /></span>
             我们的优势
           </h2>
           <div class="advantages-grid">
             <div v-for="adv in advantages" :key="adv.title" class="advantage-card">
-              <div class="adv-icon">{{ adv.icon }}</div>
+              <div class="adv-icon"><FaIcon :icon="adv.icon.replace('fa-', '')" /></div>
               <div class="adv-content">
                 <span class="adv-tag">{{ adv.tag }}</span>
                 <h3 class="adv-title">{{ adv.title }}</h3>
@@ -147,7 +147,7 @@ const advantages = [
       <section class="notes-section">
         <div class="container">
           <h2 class="section-title">
-            <span class="title-icon">📝</span>
+            <span class="title-icon"><FaIcon icon="file-signature" /></span>
             技术日志
           </h2>
           <div class="notes-list">
@@ -164,14 +164,14 @@ const advantages = [
       <section class="contact-section">
         <div class="container">
           <h2 class="section-title">
-            <span class="title-icon">📧</span>
+            <span class="title-icon"><FaIcon icon="envelope" /></span>
             联系我们
           </h2>
           <div class="contact-content">
             <p>如有合作意向或技术咨询，欢迎通过以下方式联系：</p>
             <div class="contact-info">
               <a href="mailto:contact@intjtech.cn" class="contact-item">
-                <span class="contact-icon">📮</span>
+                <span class="contact-icon"><FaIcon icon="at" /></span>
                 <span>contact@intjtech.cn</span>
               </a>
             </div>
