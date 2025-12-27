@@ -24,3 +24,14 @@ model User {
 
   @@map("users")
 }
+
+model ServiceConfig {
+  id        String   @id @default(cuid())
+  serviceId String   @unique @map("service_id")
+  title     String
+  visible   Boolean  @default(true)
+  sortOrder Int      @default(0) @map("sort_order")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("service_configs")
+}

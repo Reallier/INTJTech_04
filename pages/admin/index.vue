@@ -112,6 +112,52 @@
           <button :disabled="users.length < pageSize" @click="page++; fetchUsers()">下一页</button>
         </div>
       </section>
+      
+      <!-- 服务管理 -->
+      <section class="services-section">
+        <div class="section-header">
+          <h2><FaIcon icon="cubes" style="margin-right: 8px;" />服务管理</h2>
+        </div>
+        
+        <div class="services-table-container">
+          <table class="services-table">
+            <thead>
+              <tr>
+                <th>服务名称</th>
+                <th>服务ID</th>
+                <th>排序</th>
+                <th>显示状态</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="service in serviceConfigs" :key="service.serviceId">
+                <td class="service-title">{{ service.title }}</td>
+                <td class="service-id">{{ service.serviceId }}</td>
+                <td class="service-order">{{ service.sortOrder }}</td>
+                <td class="service-toggle">
+                  <label class="toggle-switch">
+                    <input 
+                      type="checkbox" 
+                      :checked="service.visible" 
+                      @change="toggleServiceVisibility(service)"
+                      :disabled="updatingService === service.serviceId"
+                    />
+                    <span class="toggle-slider"></span>
+                  </label>
+                  <span class="toggle-label">{{ service.visible ? '显示' : '隐藏' }}</span>
+                </td>
+              </tr>
+              <tr v-if="serviceConfigs.length === 0 && !loadingServices">
+                <td colspan="4" class="empty-row">暂无服务配置</td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <div v-if="loadingServices" class="loading-overlay">
+            加载中...
+          </div>
+        </div>
+      </section>
     </main>
     
     <!-- 充值弹窗 -->
@@ -275,6 +321,11 @@ const newCredentials = ref({ username: '', password: '' });
 const showDeleteModal = ref(false);
 const userToDelete = ref(null);
 const deleting = ref(false);
+
+// 服务配置状态
+const serviceConfigs = ref([]);
+const loadingServices = ref(false);
+const updatingService = ref('');
 
 // 获取 token
 const getToken = () => {
@@ -485,10 +536,52 @@ const formatDate = (dateStr) => {
   return date.toLocaleDateString('zh-CN');
 };
 
+// 获取服务配置列表
+const fetchServiceConfigs = async () => {
+  loadingServices.value = true;
+  try {
+    const response = await $fetch('/api/admin/services');
+    if (response.success) {
+      serviceConfigs.value = response.services;
+    }
+  } catch (e) {
+    console.error('Failed to fetch service configs:', e);
+  } finally {
+    loadingServices.value = false;
+  }
+};
+
+// 切换服务显示状态
+const toggleServiceVisibility = async (service) => {
+  updatingService.value = service.serviceId;
+  try {
+    const response = await $fetch('/api/admin/services', {
+      method: 'PUT',
+      body: {
+        serviceId: service.serviceId,
+        visible: !service.visible
+      }
+    });
+    
+    if (response.success) {
+      // 更新本地状态
+      service.visible = !service.visible;
+    } else {
+      alert('更新失败');
+    }
+  } catch (e) {
+    console.error('Failed to update service:', e);
+    alert('更新失败，请稍后重试');
+  } finally {
+    updatingService.value = '';
+  }
+};
+
 // 初始化
 onMounted(() => {
   fetchStats();
   fetchUsers();
+  fetchServiceConfigs();
 });
 </script>
 
@@ -955,5 +1048,122 @@ onMounted(() => {
 
 .credential-value.password {
   color: #059669;
+}
+
+/* 服务管理区块 */
+.services-section {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-top: 24px;
+}
+
+.services-table-container {
+  position: relative;
+  overflow-x: auto;
+}
+
+.services-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.services-table th,
+.services-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.services-table th {
+  background: #f9fafb;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+.services-table td {
+  font-size: 14px;
+  color: #374151;
+}
+
+.service-title {
+  font-weight: 600;
+}
+
+.service-id {
+  font-family: monospace;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.service-order {
+  color: #6b7280;
+}
+
+.service-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Toggle 开关样式 */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #d1d5db;
+  transition: 0.3s;
+  border-radius: 26px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+  transform: translateX(22px);
+}
+
+.toggle-switch input:disabled + .toggle-slider {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.toggle-label {
+  font-size: 13px;
+  color: #6b7280;
+  min-width: 32px;
 }
 </style>

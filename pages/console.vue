@@ -18,11 +18,12 @@ const accountInfo = ref({
 
 const loading = ref(true);
 
-// 服务列表
-const services = [
-  {
-    id: 'hirestream',
-    title: '简历匹配',
+// 服务列表 - 从 API 动态获取
+const services = ref<any[]>([]);
+
+// 本地服务 UI 配置作为后备
+const LOCAL_SERVICE_CONFIG: Record<string, any> = {
+  hirestream: {
     icon: 'fa-magnet',
     description: '智能简历与JD匹配分析，快速筛选候选人',
     color: '#6366f1',
@@ -30,9 +31,7 @@ const services = [
     href: '/api/services/hirestream-redirect',
     stats: '简历智能评分'
   },
-  {
-    id: 'customerservice',
-    title: '智能客服',
+  customerservice: {
     icon: 'fa-comments',
     description: '7×24 自动化客户问答，提升服务效率',
     color: '#10b981',
@@ -41,9 +40,7 @@ const services = [
     external: true,
     stats: '多轮对话'
   },
-  {
-    id: 'mindai',
-    title: 'MBTI判型',
+  mindai: {
     icon: 'fa-star',
     description: '16型人格智能判定，情景化测试体验',
     color: '#f59e0b',
@@ -51,9 +48,7 @@ const services = [
     href: '/api/services/mindai-redirect',
     stats: '认知功能分析'
   },
-  {
-    id: 'contract',
-    title: '合同审查',
+  contract: {
     icon: 'fa-file-signature',
     description: 'AI合同风险智能分析，识别潜在问题',
     color: '#ef4444',
@@ -61,9 +56,7 @@ const services = [
     href: '/api/services/contract-redirect',
     stats: '风险点识别'
   },
-  {
-    id: 'zhihu',
-    title: '知乎知识库',
+  zhihu: {
     icon: 'fa-book',
     description: '智能文章收藏与语义搜索，打造个人知识库',
     color: '#0ea5e9',
@@ -71,9 +64,7 @@ const services = [
     href: '/api/services/zhihu-redirect',
     stats: '语义检索'
   },
-  {
-    id: 'boss',
-    title: '求职助手',
+  boss: {
     icon: 'fa-briefcase',
     description: 'Boss直聘智能求职Agent，自动化投递管理',
     color: '#8b5cf6',
@@ -81,9 +72,7 @@ const services = [
     href: '/api/services/boss-redirect',
     stats: '自动打招呼'
   },
-  {
-    id: 'resume',
-    title: '简历优化',
+  resume: {
     icon: 'fa-file-alt',
     description: 'AI智能简历精修，提升信息密度与表达效果',
     color: '#ec4899',
@@ -91,9 +80,7 @@ const services = [
     href: '/api/services/resume-redirect',
     stats: '三维优化'
   },
-  {
-    id: 'monitor',
-    title: '资源监控',
+  monitor: {
     icon: 'fa-chart-bar',
     description: '智能资源监控Agent，实时监控服务器状态',
     color: '#14b8a6',
@@ -101,7 +88,32 @@ const services = [
     href: '/api/services/monitor-redirect',
     stats: '实时监控'
   }
-];
+};
+
+// 获取可见服务列表
+const fetchServices = async () => {
+  try {
+    const response = await $fetch('/api/services/visible');
+    if (response.success && response.services) {
+      services.value = response.services;
+    } else {
+      // API 失败时使用本地配置
+      services.value = Object.entries(LOCAL_SERVICE_CONFIG).map(([id, config]) => ({
+        id,
+        title: config.title || id,
+        ...config
+      }));
+    }
+  } catch (e) {
+    console.error('Failed to fetch services:', e);
+    // 使用本地配置作为后备
+    services.value = Object.entries(LOCAL_SERVICE_CONFIG).map(([id, config]) => ({
+      id,
+      title: config.title || id,
+      ...config
+    }));
+  }
+};
 
 // 获取账户信息
 const fetchAccountInfo = async () => {
@@ -170,6 +182,7 @@ const typeLabels: Record<string, string> = {
 
 onMounted(() => {
   fetchAccountInfo();
+  fetchServices();
 });
 </script>
 
