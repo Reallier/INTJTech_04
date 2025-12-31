@@ -1,1393 +1,1893 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { onMounted, nextTick, ref } from "vue";
 import { useAuth } from "~/composables/useAuth";
 
-const { user, fetchUser, logout } = useAuth();
+const { user, fetchUser } = useAuth();
+const showProductMenu = ref(false);
+const showTechMenu = ref(false);
 
-type NavItem = { id: string; label: string };
-type Service = {
-  title: string;
-  fit: string;
-  tasks: string[];
-  outcomes: string[];
-};
-type CaseItem = {
-  tag: string;
-  result: string;
-  agent: string;
-  background: string;
-  approach: string[];
-  effect: string;
-};
-type Advantage = {
-  title: string;
-  detail: string;
-  tag?: string;
-  extra?: string;
-  icon?: string;
-};
-type Pricing = {
-  title: string;
-  duration: string;
-  fit: string[];
-  includes: string[];
-  price: string;
-  featured?: boolean;
-};
-type Member = {
-  name: string;
-  role: string;
-  bullets: string[];
-  summary: string;
-};
-type NoteItem = { date: string; title: string; summary: string; content: string };
-
-// 公告栏数据 - 实用型信息板
-type AnnouncementItem = { 
-  date: string;
-  category: '功能上线' | '功能优化' | '开发中' | '已修复' | '待办';
-  project: string;  // 所属项目
-  title: string;
-  details?: string[];  // 详细说明
-  author?: string;
+const toggleProductMenu = () => {
+  showProductMenu.value = !showProductMenu.value;
+  showTechMenu.value = false;
 };
 
-const announcements: AnnouncementItem[] = [
-  { 
-    date: "2025-12-14",
-    category: "功能上线",
-    project: "简历优化 (app07)",
-    title: "简历修改 Agent 正式上线",
-    details: [
-      "支持 DOCX/PDF/TXT 格式简历上传",
-      "三种优化策略：信息密度、表达术语、信息广度",
-      "一键重写全文功能",
-      "原文与优化后对比预览"
-    ],
-    author: "Reallier"
-  },
-  { 
-    date: "2025-12-11",
-    category: "功能上线",
-    project: "合同审查 (app04)",
-    title: "合同审查 Agent 正式上线",
-    details: [
-      "支持 PDF/图片格式合同上传",
-      "智能识别合同类型、甲乙方信息",
-      "自动分析违约条款、费用条款风险点",
-      "生成 Markdown 格式审查报告"
-    ],
-    author: "Reallier"
-  },
-  { 
-    date: "2025-12-11",
-    category: "功能优化",
-    project: "官网 (official-site)",
-    title: "服务平台下拉菜单 UI 改版",
-    details: [
-      "新增下拉菜单整合四个服务入口",
-      "改善移动端导航适配"
-    ],
-    author: "Reallier"
-  },
-  { 
-    date: "2025-12-10",
-    category: "功能上线",
-    project: "MBTI判型 (app03)",
-    title: "16题情景剧本 v5.0 上线",
-    details: [
-      "重构测试引擎，优化认知功能信号映射",
-      "新增竞争性评分机制，提高判型准确率",
-      "更自然的对话式题目呈现"
-    ],
-    author: "Reallier"
-  },
-  { 
-    date: "2025-12-08",
-    category: "功能优化",
-    project: "智能客服 (app02)",
-    title: "FastAPI 前端迁移完成",
-    details: [
-      "从 Streamlit 迁移到 FastAPI + 静态 HTML",
-      "白色主题 UI，消息气泡左右分列",
-      "Router 日志面板右侧展示"
-    ],
-    author: "Reallier"
-  },
-  { 
-    date: "2025-12-07",
-    category: "功能上线",
-    project: "简历匹配 (app01)",
-    title: "用户模块与计费系统上线",
-    details: [
-      "JWT SSO 登录集成",
-      "Token 用量追踪与分层定价",
-      "免费额度 + 预付费余额扣减"
-    ],
-    author: "Reallier"
-  },
-  {
-    date: "进行中",
-    category: "开发中",
-    project: "MBTI判型 (app03)",
-    title: "MBTI 2.0 版本开发",
-    details: [
-      "新增更多情景模拟题型",
-      "增强 Si/Ni、Te/Fe 区分度",
-      "优化结果展示页面"
-    ]
-  },
-  {
-    date: "待定",
-    category: "待办",
-    project: "全局",
-    title: "管理后台数据看板",
-    details: [
-      "用户使用统计",
-      "Token 消耗趋势图",
-      "各服务调用量监控"
-    ]
-  }
-];
-
-// 公告栏状态
-const isAnnouncementExpanded = ref(true);
-
-const navItems: NavItem[] = [
-  { id: "hero", label: "首页" },
-  { id: "services", label: "服务" },
-  { id: "cases", label: "案例" },
-  { id: "advantages", label: "优势" },
-  { id: "pricing", label: "定价" },
-  { id: "contact", label: "联系" }
-];
-
-const services: Service[] = [
-  {
-    title: "客服 / 咨询类 Agent",
-    fit: "适合有大量重复问答的团队（课程咨询、电商售后、服务介绍等）",
-    tasks: [
-      "整理 FAQ / 文档 / 话术，搭建可检索的知识库",
-      "设计“有边界”的 Agent：能解答问题，但避免乱承诺 / 乱报价",
-      "接入你已有的渠道（官网对话框、客服系统、企业微信等）"
-    ],
-    outcomes: [
-      "重复问题在几秒内得到更统一的回答",
-      "新人客服更快上手，不用频繁问“这个怎么回？”"
-    ]
-  },
-  {
-    title: "数据整理 & 报表类 Agent",
-    fit: "适合经常有人在做“导出 Excel → 复制粘贴 → 截图发老板”的团队",
-    tasks: [
-      "从现有系统 / 表格中抽取关键数据",
-      "搭“整理 + 总结”的 Agent（生成日报 / 周报 / 摘要）",
-      "按老板习惯，输出可直接转发的简报（文字 / 表格）"
-    ],
-    outcomes: [
-      "少做大量机械的复制粘贴和截图",
-      "更快得到“这周发生了什么”这种结论级信息"
-    ]
-  },
-  {
-    title: "内部知识问答 / 培训 Agent",
-    fit: "适合文档多、新人多，但没人有空“从头再讲一遍”的团队",
-    tasks: [
-      "整理内部文档、流程说明、培训材料",
-      "搭建内部问答 Agent，回答流程 / 操作问题",
-      "嵌入日常使用的工具（协作平台 / 内部后台 / 知识库）"
-    ],
-    outcomes: [
-      "新人遇到问题先问系统，而不是每次打断老员工",
-      "更容易发现文档空白与缺口，持续补充"
-    ]
-  }
-];
-
-const caseScopes = [
-  "客服服务",
-  "内部知识",
-  "运营自动化",
-  "销售提效",
-  "定制组合场景",
-  "知识库搭建",
-  "流程编排",
-  "多语言客服",
-  "数据质检",
-  "风险控制"
-];
-
-const cases: CaseItem[] = [
-  {
-    tag: "客服 / 在线咨询",
-    result: "智能客户服务",
-    agent: "客服问答 Agent",
-    background: "重复咨询多、人力成本高，新人上手慢，服务体验不稳定。",
-    approach: [
-      "梳理 FAQ / 政策 / 价格口径，搭检索 + 规则的知识库",
-      "嵌入官网对话框与客服系统，限定报价与承诺边界",
-      "设置转人工与复盘流程，真实对话反哺知识库迭代"
-    ],
-    effect: "常见问题 70%+ 由 Agent 直接应答，新人独立接待时间从 3 周缩短到 3 天。"
-  },
-  {
-    tag: "内部知识 / Onboarding",
-    result: "内部知识自助平台",
-    agent: "内部问答 Agent",
-    background: "流程跨度大且分散，新人怕出错，老员工频繁被打断说明。",
-    approach: [
-      "收拢 Onboarding 手册、流程 SOP、政策条款，按场景拆段",
-      "接入知识库 / 协作工具，在常用入口内嵌问答",
-      "按角色做权限与回答口径，留下提问日志补文档缺口"
-    ],
-    effect: "新人 80% 的流程问题可自助解决，重复答疑工时下降一半，文档更新路径变清晰。"
-  },
-  {
-    tag: "运营 / 报表自动化",
-    result: "运营数据周报自动化",
-    agent: "自动报表 Agent",
-    background: "周报制作需要多系统导出、手动拼图，耗时且易漏。",
-    approach: [
-      "对接业务数据库 / BI，明确指标口径与异常兜底规则",
-      "生成周报草稿（文字 + 表格），支持一键补充截图与备注",
-      "上线后按真实反馈迭代摘要颗粒度与格式模板"
-    ],
-    effect: "周报生成时间从半天缩短到约 10 分钟，团队把精力放在分析而不是搬运数据。"
-  },
-  {
-    tag: "定制组合 / 跨流程",
-    result: "定制化 Agent 组合",
-    agent: "流程编排 + 多 Agent",
-    background: "跨部门流程多、标准不一致，想用 AI 串起线索筛选、沟通、报告。",
-    approach: [
-      "按现有流程拆节点，定义每步输入 / 责任与质量标准",
-      "组合问答、文案、报表 Agent，用编排减少人工搬运",
-      "保留人工校验点，输出可回溯的记录与通知"
-    ],
-    effect: "2–3 周拼出可运行版本，人工交接减少 40% 左右，新流程可观测、可继续扩展。"
-  }
-];
-
-const coreAdvantages: Advantage[] = [
-  {
-    title: "安全可控，数据在你们手里",
-    tag: "安全",
-    detail: "安全和合规是前提，不是附加功能。",
-    extra: "支持私有化 / 专有云部署；权限控制、操作审计、数据脱敏齐备，数据留在你们环境。",
-    icon: "fa-solid fa-shield-halved"
-  },
-  {
-    title: "易集成、少侵入，方便维护",
-    tag: "对接",
-    detail: "把智能能力嵌进现有系统，而不是推倒重来。",
-    extra: "对接 IM / CRM / 工单 / 知识库 / OA；通过 API / 中间层 / Agent 二开，降低侵入并可版本管理关键逻辑。",
-    icon: "fa-solid fa-plug"
-  },
-  {
-    title: "可观测、可接手，避免锁定",
-    tag: "可控",
-    detail: "系统对你们透明、可维护，而不是黑盒。",
-    extra: "代码、脚本、配置优先放在你们仓库；命中率、转人工、覆盖率等指标可观测可导出，附文档与培训便于自查。",
-    icon: "fa-solid fa-chart-line"
-  }
-];
-
-const supportAdvantages: Advantage[] = [
-  {
-    title: "试错成本低",
-    tag: "试点",
-    detail: "从小场景、小部门先试起，先跑通一个可用版本。",
-    extra: "效果可见、数据可控后，再决定是否扩大投入。",
-    icon: "fa-solid fa-flask"
-  },
-  {
-    title: "方案更灵活不套路",
-    tag: "定制",
-    detail: "不卖固定模板，在通用与定制间找成本/效果平衡。",
-    extra: "按现状裁剪开发量，避免“大而全”带来的维护负担。",
-    icon: "fa-solid fa-sliders"
-  },
-  {
-    title: "小团队，沟通链路短、迭代快",
-    tag: "效率",
-    detail: "直接和核心工程师 / 架构师对话，理解与落地更快。",
-    extra: "先上线可真实使用的版本，再按数据快速迭代。",
-    icon: "fa-solid fa-bolt"
-  }
-];
-
-const pricing: Pricing[] = [
-  {
-    title: "01. Agent 试水包",
-    duration: "1–2 周",
-    fit: [
-      "想快速验证某个 AI 场景是否可行",
-      "需要可演示、可使用的 Agent MVP",
-      "希望以较小预算先试水"
-    ],
-    includes: [
-      "1 个可运行的 Agent MVP",
-      "输入 / 输出格式设计",
-      "简易界面或 API 接口",
-      "轻量部署（单容器 / Serverless 等）",
-      "最多 1 次小范围迭代"
-    ],
-    price: "￥8,000 – ￥20,000"
-  },
-  {
-    title: "02. 小规模上线包",
-    duration: "3–6 周",
-    fit: [
-      "方向已验证，想真正用在业务流程中",
-      "希望做“可维护的功能”，而不只是 Demo",
-      "想先在有限范围内落地 AI"
-    ],
-    includes: [
-      "1–3 个 Agent 的完整工作流",
-      "与现有系统的轻量集成（API / 数据接口 / 权限）",
-      "可用界面或嵌入式组件",
-      "部署、日志、监控和错误处理基础设施",
-      "2–3 轮基于真实使用的优化迭代"
-    ],
-    price: "￥25,000 – ￥60,000",
-    featured: true
-  },
-  {
-    title: "03. 月度优化包",
-    duration: "按月订阅",
-    fit: [
-      "已有 AI 能力上线，希望持续提升效果与稳定性",
-      "需要小规模功能扩展、改进、调优",
-      "希望有稳定技术伙伴按月支持"
-    ],
-    includes: [
-      "prompt 调优与模型效果改进",
-      "小功能开发 / 小流程扩展",
-      "错误分析、修复与监控",
-      "模型更新、数据增强",
-      "固定月度工时（如 20 / 40 / 80 小时包）"
-    ],
-    price: "￥4,000 – ￥15,000 / 月"
-  }
-];
-
-const members: Member[] = [
-  {
-    name: "Reallier",
-    role: "前海外独角兽 SDK 效能架构负责人",
-    bullets: [
-      "负责整体技术方案、系统设计和项目把控",
-      "熟悉企业级生产环境、稳定性与可维护性",
-      "擅长把“想法”拆成能长期维护技术方案"
-    ],
-    summary: "方向与架构把控，强调可维护性与生产可行性。"
-  },
-  {
-    name: "Gzzch",
-    role: "技术极客 / DevOps & 深度开发",
-    bullets: [
-      "长期在一线做深度开发，技术圈小有名气",
-      "容器化、监控、自动化部署经验丰富",
-      "让 Agent 在生产环境稳定、可观测、可追责"
-    ],
-    summary: "系统与运维质量，保障上线后的稳定度。"
-  },
-  {
-    name: "Rouva",
-    role: "前大厂设计部门 Agent 落地技术负责人",
-    bullets: [
-      "在大厂负责设计团队内部 Agent / 自动化落地",
-      "懂产品与审美，也熟悉 Agent 技术",
-      "擅长把复杂流程做成好用、好看、好上手的工具"
-    ],
-    summary: "体验与落地细节，确保“能用、好用”。"
-  }
-];
-
-const notes: NoteItem[] = [
-  {
-    date: "2025-02-20",
-    title: "Coze / Dify / n8n：近期上手要点与踩坑记录",
-    summary:
-      "Coze 的灵魂在工作流与插件，要自己调 chunk 策略与 API adapter；Dify 像工程师的 AI 中台，RAG/日志/观测完善但生产部署要把数据库、向量库、对象存储和反代配齐；n8n 本质是自动化引擎，AI 节点很薄，记得限流、封装上下文。",
-    content: `Coze，官方卖点说的是零代码拖拽，但真用起来就知道灵魂其实在工作流和插件生态上。我之前给 Bot 接了个 OAuth2插件，结果它能在流程里直接把 token 拿回来继续跑，像这种细节一般竞品真没做。它的工作流节点更像轻量级的iPaaS，虽然比不上n8n那么变态，但常见的 HTTP API、KV 存储、上下文管理都能撑住；如果本来就习惯 Zapier 或 Make，迁移到这里没什么门槛。知识库这一块就比较挑人了，PDF 上传、网页抓取看起来省心，但实际效果完全取决于 embedding 的分块策略，我第一次丢长文档进去，回答飘得跟特么 GPT-2回魂一样，最后只能自己调chunk size 和 overlap 才阳间一点。另外 Coze的API 返回和 OpenAl 也不完全兼容，message 分段和 toolcall 的 schema 都有坑，不写 adapter，前端（Next.js/ Vercel 上跑的 Chat UI）直接对接基本要挂。好处是它对外触达确实方便，多渠道一键发布省了不少功夫，所以适合 MVP 或外部试水，但要做长期复杂系统可能还是不太行。
-
-Dify 的路线就不一样，属于是工程师的“AI 中台”。四大件——模型管理、RAG 检索、Agent 工作流、观测评估——一套齐活。它的日志和评测系统非常不错，可以直接看到每次调用的 prompt、响应、token 消耗和命中率，调优复杂链路的时候比自己写一堆 debuglog 快活。RAG部分也给足了选择，pgvector、 Milvus、Weaviate 都能接，但坑在于底层数据库必须先调优好，不然索引没建全、连接池没调，几百 QPS就寄；embedding 跑大了还得盯存储成本，S3/MinlO的账单比 KPI 诚实。部署上官方说“一键”，但那个 Docker Compose 只能算 demo，真要上生产还是Helm/K8S,Postgres、Redis、对象存储、反代（Nginx/Traefilk）全得配齐，最好再上 GitOps （ArgoCD/Flux）做多环境持续交付。不提前规划PVC，迁移的时候会血压飙升。
-
-n8n这东西就更直接了，它压根不是 AI平台，应该算是个自动化引擎，AI 节点只是其中一个 widget。强项是几百个集成组件，Webhook、消息队列（Kafka、RabbitMQ）、数据库（MySQL、Postgres、Mongo）全能接，逻辑编排还能写小段JS 控制流，相当于把 Node.js 灵活性抽象进了可视化。我当时拿 Google Sheet 做灵感池触发LLM 生成标题，结果忘了限流，API队列直接开始爬行，最后只能加 Redis 阀门限流。AI节点本身其实挺薄的，系统提示、上下文拼接都要自己封装，和LangChain、Llamalndex 那种专门为大模型打磨的框架没法比，但胜在生态够厚，几乎能和任何 Saas 打通。如果想更稳，还可以搭配 Temporal或 Prefect 这种调度框架，做复杂任务编排；所以n8n也不用懂Al了，懂你Leader 需求就行了`
-  },
-  {
-    date: "2025-02-20",
-    title: "Airflow 的价值是透明性，而非执行性能",
-    summary:
-      "延迟主要来自调度与进程通信开销，天生不适合低延迟场景；它在批处理和数据管道里提供可追溯、可观测的可见性，TaskFlow API 体现“代码即 DAG”；规模化后文档支撑有限，但生态惯性让它仍是事实标准。",
-    content: `Airflow 的体验再次验证了一个恒定的工程规律：任何系统都受制于自身的设计边界。 相同的 CPU，服务器执行同一 DAG 需十秒，本地性能模式四五秒，节能模式甚至三秒。这种反常的梯度说明瓶颈不在硬件，而在解释器调度、进程通信与 Executor 实现。系统开销主导了延迟结构，Airflow 在设计层面无法避免这种“控制面放大效应”——亚毫秒级逻辑被膨胀成秒级延迟，这是其体系固有的代价。
-
-它真正擅长的领域是批处理与数据管道。CeleryExecutor 的运行模式更接近“批量编排器”而非“实时控制器”。延迟敏感的业务（支付、订单流转、同步交易）并不需要调度层，只需数据库状态枚举即可。Airflow 的核心价值并非执行性能，而是透明性：可追溯、可观测、可统计。它在系统中承担“可见化节点”的角色，将复杂的异步过程转化为可解释的结构映射。
-
-TaskFlow API 的出现，进一步揭示了行业的结构拐点：配置文件的表达力已达极限。YAML 的简洁性与约束性在复杂逻辑下失效，代码成为新的均衡点。Airflow 选择“代码即 DAG”，是主动放弃低门槛，换取逻辑的完备性。循环、条件、依赖在语言层内天然具备抽象能力，比层层缩进的配置文件更具可维护性。系统设计从描述式转向命令式，体现出编排系统演化的必然方向——在复杂性增量面前，静态配置让位于可组合逻辑。
-
-代价是清晰的。Airflow 在单 DAG 层面友好，但当规模扩展到模块化、多依赖场景时，文档支撑不足，知识传递依赖经验。系统因此形成筛选机制：只有具备项目组织思维的用户才能留下。 对留下的人而言，Airflow 从“任务调度器”演化为“流程管理框架”，DAG 不再是任务列表，而是运行时依赖图。
-
-竞争者 Prefect 与 Dagster 的策略集中在托管云与用户体验。它们以“轻量、现代”作为入口，尝试以服务化取代生态，但技术债、生态积累与社区规模决定了优势不对称。Apache 基金会的长周期治理与十年沉淀，使 Airflow 成为事实标准。这里的壁垒不是功能，而是生态惯性：系统之间的兼容、插件依赖、团队经验、运维惯性，构成了路径锁定效应。
-
-因此，Airflow 的价值从不在性能。它提供的是一种结构化的可见性与可控性。适用于跨系统、异步、大批量任务的编排与追踪，不适用于高并发、低延迟的实时场景。它是后台的导演，不是前台的收银机。
-
-如果从认知框架去解析：Ni 识别边界与趋势，Te 衡量资源与产出，Fi 确认系统定位与价值，Se 记录操作层的真实表现。四个维度收束的结论是一致的——Airflow 是规模化异步系统的组织者，不是实时系统的执行单元。它的设计哲学强调秩序与可观测性，而非反应速度。
-
-Airflow 的局限不是缺陷，而是边界的自洽。一个系统能做什么，取决于它愿意为代价付出什么。Airflow 选择了延迟，换来了结构透明与运行确定性。在工程世界中，这种取舍本身就是成熟。`
-  },
-  {
-    date: "2025-02-20",
-    title: "AI 退潮后的温度：接受边界、换取确定性",
-    summary:
-      "以 Airflow 为例，系统设计选择了延迟换透明，适用跨系统异步与批量编排，不适合高并发实时；Ni/Te/Fi/Se 的取舍收敛到同一结论：成熟系统靠可观测与确定性站稳，而非追求极致反应速度。",
-    content: `当AI的热度退去，我们终于看清它真正的温度。Airflow 的体验再次验证了一个恒定的工程规律：任何系统都受制于自身的设计边界。 相同的 CPU，服务器执行同一 DAG 需十秒，本地性能模式四五秒，节能模式甚至三秒。这种反常的梯度说明瓶颈不在硬件，而在解释器调度、进程通信与 Executor 实现。系统开销主导了延迟结构，Airflow 在设计层面无法避免这种“控制面放大效应”——亚毫秒级逻辑被膨胀成秒级延迟，这是其体系固有的代价。
-
-它真正擅长的领域是批处理与数据管道。CeleryExecutor 的运行模式更接近“批量编排器”而非“实时控制器”。延迟敏感的业务（支付、订单流转、同步交易）并不需要调度层，只需数据库状态枚举即可。Airflow 的核心价值并非执行性能，而是透明性：可追溯、可观测、可统计。它在系统中承担“可见化节点”的角色，将复杂的异步过程转化为可解释的结构映射。
-
-TaskFlow API 的出现，进一步揭示了行业的结构拐点：配置文件的表达力已达极限。YAML 的简洁性与约束性在复杂逻辑下失效，代码成为新的均衡点。Airflow 选择“代码即 DAG”，是主动放弃低门槛，换取逻辑的完备性。循环、条件、依赖在语言层内天然具备抽象能力，比层层缩进的配置文件更具可维护性。系统设计从描述式转向命令式，体现出编排系统演化的必然方向——在复杂性增量面前，静态配置让位于可组合逻辑。
-
-代价是清晰的。Airflow 在单 DAG 层面友好，但当规模扩展到模块化、多依赖场景时，文档支撑不足，知识传递依赖经验。系统因此形成筛选机制：只有具备项目组织思维的用户才能留下。 对留下的人而言，Airflow 从“任务调度器”演化为“流程管理框架”，DAG 不再是任务列表，而是运行时依赖图。
-
-竞争者 Prefect 与 Dagster 的策略集中在托管云与用户体验。它们以“轻量、现代”作为入口，尝试以服务化取代生态，但技术债、生态积累与社区规模决定了优势不对称。Apache 基金会的长周期治理与十年沉淀，使 Airflow 成为事实标准。这里的壁垒不是功能，而是生态惯性：系统之间的兼容、插件依赖、团队经验、运维惯性，构成了路径锁定效应。
-
-因此，Airflow 的价值从不在性能。它提供的是一种结构化的可见性与可控性。适用于跨系统、异步、大批量任务的编排与追踪，不适用于高并发、低延迟的实时场景。它是后台的导演，不是前台的收银机。
-
-如果从认知框架去解析：Ni 识别边界与趋势，Te 衡量资源与产出，Fi 确认系统定位与价值，Se 记录操作层的真实表现。四个维度收束的结论是一致的——Airflow 是规模化异步系统的组织者，不是实时系统的执行单元。它的设计哲学强调秩序与可观测性，而非反应速度。
-
-Airflow 的局限不是缺陷，而是边界的自洽。一个系统能做什么，取决于它愿意为代价付出什么。Airflow 选择了延迟，换来了结构透明与运行确定性。在工程世界中，这种取舍本身就是成熟。`
-  }
-];
-
-const heroChips = ["1–6 周交付", "￥8,000–￥60,000 典型预算", "偏工程、少花哨"];
-const timeline = ["想法 / 场景梳理", "快速试水 MVP", "小规模上线", "持续优化与监控"];
-
-const activeSection = ref("hero");
-const selectedNote = ref<NoteItem | null>(null);
-let observer: IntersectionObserver | null = null;
-const isMobileNavOpen = ref(false);
-const isServicesDropdownOpen = ref(false);
-
-const toggleMobileNav = () => {
-  isMobileNavOpen.value = !isMobileNavOpen.value;
+const toggleTechMenu = () => {
+  showTechMenu.value = !showTechMenu.value;
+  showProductMenu.value = false;
 };
 
-const closeMobileNav = () => {
-  isMobileNavOpen.value = false;
-  isServicesDropdownOpen.value = false;
-};
-
-const toggleServicesDropdown = () => {
-  isServicesDropdownOpen.value = !isServicesDropdownOpen.value;
-};
-
-const closeAllDropdowns = () => {
-  isServicesDropdownOpen.value = false;
-  closeMobileNav();
-};
-
-const noteParagraphs = computed(() =>
-  selectedNote.value
-    ? selectedNote.value.content
-        .split("\n\n")
-        .map((para) => para.trim())
-        .filter(Boolean)
-    : []
-);
-
-const closeNote = () => {
-  selectedNote.value = null;
-  document.documentElement.style.overflow = "";
-  document.body.style.overflow = "";
-};
-
-const openNote = (note: NoteItem) => {
-  selectedNote.value = note;
-  document.documentElement.style.overflow = "hidden";
-  document.body.style.overflow = "hidden";
-};
-
-onMounted(async () => {
-  console.log('[Index Page] onMounted');
-  await fetchUser();
-  console.log('[Index Page] fetchUser done');
-  // 强制滚动到页面顶部 - 使用多种方式确保兼容性
-  window.scrollTo({ top: 0, behavior: 'auto' });
-  document.documentElement.scrollTop = 0;
-  document.body.scrollTop = 0;
-  
-  observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          activeSection.value = entry.target.id;
-        }
-      });
-    },
-    {
-      rootMargin: "-30% 0px -50% 0px",
-      threshold: 0.3
-    }
-  );
-
-  navItems.forEach((item) => {
-    const el = document.getElementById(item.id);
-    if (el) {
-      observer?.observe(el);
+// Auto close logic
+if (typeof window !== 'undefined') {
+  window.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    if (!target.closest('.nav-dropdown')) {
+      showProductMenu.value = false;
+      showTechMenu.value = false;
     }
   });
+}
+
+onMounted(async () => {
+  await fetchUser();
+  // 使用 nextTick 确保 DOM 完全渲染后再初始化动画
+  await nextTick();
+  initScrollReveal();
 });
 
-onBeforeUnmount(() => {
-  observer?.disconnect();
-  document.documentElement.style.overflow = "";
-  document.body.style.overflow = "";
-});
+// 滚动揭示逻辑
+const initScrollReveal = () => {
+  // 确保在客户端运行
+  if (typeof window === 'undefined') return;
+  
+  const observerOptions = { 
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+        // 一旦激活就停止观察，避免重复触发
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  const revealElements = document.querySelectorAll('.reveal');
+  
+  revealElements.forEach(el => {
+    observer.observe(el);
+  });
+  
+  // 对于已经在视口内的元素，立即触发
+  setTimeout(() => {
+    revealElements.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        el.classList.add('active');
+      }
+    });
+  }, 100);
+};
+
+const philosophies = [
+  {
+    id: '01',
+    title: '数据主权 / DATA SOVEREIGNTY',
+    tags: 'SPEC: PRIVATE-FIRST / VPC',
+    content: '坚持环境感知优于数据托管。所有 AI 逻辑与数据流转闭环运行于客户受控环境，实现交付即物理隔离。'
+  },
+  {
+    id: '02',
+    title: '原子集成 / ATOMIC ARCHITECTURE',
+    tags: 'PATTERN: MICROSERVICES / LOW-ENTROPY',
+    content: '采用原子化微服务封装 AI 能力，实现存量业务系统的无感介入。严禁架构越权，AI 仅作为翻译插件。'
+  },
+  {
+    id: '03',
+    title: '链路确定性 / DETERMINISTIC OBSERVABILITY',
+    tags: 'STANDARD: DEEP TRACE',
+    content: '引入分布式链路追踪标准。通过强类型协议约束，实现决策路径、入参及 Token 流转的全量透明化。'
+  },
+  {
+    id: '04',
+    title: '意图即执行 / ACTION-DRIVEN INTERFACE',
+    tags: 'LOGIC: INTENT-AS-EXECUTION',
+    content: '直驱底层脚本。对话框仅作为异常处理的兜底，严禁在自动化路径中依赖多轮自然语言确认。'
+  },
+  {
+    id: '05',
+    title: '强契约通讯 / SCHEMA-FIRST PROTOCOL',
+    tags: 'PROTOCOL: MANDATORY JSON',
+    content: '废除自然语言总结，所有协作指令通过标准 JSON 协议传递，确保逻辑严密性并有效隔离幻觉。'
+  },
+  {
+    id: '06',
+    title: '工业级吞吐 / PRODUCTION-GRADE THROUGHPUT',
+    tags: 'CRITERIA: HIGH-CONCURRENCY',
+    content: '深度优化推理路由，确保高并发下的毫秒级响应与低熵增。不交付非生产级原型。'
+  }
+];
+
+
+
+const engineeringStack = [
+  {
+    id: '01',
+    title: '并发与调度层 / CONCURRENCY & SCHEDULING',
+    tags: 'PATTERN: ASYNC-IO / EVENT-DRIVEN / TASK-QUEUE',
+    content: '核心实现： 采用非阻塞异步 IO 架构（AsyncIO/Tokio），支持大规模 Agent 任务的并行调度与毫秒级上下文切换。针对高并发场景实施流量削峰与反压（Backpressure）机制，确保系统在高负载下的线性响应。'
+  },
+  {
+    id: '02',
+    title: '协议与校验层 / PROTOCOL & VALIDATION',
+    tags: 'PATTERN: SCHEMA-FIRST / Pydantic / JSON-RPC',
+    content: '核心实现： 强制执行强类型 Schema 约束，利用 Pydantic/Standard-JSON 进行运行时数据校验。所有 Agent 间通讯均通过结构化协议映射，从物理层杜绝自然语言交互产生的“逻辑漂移”与“非结构化幻觉”。'
+  },
+  {
+    id: '03',
+    title: '可观测性与追踪层 / OBSERVABILITY & TRACE',
+    tags: 'PATTERN: DISTRIBUTED TRACING / OpenTelemetry / RCA',
+    content: '核心实现： 全量接入 OpenTelemetry 工业标准，对每一个 Tool Call 及模型推理路径进行全局唯一 ID 标记。通过分布式链路追踪（Deep Trace）实现亚秒级故障根因分析（RCA），让 AI 决策路径完全透明。'
+  },
+  {
+    id: '04',
+    title: '状态与持久化层 / STATE & PERSISTENCE',
+    tags: 'PATTERN: HYBRID-SEARCH / VECTOR-GRAPH / ATOMIC-PERSIST',
+    content: '核心实现： 构建向量（Vector）与图（Graph）混合索引架构，解决长程记忆中的语义关联偏差。采用原子化事务保障 Agent 状态的持久化一致性，在高频交互中确保“状态不丢、逻辑不乱”。'
+  },
+  {
+    id: '05',
+    title: '部署与主权层 / DEPLOYMENT & SOVEREIGNTY',
+    tags: 'PATTERN: DOCKER / VPC-ISOLATION / CI-CD',
+    content: '核心实现： 实施全量容器化封装与环境声明式配置。支持基于 VPC 的物理隔离部署，确保 AI 逻辑运行于完全受控的内网环境，通过自动化流水线（CI/CD）实现工程标准的原子化交付。'
+  }
+];
 </script>
 
 <template>
   <div class="page">
-    <header class="top-nav">
-      <div class="container">
-        <div class="nav-bar">
-          <div class="brand">
-            <img src="/site-logo.png" alt="简序智能 Logo" style="width: 40px; height: 40px; vertical-align: middle; margin-right: 8px;" />
-            简序智能 · AI Agent
-          </div>
-          <button
-            type="button"
-            class="nav-toggle"
-            :class="{ open: isMobileNavOpen }"
-            :aria-expanded="isMobileNavOpen"
-            aria-label="切换导航"
-            @click="toggleMobileNav"
-          >
-            <span class="line" />
-            <span class="line" />
-          </button>
-        </div>
-        <nav :class="['nav-links', { 'nav-open': isMobileNavOpen }]">
-          <a
-            v-for="item in navItems"
-            :key="item.id"
-            :href="`#${item.id}`"
-            class="nav-link"
-            :class="{ active: activeSection === item.id }"
-            @click="closeMobileNav"
-          >
-            {{ item.label }}
-          </a>
-          <!-- 服务平台下拉菜单 -->
-          <div 
-            class="nav-dropdown"
-            @mouseenter="isServicesDropdownOpen = true"
-            @mouseleave="isServicesDropdownOpen = false"
-          >
-            <button 
-              type="button"
-              class="nav-link nav-link-highlight nav-dropdown-trigger"
-              :class="{ 'dropdown-open': isServicesDropdownOpen }"
-              @click="toggleServicesDropdown"
-            >
-              <FaIcon icon="rocket" style="margin-right: 8px;" />服务平台
-              <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-inner">
+        <a href="/" class="logo">简序智能<span>INTJ Tech</span></a>
+        <nav class="nav">
+          <div class="nav-item">
+            <button class="nav-link" @click.stop="toggleProductMenu" :class="{ 'active': showProductMenu }">
+              产品矩阵
             </button>
-            <div class="nav-dropdown-menu" :class="{ 'show': isServicesDropdownOpen }">
-              <a 
-                href="/api/services/hirestream-redirect" 
-                class="dropdown-item"
-                @click="closeAllDropdowns"
-              >
-                <span class="dropdown-icon"><FaIcon icon="magnet" /></span>
-                <div class="dropdown-content">
-                  <span class="dropdown-title">简历匹配</span>
-                  <span class="dropdown-desc">智能简历与JD匹配分析</span>
-                </div>
-              </a>
-              <a 
-                href="https://cs.reallier.top:5443" 
-                target="_blank"
-                class="dropdown-item"
-                @click="closeAllDropdowns"
-              >
-                <span class="dropdown-icon"><FaIcon icon="comments" /></span>
-                <div class="dropdown-content">
-                  <span class="dropdown-title">智能客服</span>
-                  <span class="dropdown-desc">7×24 自动化客户问答</span>
-                </div>
-              </a>
-              <a 
-                href="/api/services/mindai-redirect" 
-                class="dropdown-item"
-                @click="closeAllDropdowns"
-              >
-                <span class="dropdown-icon"><FaIcon icon="star" /></span>
-                <div class="dropdown-content">
-                  <span class="dropdown-title">MBTI判型</span>
-                  <span class="dropdown-desc">16型人格智能判定</span>
-                </div>
-              </a>
-              <a 
-                href="/api/services/contract-redirect" 
-                class="dropdown-item"
-                @click="closeAllDropdowns"
-              >
-                <span class="dropdown-icon"><FaIcon icon="file-signature" /></span>
-                <div class="dropdown-content">
-                  <span class="dropdown-title">合同审查</span>
-                  <span class="dropdown-desc">AI合同风险智能分析</span>
-                </div>
-              </a>
-              <a 
-                href="/api/services/zhihu-redirect" 
-                class="dropdown-item"
-                @click="closeAllDropdowns"
-              >
-                <span class="dropdown-icon"><FaIcon icon="book" /></span>
-                <div class="dropdown-content">
-                  <span class="dropdown-title">知乎知识库</span>
-                  <span class="dropdown-desc">智能文章收藏与搜索</span>
-                </div>
-              </a>
-              <a 
-                href="/api/services/boss-redirect" 
-                class="dropdown-item"
-                @click="closeAllDropdowns"
-              >
-                <span class="dropdown-icon"><FaIcon icon="briefcase" /></span>
-                <div class="dropdown-content">
-                  <span class="dropdown-title">求职助手</span>
-                  <span class="dropdown-desc">Boss直聘智能求职Agent</span>
-                </div>
-              </a>
-              <a 
-                href="/api/services/resume-redirect" 
-                class="dropdown-item"
-                @click="closeAllDropdowns"
-              >
-                <span class="dropdown-icon"><FaIcon icon="file-alt" /></span>
-                <div class="dropdown-content">
-                  <span class="dropdown-title">简历优化</span>
-                  <span class="dropdown-desc">AI智能简历精修Agent</span>
-                </div>
-              </a>
-              <a 
-                href="/api/services/monitor-redirect" 
-                class="dropdown-item"
-                @click="closeAllDropdowns"
-              >
-                <span class="dropdown-icon"><FaIcon icon="chart-bar" /></span>
-                <div class="dropdown-content">
-                  <span class="dropdown-title">资源监控</span>
-                  <span class="dropdown-desc">智能资源监控Agent</span>
-                </div>
-              </a>
-              <div class="dropdown-divider"></div>
-              <a 
-                href="#services" 
-                class="dropdown-item dropdown-item-more"
-                @click="closeAllDropdowns"
-              >
-                <span class="dropdown-icon"><FaIcon icon="clipboard-list" /></span>
-                <div class="dropdown-content">
-                  <span class="dropdown-title">了解更多服务</span>
-                  <span class="dropdown-desc">查看完整服务介绍</span>
-                </div>
-              </a>
-            </div>
           </div>
+          <div class="nav-item">
+             <button class="nav-link" @click.stop="toggleTechMenu" :class="{ 'active': showTechMenu }">
+              技术资源
+            </button>
+          </div>
+
+          <a v-if="user" href="/console" class="btn-login">CONSOLE</a>
+          <a v-else href="/login" class="btn-login">LOGIN</a>
         </nav>
-        <div class="header-auth">
-            <a v-if="user" href="/console" class="btn-console">进入控制台</a>
-            <a v-else href="/login" class="btn-login-header">登录</a>
+      </div>
+      
+      <!-- Compact Panels -->
+      <div class="dropdown-panel" v-show="showProductMenu">
+        <div class="panel-inner">
+           <div class="panel-grid cols-3">
+              <a href="/login" class="panel-item">
+                <div class="panel-icon">[ ]</div>
+                <div class="panel-content">
+                  <div class="panel-head">
+                     <span class="panel-title">TALENTAI</span>
+                     <span class="panel-meta">PROD</span>
+                  </div>
+                  <p class="panel-desc">AI 驱动的确定性人才发现引擎。</p>
+                </div>
+              </a>
+              <a href="#products" class="panel-item">
+                <div class="panel-icon">//</div>
+                <div class="panel-content">
+                  <div class="panel-head">
+                     <span class="panel-title">BRIDGE</span>
+                     <span class="panel-meta">CUSTOM</span>
+                  </div>
+                  <p class="panel-desc">定制化 AI 中台与存量业务注入。</p>
+                </div>
+              </a>
+              <a href="#products" class="panel-item">
+                <div class="panel-icon">{ }</div>
+                <div class="panel-content">
+                  <div class="panel-head">
+                     <span class="panel-title">LABS</span>
+                     <span class="panel-meta">BETA</span>
+                  </div>
+                  <p class="panel-desc">前沿工具与原子组件原型库。</p>
+                </div>
+              </a>
+           </div>
+        </div>
+      </div>
+
+      <div class="dropdown-panel" v-show="showTechMenu">
+        <div class="panel-inner">
+           <div class="panel-grid cols-4">
+              <a href="#deep-dive" class="panel-item">
+                <div class="panel-icon">&</div>
+                <div class="panel-content">
+                  <div class="panel-head">
+                     <span class="panel-title">PHILOSOPHY</span>
+                  </div>
+                  <p class="panel-desc">核心架构设计原则。</p>
+                </div>
+              </a>
+              <a href="#deep-dive" class="panel-item">
+                <div class="panel-icon">_</div>
+                <div class="panel-content">
+                  <div class="panel-head">
+                     <span class="panel-title">SPECS</span>
+                  </div>
+                  <p class="panel-desc">技术栈与实现细节。</p>
+                </div>
+              </a>
+              <a href="/log" class="panel-item">
+                <div class="panel-icon">::</div>
+                <div class="panel-content">
+                  <div class="panel-head">
+                     <span class="panel-title">LOGS</span>
+                     <span class="panel-meta">LIVE</span>
+                  </div>
+                  <p class="panel-desc">实时工程演进记录。</p>
+                </div>
+              </a>
+              <a href="/docs" class="panel-item">
+                <div class="panel-icon">< ></div>
+                <div class="panel-content">
+                  <div class="panel-head">
+                     <span class="panel-title">API</span>
+                     <span class="panel-meta">DOCS</span>
+                  </div>
+                  <p class="panel-desc">标准化接口集成指南。</p>
+                </div>
+              </a>
+           </div>
         </div>
       </div>
     </header>
 
-    <!-- 开发动态信息板 - SaaS 平台版本隐藏 -->
-    <!-- 如需恢复，请取消以下注释
-    <div class="dev-board" :class="{ collapsed: !isAnnouncementExpanded }">
-      <div class="container">
-        <div class="dev-board-header" @click="isAnnouncementExpanded = !isAnnouncementExpanded">
-          <div class="dev-board-title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span><FaIcon icon="clipboard-list" style="margin-right: 8px;" />开发动态 · 内部信息板</span>
-            <span class="dev-board-count">{{ announcements.length }} 条更新</span>
+    <main>
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="container">
+          <span class="hero-label">Intelligent System Architect</span>
+          <h1 class="hero-title">秩序，<br>即是自由。</h1>
+          <p class="hero-subtitle">
+            我们重新编排业务的逻辑序数。简序智能（INTJ Tech）致力于将复杂的非结构化碎片，转化为稳健且可进化的生产力组件。
+          </p>
+          <div class="hero-cta">
+            <a href="#products" class="btn">探索产品矩阵</a>
+            <a href="#deep-dive" class="btn btn-ghost">了解核心能力</a>
           </div>
-          <button type="button" class="dev-board-toggle" :title="isAnnouncementExpanded ? '收起' : '展开'">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" :class="{ rotated: !isAnnouncementExpanded }">
-              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
+        </div>
+      </section>
+
+
+      <!-- Bento Products Grid -->
+      <section id="products" class="bento container">
+        <div class="bento-grid">
+          <!-- TalentAI Flagship Card -->
+          <div class="bento-card card-talent reveal">
+            <span class="card-tag">Flagship</span>
+            <h2 class="card-title">TalentAI</h2>
+            <p class="card-desc">新一代人才评估引擎。打破简历与岗位间的信息熵增，让每一份才华被精准映射。</p>
+            <div class="card-cta">
+              <a href="/login" class="btn">立即开始 →</a>
+            </div>
+            <!-- UI Mockup -->
+            <div class="ui-mockup">
+              <div class="mockup-bar"></div>
+              <div class="mockup-bar-short"></div>
+              <div class="mockup-row">
+                <div class="mockup-avatar"></div>
+                <div class="mockup-content"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Labs Card -->
+          <div class="bento-card card-labs reveal">
+            <span class="card-tag">Research</span>
+            <h2 class="card-title">实验室</h2>
+            <p class="card-desc card-desc-sm">AI 知识库、流程引擎、逻辑桥... 更多原子工具正在构建中。</p>
+          </div>
+
+          <!-- Bridge Custom Service Card -->
+          <div class="bento-card card-bridge reveal">
+            <div class="bridge-content">
+              <span class="card-tag">Custom Service</span>
+              <h2 class="card-title">INTJ Bridge</h2>
+              <p class="card-desc">当标准化工具无法承载您的雄心，我们为您构建专属的 AI 底层。</p>
+            </div>
+            <a href="mailto:contact@intjtech.cn" class="btn btn-ghost">预约咨询</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Engineering Philosophy (Linear Flow) -->
+      <section id="deep-dive" class="container philosophy-section reveal">
+        <div class="section-header">
+          <span class="section-tag-index">ENGINEERING PHILOSOPHY / 工程哲学</span>
         </div>
         
-        <div class="dev-board-content" v-show="isAnnouncementExpanded">
-          <div class="dev-board-list">
-            <div 
-              v-for="(item, index) in announcements" 
-              :key="index"
-              class="dev-item"
-              :class="'dev-item-' + item.category.replace(/\s+/g, '')"
-            >
-              <div class="dev-item-header">
-                <span class="dev-item-date">{{ item.date }}</span>
-                <span 
-                  class="dev-item-category"
-                  :class="'category-' + item.category.replace(/\s+/g, '')"
-                >
-                  {{ item.category }}
-                </span>
-                <span class="dev-item-project">{{ item.project }}</span>
-                <span v-if="item.author" class="dev-item-author">@{{ item.author }}</span>
-              </div>
-              <div class="dev-item-title">{{ item.title }}</div>
-              <ul v-if="item.details && item.details.length" class="dev-item-details">
-                <li v-for="(detail, dIndex) in item.details" :key="dIndex">{{ detail }}</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    -->
-
-    <main>
-      <section id="hero" class="section hero-section">
-        <div class="container hero-container">
-          <!-- 左侧文本区域 -->
-          <div class="hero-content">
-            <div class="eyebrow">
-              <span class="dot" />
-              简序智能 · 面向小微企业的 AI Agent 技术伙伴
-            </div>
-            
-            <!-- 主标题 -->
-            <h1 class="hero-title">小微企业的专属 <span class="highlight">AI 工程团队</span></h1>
-            
-            <!-- 副标题 -->
-            <h2 class="hero-subtitle">
-              用工程化方法做 Agent 设计、开发与落地，让流程自动化、更省心、更可控。
-            </h2>
-            
-            <!-- 支持卖点 -->
-            <div class="hero-benefits">
-              <div class="benefit-tag">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <!-- 淡灰色圆圈背景 -->
-                  <circle cx="12" cy="12" r="10" fill="none" stroke="#E5E7EB" stroke-width="1"/>
-                  <!-- 细线条对勾图标 -->
-                  <path d="M20 6L9 17L4 12" stroke="#6366F1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                工程落地，不止是 Demo
-              </div>
-              <div class="benefit-tag">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <!-- 淡灰色圆圈背景 -->
-                  <circle cx="12" cy="12" r="10" fill="none" stroke="#E5E7EB" stroke-width="1"/>
-                  <!-- 细线条对勾图标 -->
-                  <path d="M20 6L9 17L4 12" stroke="#6366F1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                1–6 周可交付，小工程不拖期
-              </div>
-              <div class="benefit-tag">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <!-- 淡灰色圆圈背景 -->
-                  <circle cx="12" cy="12" r="10" fill="none" stroke="#E5E7EB" stroke-width="1"/>
-                  <!-- 细线条对勾图标 -->
-                  <path d="M20 6L9 17L4 12" stroke="#6366F1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                成本透明：¥8,000–¥60,000
-              </div>
-            </div>
-            
-            <!-- CTA按钮 -->
-            <div class="cta-row">
-              <a class="btn btn-primary" href="#contact">立即沟通需求</a>
-              <a class="btn btn-secondary" href="#contact">
-                看看我们怎么做项目
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </a>
-            </div>
-            
-            <div class="note">
-              不确定从哪里开始？先用 15 分钟聊聊你的业务场景，一起找一个小切入口。
-            </div>
-          </div>
-          
-          <!-- 右侧视觉区域 -->
-          <div class="hero-visual">
-            <div class="engineering-illustration">
-              <client-only>
-                <lottie-player
-                  src="/agent-diagram-lottie.json"
-                  background="transparent"
-                  speed="1"
-                  loop
-                  autoplay
-                  style="width: 100%; height: 100%;"
-                />
-              </client-only>
-              <img
-                class="hero-visual-fallback"
-                src="/agent-diagram.svg"
-                alt="Agent 流程示意"
-                loading="lazy"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="flow-demo" class="section flow-demo-section">
-        <div class="container">
-          <div class="flow-grid">
-            <div class="flow-tile">
-              <div class="flow-demo-shell">
-                <svg viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg" aria-label="AI Workflow · Enlarged Bold Edition">
-                  <defs>
-                    <symbol id="icon-gear" viewBox="0 0 24 24">
-                      <path
-                        d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.5.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"
-                      />
-                    </symbol>
-                  </defs>
-
-                  <path d="M 480 100 C 480 140, 480 160, 480 200" class="path-track" />
-                  <path d="M 480 340 C 480 370, 240 370, 240 400" class="path-track" />
-                  <path d="M 480 340 C 480 370, 720 370, 720 400" class="path-track" />
-
-                  <path d="M 480 100 C 480 140, 480 160, 480 200" class="path-active timeline-anim" style="animation-name: draw-track-top;" />
-                  <path d="M 480 340 C 480 370, 240 370, 240 400" class="path-active timeline-anim" style="animation-name: draw-track-bottom;" />
-                  <path d="M 480 340 C 480 370, 720 370, 720 400" class="path-active timeline-anim" style="animation-name: draw-track-bottom;" />
-
-                  <g transform="translate(320, 30)">
-                    <g class="timeline-anim" style="animation-name: squeeze-top;">
-                      <rect width="320" height="70" rx="35" class="card-rect" />
-                      <circle cx="35" cy="35" r="6" fill="#3b82f6" />
-                      <text x="55" y="28" class="card-desc">INCOMING</text>
-                      <text x="55" y="50" class="card-title">查询最近订单并退款</text>
-                    </g>
-                  </g>
-
-                  <g transform="translate(280, 200)">
-                    <circle cx="200" cy="70" r="60" class="orch-pulse-ring timeline-anim" style="animation-name: pulse-strong; animation-delay: 0s;" />
-                    <circle cx="200" cy="70" r="60" class="orch-pulse-ring timeline-anim" style="animation-name: pulse-strong; animation-delay: 0.4s;" />
-
-                    <rect width="400" height="140" rx="16" class="card-rect orch-bg timeline-anim" style="animation-name: process-impact;" />
-
-                    <g transform="translate(200, 50)">
-                      <use href="#icon-gear" x="-16" y="-36" width="32" height="32" class="gear-icon timeline-anim" style="animation-name: gear-spin;" />
-                      <text y="16" text-anchor="middle" style="font-size:20px; font-weight:700; fill:#1e293b; letter-spacing: -0.01em;">意图识别 &amp; 任务分发</text>
-                    </g>
-
-                    <g transform="translate(0, 10)">
-                      <rect x="110" y="85" width="80" height="22" rx="6" fill="#fff" stroke="#bfdbfe" stroke-width="1.5" />
-                      <text x="150" y="100" text-anchor="middle" style="font-size:12px; font-weight:600; fill:#64748b;">NLP 解析</text>
-                      <rect x="210" y="85" width="80" height="22" rx="6" fill="#fff" stroke="#bfdbfe" stroke-width="1.5" />
-                      <text x="250" y="100" text-anchor="middle" style="font-size:12px; font-weight:600; fill:#64748b;">权限校验</text>
-                    </g>
-                  </g>
-
-                  <g transform="translate(80, 400)">
-                    <g class="timeline-anim" style="animation-name: result-impact; color: #3b82f6;">
-                      <rect width="320" height="110" rx="16" class="card-rect" />
-                      <line x1="0" y1="0" x2="0" y2="110" stroke="#3b82f6" stroke-width="6" />
-                      <text x="25" y="40" class="card-desc">ACTION 01</text>
-                      <text x="25" y="70" class="card-title" style="font-size: 20px;">调用订单查询 API</text>
-
-                      <circle cx="270" cy="55" r="20" class="icon-bg timeline-anim" style="animation-name: icon-flash-blue;" />
-                      <path d="M 260 55 L 266 61 L 278 47" class="check-path check-blue timeline-anim" style="animation-name: draw-check;" />
-                    </g>
-                  </g>
-
-                  <g transform="translate(560, 400)">
-                    <g class="timeline-anim" style="animation-name: result-impact; color: #10b981;">
-                      <rect width="320" height="110" rx="16" class="card-rect" />
-                      <line x1="0" y1="0" x2="0" y2="110" stroke="#10b981" stroke-width="6" />
-                      <text x="25" y="40" class="card-desc">ACTION 02</text>
-                      <text x="25" y="70" class="card-title" style="font-size: 20px;">创建退款工单</text>
-
-                      <circle cx="270" cy="55" r="20" class="icon-bg timeline-anim" style="animation-name: icon-flash-green;" />
-                      <path d="M 260 55 L 266 61 L 278 47" class="check-path check-green timeline-anim" style="animation-name: draw-check;" />
-                    </g>
-                  </g>
-
-                  <circle r="8" class="packet timeline-anim" style="animation-name: travel-top; offset-path: path('M 480 100 C 480 140, 480 160, 480 200');" />
-
-                  <circle r="8" class="packet timeline-anim" style="animation-name: travel-bottom; offset-path: path('M 480 340 C 480 370, 240 370, 240 400');" />
-                  <circle r="8" class="packet-success timeline-anim" style="animation-name: travel-bottom; offset-path: path('M 480 340 C 480 370, 720 370, 720 400');" />
-                </svg>
-              </div>
-            </div>
-
-            <div class="flow-tile">
-              <div class="flow-demo-shell data-pipeline-shell">
-                <svg viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg" aria-label="Data Agent · High Impact Animation">
-                  <defs>
-                    <clipPath id="data-agent-clip">
-                      <rect width="320" height="140" rx="24" />
-                    </clipPath>
-                  </defs>
-
-                  <defs>
-                    <path id="data-path-left" d="M 210 110 C 210 160, 420 140, 460 180" />
-                    <path id="data-path-mid" d="M 480 110 C 480 140, 480 150, 480 180" />
-                    <path id="data-path-right" d="M 750 110 C 750 160, 540 140, 500 180" />
-                    <path id="data-path-down" d="M 480 320 L 480 370" />
-                  </defs>
-
-                  <use href="#data-path-left" class="data-track" />
-                  <use href="#data-path-mid" class="data-track" />
-                  <use href="#data-path-right" class="data-track" />
-                  <use href="#data-path-down" class="data-track" />
-
-                  <use href="#data-path-left" class="data-flow-line data-timeline" style="animation-name: flow-down-dash; animation-delay: -2.5s;" />
-                  <use href="#data-path-down" class="data-flow-line data-timeline" style="animation-name: flow-down-dash;" />
-
-                  <g transform="translate(120, 40)">
-                    <g class="data-timeline anim-source">
-                      <rect width="180" height="70" rx="16" class="data-card-base" />
-                      <circle cx="35" cy="35" r="8" fill="#94a3b8" />
-                      <text x="60" y="32" class="data-label-tag">SOURCE 01</text>
-                      <text x="60" y="52" class="data-label-title">SQL DB</text>
-                    </g>
-                  </g>
-
-                  <g transform="translate(390, 40)">
-                    <g class="data-timeline anim-source" style="animation-delay: 0.1s;">
-                      <rect width="180" height="70" rx="16" class="data-card-base" />
-                      <circle cx="35" cy="35" r="8" fill="#22c55e" />
-                      <text x="60" y="32" class="data-label-tag" style="fill:#86efac;">SOURCE 02</text>
-                      <text x="60" y="52" class="data-label-title">Excel Files</text>
-                    </g>
-                  </g>
-
-                  <g transform="translate(660, 40)">
-                    <g class="data-timeline anim-source" style="animation-delay: 0.2s;">
-                      <rect width="180" height="70" rx="16" class="data-card-base" />
-                      <circle cx="35" cy="35" r="8" fill="#0ea5e9" />
-                      <text x="60" y="32" class="data-label-tag" style="fill:#7dd3fc;">SOURCE 03</text>
-                      <text x="60" y="52" class="data-label-title">Cloud API</text>
-                    </g>
-                  </g>
-
-                  <g transform="translate(320, 180)">
-                    <g class="data-timeline anim-agent-process">
-                      <rect width="320" height="140" rx="24" class="data-card-base" style="stroke: #a78bfa; stroke-width: 3;" />
-                      <text x="160" y="45" text-anchor="middle" class="data-label-tag" style="font-size: 12px; fill: #7c3aed;">Data Intelligence Agent</text>
-                      <text x="160" y="80" text-anchor="middle" class="data-label-title" style="font-size: 24px;">数据清洗 &amp; 结构化</text>
-
-                      <g transform="translate(160, 110)">
-                        <circle cx="0" cy="0" r="18" fill="none" stroke="#ddd6fe" stroke-width="4" stroke-dasharray="12 12" class="data-timeline" style="animation-name: ring-spin;" />
-                        <circle cx="0" cy="0" r="6" fill="#7c3aed" />
-                      </g>
-
-                      <g clip-path="url(#data-agent-clip)">
-                        <line x1="20" y1="70" x2="300" y2="70" stroke="#a78bfa" stroke-width="4" stroke-opacity="0.6" class="data-timeline" style="animation-name: scan-active;" />
-                      </g>
-                    </g>
-                  </g>
-
-                  <g transform="translate(180, 370)">
-                    <rect width="600" height="140" rx="20" class="data-card-base data-timeline" style="animation-name: report-feedback;" />
-
-                    <g transform="translate(30, 30)">
-                      <circle cx="8" cy="8" r="6" fill="#10b981" />
-                      <text x="24" y="14" class="data-label-title" style="font-size: 18px;">Q3 销售与转化分析报表.pdf</text>
-                      <rect x="500" y="4" width="40" height="20" rx="6" fill="#f1f5f9" />
-                      <text x="520" y="18" text-anchor="middle" class="data-label-tag" style="fill:#64748b;">PDF</text>
-
-                      <g transform="translate(40, 50)">
-                        <text x="0" y="-10" class="data-label-desc">Revenue Trend</text>
-                        <line x1="0" y1="50" x2="160" y2="50" stroke="#e2e8f0" stroke-width="3" />
-                        <path d="M 10 50 L 10 20 Q 10 16 14 16 L 36 16 Q 40 16 40 20 L 40 50 Z" class="bar-path data-timeline" style="fill: var(--data-primary); animation-name: bar-grow;" />
-                        <path d="M 60 50 L 60 10 Q 60 6 64 6 L 86 6 Q 90 6 90 10 L 90 50 Z" class="bar-path data-timeline" style="fill: var(--data-secondary); animation-name: bar-grow; animation-delay: 0.05s;" />
-                        <path d="M 110 50 L 110 25 Q 110 21 114 21 L 136 21 Q 140 21 140 25 L 140 50 Z" class="bar-path data-timeline" style="fill: #10b981; animation-name: bar-grow; animation-delay: 0.1s;" />
-                      </g>
-
-                      <g transform="translate(340, 50)">
-                        <text x="0" y="-10" class="data-label-desc">Key Metrics</text>
-                        <g transform="translate(40, 30)">
-                          <circle cx="0" cy="0" r="26" fill="#f1f5f9" />
-                          <path d="M 0 0 L 0 -26 A 26 26 0 0 1 26 0 Z" class="pie-purple data-timeline anim-pie" />
-                          <path d="M 0 0 L 26 0 A 26 26 0 0 1 -18 18 Z" class="pie-blue data-timeline anim-pie" style="animation-delay: 0.1s;" />
-                        </g>
-
-                        <g transform="translate(90, 10)">
-                          <circle cx="0" cy="0" r="4" fill="#7c3aed" />
-                          <text x="12" y="4" class="data-label-tag" style="fill:#64748b; font-size:10px;">Sales</text>
-                          <circle cx="0" cy="20" r="4" fill="#0ea5e9" />
-                          <text x="12" y="24" class="data-label-tag" style="fill:#64748b; font-size:10px;">Leads</text>
-                        </g>
-                      </g>
-                    </g>
-                  </g>
-
-                  <circle r="6" class="data-particle data-timeline" style="animation-name: move-in-left; offset-path: path('M 210 110 C 210 160, 420 140, 460 180');" />
-                  <circle r="6" class="data-particle data-timeline" style="animation-name: move-in-mid; offset-path: path('M 480 110 C 480 140, 480 150, 480 180');" />
-                  <circle r="6" class="data-particle data-timeline" style="animation-name: move-in-right; offset-path: path('M 750 110 C 750 160, 540 140, 500 180');" />
-                  <circle r="8" class="data-particle data-timeline" style="fill:#10b981; animation-name: move-down; offset-path: path('M 480 320 L 480 370');" />
-                </svg>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      <section id="services" class="section">
-        <div class="container">
-          <h2 class="section-heading">我们能帮你做什么（Services）</h2>
-          <p class="section-subtitle">
-            围绕“让人从重复劳动里解放出来”，目前主要聚焦三类场景。
-          </p>
-          <div class="cards-grid">
-            <article v-for="service in services" :key="service.title" class="card">
-              <div class="pill">{{ service.title }}</div>
-              <p class="meta">{{ service.fit }}</p>
-              <div>
-                <strong>我们会帮你：</strong>
-                <ul>
-                  <li v-for="item in service.tasks" :key="item">{{ item }}</li>
-                </ul>
-              </div>
-              <div>
-                <strong>你能得到：</strong>
-                <ul>
-                  <li v-for="item in service.outcomes" :key="item">{{ item }}</li>
-                </ul>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <div class="banner-section">
-        <div class="container">
-          <iframe
-            class="banner-embed"
-            src="/banner.html"
-            title="LangGraph Agent 流程示意"
-            loading="lazy"
-          ></iframe>
-        </div>
-      </div>
-
-      <section id="cases" class="section cases-section">
-        <div class="container">
-          <div class="cases-header">
-            <h2 class="section-heading">一些我们做过和正在做的东西（Cases）</h2>
-            <p class="section-subtitle cases-subtitle">
-              3–4 个真实落地的代表场景，先讲业务问题与结果，再讲 Agent 的做法；更多案例放在单独页面。
-            </p>
-          </div>
-          <div class="case-chips" v-if="caseScopes.length">
-            <span v-for="scope in caseScopes" :key="scope" class="case-chip">{{ scope }}</span>
-          </div>
-          <div class="cases-grid">
-            <article v-for="item in cases" :key="item.result" class="case-card">
-              <div class="case-tag">{{ item.tag }}</div>
-              <h3 class="case-title">
-                <span class="case-result">{{ item.result }}</span>
-                <span class="case-agent">（{{ item.agent }}）</span>
-              </h3>
-              <p class="case-background">{{ item.background }}</p>
-              <div class="case-approach">
-                <div class="case-label">我们怎么做</div>
-                <ul>
-                  <li v-for="step in item.approach" :key="step">{{ step }}</li>
-                </ul>
-              </div>
-              <div class="case-effect">
-                <span class="case-label">效果</span>
-                <span class="case-effect-text">{{ item.effect }}</span>
-              </div>
-            </article>
-          </div>
-          <div class="cases-footer">
-            <a class="case-more-link" href="/cases">
-              查看更多案例
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section id="advantages" class="section">
-        <div class="container">
-          <h2 class="section-heading">为什么找我们这样的「小而精」团队（Advantages）</h2>
-          <p class="section-subtitle">
-            我们不是大公司，没有庞大组织和流程，但在 AI Agent / 业务自动化方向长期深耕。对很多中小企业来说，一支规模不大但技术与业务都过关的团队，往往比“人多但不熟你业务”的团队更适合。
-          </p>
-          <div class="advantage-groups">
-            <div class="adv-group advantage-top">
-              <div class="cards-grid advantages-grid primary-grid">
-                <article
-                  v-for="adv in coreAdvantages"
-                  :key="adv.title"
-                  class="card advantage-card advantage-primary"
-                >
-                  <div class="adv-tag" role="img" :aria-label="adv.tag || adv.title">
-                    <i :class="adv.icon || 'fa-solid fa-star'"></i>
-                  </div>
-                  <h3>{{ adv.title }}</h3>
-                  <div class="adv-body">
-                    <p class="meta">{{ adv.detail }}</p>
-                    <p v-if="adv.extra" class="extra">{{ adv.extra }}</p>
-                  </div>
-                </article>
-              </div>
-            </div>
-            <div class="adv-group advantage-bottom">
-              <div class="cards-grid advantages-grid secondary-grid">
-                <article
-                  v-for="adv in supportAdvantages"
-                  :key="adv.title"
-                  class="card advantage-card advantage-secondary"
-                >
-                  <div class="adv-tag" role="img" :aria-label="adv.tag || adv.title">
-                    <i :class="adv.icon || 'fa-solid fa-star'"></i>
-                  </div>
-                  <h3>{{ adv.title }}</h3>
-                  <div class="adv-body">
-                    <p class="meta">{{ adv.detail }}</p>
-                    <p v-if="adv.extra" class="extra">{{ adv.extra }}</p>
-                  </div>
-                </article>
-              </div>
-            </div>
-          </div>
-          <div class="note advantage-note">
-            目标：在安全、可控的前提下，先跑通 1–2 个可观测、有数据的试点，再基于效果逐步扩展，而不是一开始就做周期长、风险大的大项目。
-          </div>
-        </div>
-      </section>
-
-      <section id="pricing" class="section">
-        <div class="container">
-          <h2 class="section-heading">合作方式 & 定价（Collaboration / Pricing）</h2>
-          <p class="section-subtitle">
-            三段式合作，让你从“试水”到“上线”再到“持续优化”，都保持轻量、可控的节奏与预算。
-          </p>
-          <div class="pricing-grid">
-            <article
-              v-for="pkg in pricing"
-              :key="pkg.title"
-              class="price-card"
-              :class="{ featured: pkg.featured }"
-            >
-              <div class="pill">{{ pkg.title }}</div>
-              <div class="price-tag">{{ pkg.price }}</div>
-              <div class="price-duration">时间范围：{{ pkg.duration }}</div>
-              <div class="divider" />
-              <div>
-                <strong>适合：</strong>
-                <ul>
-                  <li v-for="item in pkg.fit" :key="item">{{ item }}</li>
-                </ul>
-              </div>
-              <div>
-                <strong>包含内容：</strong>
-                <ul>
-                  <li v-for="item in pkg.includes" :key="item">{{ item }}</li>
-                </ul>
-              </div>
-              <div class="note">
-                实际价格会在了解具体场景后给出清晰报价，不会“做完才知道多少钱”。
-              </div>
-            </article>
-          </div>
-          <div class="pricing-banner">
-            <div class="pricing-banner-icon">
-              <i class="fa-solid fa-bullseye" aria-hidden="true"></i>
-            </div>
-            <div class="pricing-banner-body">
-              <p class="pricing-banner-text">
-                提交你的使用场景，我们将在数小时内交付一版定制 Demo，完全免费，无风险试用。
-              </p>
-            </div>
-            <div class="pricing-banner-cta">
-              <a class="btn btn-primary pricing-banner-btn" href="#contact">
-                体验免费 Demo
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 团队和日志 section 已移至 /about 页面 -->
-      <section v-if="false" id="team" class="section">
-        <div class="container">
-          <h2 class="section-heading">关于我们（Team）</h2>
-          <p class="section-subtitle">
-            简序智能是一个核心成员仅有 3 人的小型工程团队，每个人都长期在一线写代码、做真实业务系统。
-          </p>
-          <div class="team-grid">
-            <div class="info-card info-top">
-              <div class="pill pill-ghost">小型工程团队</div>
-              <h3>2–3 人配置，方向 / 系统 / 体验都到位</h3>
-              <p class="intro-meta">
-                简单说，就是：一个负责方向和架构 + 一个负责系统与运维质量 + 一个负责体验与落地细节。
-              </p>
-              <p class="muted">
-                共同目标：让 Agent 不只是“看上去很酷”，而是真正在公司里稳定被每天使用。
-              </p>
-            </div>
-
-            <article
-              v-for="(member, index) in members"
-              :key="member.name"
-              class="member-card"
-              :class="`member-slot-${index}`"
-            >
-              <div class="member-header">
-                <div class="member-name">{{ member.name }}</div>
-                <span class="member-role">{{ member.role }}</span>
-              </div>
-              <p class="member-summary">{{ member.summary }}</p>
-              <ul class="member-bullets">
-                <li v-for="bullet in member.bullets" :key="bullet">{{ bullet }}</li>
-              </ul>
-            </article>
-
-            <div class="info-card info-bottom">
-              <div class="team-meta-row">
-                <div class="team-meta-block">
-                  <span class="meta-label">规模</span>
-                  <span class="meta-value">2–3 人常驻</span>
-                  <small>保持直接沟通，快速迭代</small>
-                </div>
-                <div class="team-meta-block">
-                  <span class="meta-label">工作方式</span>
-                  <span class="meta-value">先跑通，再精炼</span>
-                  <small>落地导向，可观测且好维护</small>
-                </div>
-              </div>
-
-              <div class="team-focus-title">我们关注的关键点</div>
-              <div class="team-focus-chips">
-                <div class="focus-chip">
-                  <div class="chip-title">生产可用性</div>
-                  <div class="chip-desc">稳定性、监控、错误发现与追踪</div>
-                </div>
-                <div class="focus-chip">
-                  <div class="chip-title">可维护性</div>
-                  <div class="chip-desc">清晰的输入输出协议、文档化的约束与边界</div>
-                </div>
-                <div class="focus-chip">
-                  <div class="chip-title">体验</div>
-                  <div class="chip-desc">好用、好看、好上手，方便团队内部推广</div>
-                </div>
+        <div class="philosophy-list">
+          <div v-for="item in philosophies" :key="item.id" class="ph-row">
+            <span class="ph-id">{{ item.id }}</span>
+            <div class="ph-main">
+              <h3 class="ph-title">{{ item.title }}</h3>
+              <div class="ph-meta">
+                <span class="ph-tags">{{ item.tags }}</span>
+                <span class="ph-divider">|</span>
+                <span class="ph-desc">{{ item.content }}</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section v-if="false" id="notes" class="section">
-        <div class="container">
-          <h2 class="section-heading">更新日志 / 笔记（Changelog / Notes）</h2>
-          <p class="section-subtitle">
-            记录一线落地过程中的经验和踩坑，方便你了解真实问题与解决方式。
-          </p>
-          <div class="cards-grid">
-            <article
-              v-for="note in notes"
-              :key="note.title"
-              class="note-card"
-              role="button"
-              tabindex="0"
-              @click="openNote(note)"
-              @keydown.enter.prevent="openNote(note)"
-              @keydown.space.prevent="openNote(note)"
-            >
-              <div class="badge">{{ note.date }}</div>
-              <h3>{{ note.title }}</h3>
-              <p class="meta">{{ note.summary }}</p>
-              <div class="note-card-cta">点击查看全文</div>
-            </article>
+      <!-- Engineering Stack (New) -->
+      <section class="container philosophy-section reveal">
+        <div class="section-header">
+          <span class="section-tag-index">ENGINEERING STACK / 工程实现规格</span>
+        </div>
+        
+        <div class="philosophy-list">
+          <div v-for="item in engineeringStack" :key="item.id" class="ph-row">
+            <span class="ph-id">{{ item.id }}</span>
+            <div class="ph-main">
+              <h3 class="ph-title">{{ item.title }}</h3>
+              <div class="ph-meta">
+                <span class="ph-tags">{{ item.tags }}</span>
+                <span class="ph-divider">|</span>
+                <span class="ph-desc">{{ item.content }}</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
+
+
+
 
     </main>
-    <footer class="footer">
-      <div class="container footer-shell">
-        <div class="footer-brand-compact">
-          <img class="footer-logo" src="/site-logo.png" alt="简序智能 Logo" />
-          <div>
-            <div class="footer-title">简序智能 · AI Agent 技术伙伴</div>
-            <div class="footer-slogan">小微企业的工程化 Agent 团队</div>
+
+    <!-- Footer: System Status Bar -->
+    <footer class="system-footer">
+      <div class="footer-inner">
+        <!-- Left: Identity & Meta -->
+        <div class="footer-identity">
+          <div class="footer-brand">简序智能<span class="brand-en">INTJ Tech</span></div>
+          <div class="footer-meta">
+            <span>SYSTEM_STATUS: OPERATIONAL</span>
+            <span>BUILD: SEAM_V4.8 / OIS_PROTOCOL</span>
           </div>
         </div>
-
-        <div class="footer-links-compact">
-          <a href="#services">服务</a>
-          <a href="#cases">案例</a>
-          <a href="#advantages">优势</a>
-          <a href="#pricing">定价</a>
-          <a href="/about">关于我们</a>
-          <a href="/console">控制台</a>
+        
+        <!-- Center: Resource Matrix -->
+        <div class="footer-matrix">
+          <div class="matrix-row">
+            <span class="matrix-label">[ PRODUCT ]</span>
+            <span class="matrix-items">TalentAI / INTJ Bridge / Labs</span>
+          </div>
+          <div class="matrix-row">
+            <span class="matrix-label">[ SPECS ]</span>
+            <span class="matrix-items">工程哲学 / 技术规格 / 研发日志</span>
+          </div>
+          <div class="matrix-row">
+            <span class="matrix-label">[ LEGAL ]</span>
+            <span class="matrix-items">隐私政策 / 服务条款</span>
+          </div>
         </div>
-
-        <div class="footer-contact-compact">
-          <span class="footer-label">微信</span>
-          <span class="footer-value">________</span>
-          <span class="footer-divider-dot">·</span>
-          <span class="footer-label">Email</span>
-          <span class="footer-value">________</span>
-          <span class="footer-divider-dot">·</span>
-          <span class="footer-value">GitHub / Blog / 公众号</span>
+        
+        <!-- Right: Nodes & Copyright -->
+        <div class="footer-nodes">
+          <div class="nodes-location">LOCATIONS: SZ · HK · SH</div>
+          <div class="nodes-copyright">© 2025 INTJ TECH</div>
+          <div class="nodes-reserved">ALL RIGHTS RESERVED.</div>
         </div>
-
-        <a class="btn btn-primary footer-top-btn" href="#hero" aria-label="回到顶部">
-          回到顶部
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 19V5M12 5l-6 6M12 5l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-      </div>
-
-      <div class="container footer-bottom">
-        <small>小团队、重工程、追求可落地的 Agent 交付</small>
-        <span class="footer-divider" />
-        <small>Copyright © 深圳市简序智能科技有限公司</small>
       </div>
     </footer>
-    <div
-      v-if="selectedNote"
-      class="note-modal-overlay"
-      role="dialog"
-      aria-modal="true"
-      :aria-label="selectedNote?.title"
-      @click.self="closeNote"
-    >
-      <div class="note-modal">
-        <div class="note-modal-header">
-          <div>
-            <div class="badge">{{ selectedNote.date }}</div>
-            <h3>{{ selectedNote.title }}</h3>
-          </div>
-          <button class="note-modal-close" type="button" aria-label="关闭" @click="closeNote">
-            ✕
-          </button>
-        </div>
-        <div class="note-modal-body">
-          <p v-for="(para, idx) in noteParagraphs" :key="idx">{{ para }}</p>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
+
+<style scoped>
+/* ========================================
+   CSS Variables - 极简工业风设计系统
+   在 scoped 样式中，变量需要定义在组件根元素上
+   ======================================== */
+
+/* ========================================
+   Base Styles
+   ======================================== */
+.page {
+  /* CSS Variables */
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #666666;
+  --border: rgba(0, 0, 0, 0.08);
+  --grid-line: rgba(0, 0, 0, 0.04); /* 稍微加深一点栅格 */
+  --dot-color: rgba(0, 0, 0, 0.15); /* 加深点阵颜色确保可见 */
+  --accent: #000000;
+  --radius: 12px;
+  --section-padding: 160px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  
+  /* Base Styles */
+  min-height: 100vh;
+  color: var(--fg);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+
+  /* 
+    Layer 1 (上层): 横向栅格
+    Layer 2 (上层): 纵向栅格
+    Layer 3 (底层): 纯白背景色
+  */
+  background-color: var(--bg);
+  background-image: 
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  
+  /* 调整背景位置和尺寸 */
+  background-size: 40px 40px, 40px 40px;
+  background-position: 0 0, 0 0;
+  
+  /* 关键：local 或 scroll 都可以让背景随内容移动，
+     但在 main 容器上，默认就是随文档流动的 */
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 40px;
+  box-sizing: border-box; /* Critical for alignment */
+}
+
+/* Panel Inner */
+.panel-inner {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ========================================
+   动效基础类
+   ======================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ========================================
+   Header
+   ======================================== */
+.header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background: #fff;
+  border-bottom: 1px solid var(--fg);
+  z-index: 1000;
+}
+
+.header-inner {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.logo {
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: -0.04em;
+  text-decoration: none;
+  color: var(--fg);
+  transition: opacity 0.2s var(--ease);
+}
+
+.logo:hover {
+  opacity: 0.7;
+}
+
+.logo span {
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 4px;
+}
+
+.nav {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+
+.nav-link {
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--muted);
+  transition: color 0.2s var(--ease);
+}
+
+.nav-link:hover {
+  color: var(--fg);
+}
+
+.btn-login {
+  padding: 8px 16px;
+  border: 1px solid var(--fg);
+  border-radius: 0;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--fg);
+  transition: all 0.2s var(--ease);
+}
+
+.btn-login:hover {
+  background: var(--fg);
+  color: #fff;
+}
+
+/* ========================================
+   Dropdown Panels
+   ======================================== */
+.dropdown-panel {
+  position: absolute;
+  top: 72px;
+  left: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--fg);
+  padding: 32px 0;
+  z-index: 999;
+}
+
+.panel-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+.panel-item {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  text-decoration: none;
+  border: 1px solid #000 !important;
+  background: #fff;
+  transition: background 0.15s;
+}
+
+.panel-item:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.panel-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'SF Mono', 'Roboto Mono', monospace;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--fg);
+  flex-shrink: 0;
+}
+
+.panel-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.panel-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+  text-transform: uppercase;
+}
+
+.panel-meta {
+  font-family: 'SF Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  background: rgba(0, 0, 0, 0.04);
+  padding: 2px 6px;
+  border: 1px solid var(--border);
+}
+
+.panel-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ========================================
+   Hero Section
+   ======================================== */
+.hero {
+  padding: 220px 0 120px;
+  text-align: center;
+}
+
+.hero-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: var(--muted);
+  margin-bottom: 32px;
+  display: block;
+  animation: fadeInDown 0.8s var(--ease) both;
+}
+
+.hero-title {
+  font-size: 96px;
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+  margin-bottom: 40px;
+  animation: fadeInUp 1s var(--ease) 0.1s both;
+}
+
+.hero-subtitle {
+  font-size: 24px;
+  max-width: 800px;
+  margin: 0 auto 56px;
+  color: var(--muted);
+  font-weight: 400;
+  line-height: 1.4;
+  animation: fadeInUp 1s var(--ease) 0.2s both;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  animation: fadeInUp 1s var(--ease) 0.3s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   Buttons
+   ======================================== */
+.btn {
+  padding: 16px 32px;
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 0;
+  font-size: 15px;
+  font-weight: 600;
+  transition: transform 0.3s var(--ease), background 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  display: inline-block;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--fg);
+}
+
+.btn-ghost:hover {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.btn-light {
+  background: #fff;
+  color: #000;
+}
+
+.btn-light:hover {
+  background: #f5f5f5;
+}
+
+/* ========================================
+   Bento Grid
+   ======================================== */
+.bento {
+  padding: 80px 0;
+}
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(2, 440px);
+  gap: 24px;
+}
+
+.bento-card {
+  background: #fff;
+  border: 1px solid #111;
+  border-radius: 0;
+  padding: 56px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+}
+
+.bento-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+}
+
+.card-talent {
+  grid-column: span 8;
+}
+
+.card-labs {
+  grid-column: span 4;
+  background: #fff;
+}
+
+.card-bridge {
+  grid-column: span 12;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-tag {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-tag::before {
+  content: "";
+  width: 8px;
+  height: 1px;
+  background: var(--muted);
+}
+
+.card-title {
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  letter-spacing: -0.03em;
+}
+
+.card-desc {
+  font-size: 17px;
+  color: var(--muted);
+  max-width: 440px;
+}
+
+.card-desc-sm {
+  font-size: 14px;
+}
+
+.card-cta {
+  margin-top: 40px;
+}
+
+/* UI Mockup */
+.ui-mockup {
+  position: absolute;
+  right: 40px;
+  bottom: -20px;
+  width: 400px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px 12px 0 0;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition: transform 0.6s var(--ease);
+}
+
+.bento-card:hover .ui-mockup {
+  transform: translateY(-20px);
+}
+
+.mockup-bar {
+  width: 100%;
+  height: 8px;
+  background: #eee;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.mockup-bar-short {
+  width: 60%;
+  height: 8px;
+  background: #eee;
+  border-radius: 4px;
+  margin-bottom: 24px;
+}
+
+.mockup-row {
+  display: flex;
+  gap: 12px;
+}
+
+.mockup-avatar {
+  width: 32px;
+  height: 32px;
+  background: #000;
+  border-radius: 50%;
+}
+
+.mockup-content {
+  flex: 1;
+  height: 32px;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+/* ========================================
+   Feature Deep Dive
+   ======================================== */
+.deep-dive {
+  padding: var(--section-padding) 0;
+  border-top: 1px solid var(--border);
+}
+
+.feature-row {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 100px;
+  align-items: center;
+  margin-bottom: 160px;
+}
+
+.feature-row:last-child {
+  margin-bottom: 0;
+}
+
+.feature-row-reverse {
+  direction: rtl;
+}
+
+.feature-row-reverse .feature-text {
+  direction: ltr;
+}
+
+.feature-visual {
+  background: #fafafa;
+  aspect-ratio: 16/10;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.4s var(--ease);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feature-visual:hover {
+  border-color: #000;
+}
+
+.visual-code {
+  font-weight: 800;
+  font-size: 100px;
+  opacity: 0.03;
+}
+
+.feature-text h3 {
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  margin-bottom: 24px;
+}
+
+.feature-text p {
+  font-size: 18px;
+  color: var(--muted);
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+/* ========================================
+   Comparison Section
+   ======================================== */
+.comparison {
+  padding: var(--section-padding) 0;
+  background: #111;
+  color: #fff;
+  border-radius: 32px;
+  margin: 0 40px;
+}
+
+.comp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-top: 1px solid #222;
+}
+
+.comp-col {
+  padding: 80px;
+  transition: background 0.4s var(--ease);
+}
+
+.comp-col:hover {
+  background: #161616;
+}
+
+.comp-col:first-child {
+  border-right: 1px solid #222;
+}
+
+.comp-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #555;
+  margin-bottom: 40px;
+  display: block;
+}
+
+.comp-label-light {
+  color: #fff;
+}
+
+.comp-item {
+  margin-bottom: 48px;
+  opacity: 0.6;
+  transition: opacity 0.4s var(--ease);
+}
+
+.comp-col:hover .comp-item {
+  opacity: 1;
+}
+
+.comp-item h5 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.comp-item p {
+  font-size: 15px;
+  color: #777;
+  margin: 0;
+}
+
+/* ========================================
+   Developer Section
+   ======================================== */
+.developer {
+  padding: var(--section-padding) 0;
+}
+
+.dev-box {
+  background: #000;
+  color: #fff;
+  border-radius: 24px;
+  padding: 100px;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.dev-content h2 {
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  margin-bottom: 24px;
+}
+
+.dev-content p {
+  color: #777;
+  margin-bottom: 40px;
+  font-size: 18px;
+}
+
+.code-editor {
+  background: #0a0a0a;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 32px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 14px;
+  color: #777;
+  line-height: 1.8;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.code-line {
+  white-space: pre;
+}
+
+.code-indent {
+  padding-left: 2em;
+}
+
+.code-empty {
+  height: 1.8em;
+}
+
+.keyword {
+  color: #fff;
+  font-weight: 600;
+}
+
+.string {
+  color: #555;
+}
+
+/* ========================================
+   Manifesto
+   ======================================== */
+.manifesto {
+  padding: 160px 0;
+  border-top: 1px solid var(--border);
+}
+
+.manifesto-text {
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 1.3;
+  max-width: 900px;
+  letter-spacing: -0.03em;
+}
+
+.text-muted {
+  color: var(--muted);
+}
+
+/* ========================================
+   Initialize Section (New CTA)
+   ======================================== */
+.init-section {
+  padding: 80px 0 160px;
+}
+
+.init-status {
+  font-family: 'SF Mono', 'Roboto Mono', monospace;
+  font-size: 14px;
+  color: #000;
+  opacity: 0.5;
+  margin-left: 24px;
+}
+
+.init-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.init-row {
+  display: grid;
+  grid-template-columns: 48px 1fr 160px; /* ID | Main(Title+Content) | Action */
+  align-items: baseline;
+  gap: 24px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.init-row:last-child {
+  border-bottom: none;
+}
+
+.init-btn {
+  font-family: 'SF Mono', 'Roboto Mono', monospace;
+  font-size: 14px;
+  color: #111;
+  text-decoration: none;
+  font-weight: 700;
+  text-align: right;
+  transition: color 0.2s ease;
+}
+
+.init-btn:hover {
+  text-decoration: underline;
+  color: #000;
+}
+
+@media (max-width: 768px) {
+  .init-grid {
+    gap: 40px;
+  }
+  .init-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+  .init-status {
+    display: block;
+    margin-left: 0;
+    margin-top: 8px;
+  }
+  .init-btn {
+    text-align: left;
+    margin-top: 8px;
+    display: inline-block;
+  }
+}
+
+/* ========================================
+   System Footer (Status Bar Style)
+   ======================================== */
+.system-footer {
+  border-top: 1px solid var(--fg);
+  padding: 40px 0;
+  background: transparent;
+}
+
+.footer-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 60px;
+}
+
+/* Left: Identity & Meta */
+.footer-identity {
+  flex: 0 0 auto;
+}
+
+.footer-brand {
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  color: var(--fg);
+  margin-bottom: 12px;
+}
+
+.brand-en {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  margin-left: 6px;
+  color: var(--muted);
+}
+
+.footer-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.footer-meta span {
+  font-family: 'SF Mono', 'Roboto Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+
+/* Center: Resource Matrix */
+.footer-matrix {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 400px;
+}
+
+.matrix-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.matrix-label {
+  font-family: 'SF Mono', 'Roboto Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--fg);
+  flex-shrink: 0;
+}
+
+.matrix-items {
+  font-family: 'SF Mono', 'Roboto Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* Right: Nodes & Copyright */
+.footer-nodes {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-left: auto;
+}
+
+.nodes-location {
+  font-family: 'SF Mono', 'Roboto Mono', monospace;
+  font-size: 11px;
+  color: var(--fg);
+  margin-bottom: 8px;
+  letter-spacing: 0.1em;
+}
+
+.nodes-copyright {
+  font-family: 'SF Mono', 'Roboto Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.nodes-reserved {
+  font-family: 'SF Mono', 'Roboto Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  opacity: 0.6;
+}
+
+/* ========================================
+   Responsive Design
+   ======================================== */
+@media (max-width: 1024px) {
+  .hero-title {
+    font-size: 64px;
+  }
+
+  .bento-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  .card-talent,
+  .card-labs,
+  .card-bridge {
+    grid-column: span 1;
+  }
+
+  .ui-mockup {
+    position: relative;
+    right: 0;
+    width: 100%;
+    margin-top: 40px;
+  }
+
+  .feature-row,
+  .feature-row-reverse,
+  .dev-box,
+  .comp-grid {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+
+  .feature-row-reverse {
+    direction: ltr;
+  }
+
+  .comp-col:first-child {
+    border-right: none;
+    border-bottom: 1px solid #222;
+  }
+
+  .manifesto-text {
+    font-size: 28px;
+  }
+
+  .final-cta h2 {
+    font-size: 40px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 20px;
+  }
+
+  .header-inner {
+    height: 64px;
+  }
+
+  .nav {
+    gap: 20px;
+  }
+
+  .nav-link {
+    display: none;
+  }
+
+  .hero {
+    padding: 140px 0 80px;
+  }
+
+  .hero-title {
+    font-size: 48px;
+  }
+
+  .hero-subtitle {
+    font-size: 18px;
+  }
+
+  .hero-cta {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .bento-card {
+    padding: 32px;
+  }
+
+  .card-title {
+    font-size: 28px;
+  }
+
+  .feature-text h3 {
+    font-size: 32px;
+  }
+
+  .comparison {
+    margin: 0 20px;
+    border-radius: 20px;
+  }
+
+  .comp-col {
+    padding: 40px;
+  }
+
+  .dev-box {
+    padding: 40px;
+  }
+
+  .dev-content h2 {
+    font-size: 32px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+}
+
+/* Engineering Philosophy Styles */
+.philosophy-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 48px;
+  row-gap: 64px;
+  margin-top: 60px;
+}
+
+.section-tag-index {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #999;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.section-title-index {
+  font-size: 40px;
+  font-weight: 800;
+  color: #111;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.ph-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ph-top {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+  border-bottom: 2px solid #111;
+  padding-bottom: 12px;
+  width: 100%;
+}
+
+.ph-id {
+  font-family: 'SF Mono', 'Roboto Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+}
+
+.ph-slash {
+  color: #eee;
+}
+
+.ph-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #111;
+  letter-spacing: 0.02em;
+}
+
+.ph-tags-box {
+  margin-bottom: 16px;
+}
+
+.ph-tags {
+  display: inline-block;
+  font-family: 'SF Mono', 'Roboto Mono', monospace;
+  font-size: 12px;
+  color: #666;
+  background: #f4f4f4;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.ph-content {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #444;
+  margin: 0;
+  text-align: justify;
+}
+
+@media (max-width: 768px) {
+  .philosophy-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+/* Compact Dropdown Panel */
+.nav-link {
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--fg);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  position: relative;
+}
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #000;
+}
+
+.dropdown-panel {
+  position: absolute;
+  top: 72px;
+  left: 0;
+  width: 100%;
+  background: #ffffff;
+  border-bottom: 1px solid #000;
+  padding: 24px 0; /* Reduced Panel Padding */
+  z-index: 999;
+}
+
+.panel-grid {
+  display: grid;
+  gap: 16px; /* Tighter Grid Gap */
+}
+.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+.panel-item {
+  display: flex;
+  flex-direction: row; /* Horizontal Layout */
+  align-items: flex-start;
+  gap: 16px; 
+  padding: 16px; /* Compact Item Padding */
+  text-decoration: none;
+  border: 1px solid transparent; 
+  transition: background 0.1s, border-color 0.1s;
+}
+
+.panel-item:hover {
+  background: #f4f4f4;
+  border: 1px solid #000;
+}
+
+.panel-icon {
+  width: 48px; height: 48px;
+  background: #f8f8f8;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'SF Mono', 'Roboto Mono', monospace;
+  font-weight: 700;
+  font-size: 16px;
+  color: #000;
+  flex-shrink: 0;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.panel-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px; /* Tight text gap */
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.panel-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 14px; /* Smaller Title */
+  letter-spacing: -0.01em;
+  color: #000;
+  text-transform: uppercase;
+}
+
+.panel-meta {
+  font-family: 'SF Mono', monospace;
+  font-size: 10px;
+  color: #666;
+  background: #eee;
+  padding: 2px 5px;
+  border-radius: 0;
+}
+
+.panel-desc {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.4;
+  margin: 0;
+}
+/* Global Grid Background (from About page) */
+.page {
+  /* CSS Variables */
+  --bg: #ffffff;
+  --bg-secondary: #fafafa;
+  --fg: #111111;
+  --muted: #666666;
+  --muted-light: #999999;
+  --border: transparent;
+  --grid-line: rgba(0, 0, 0, 0.04);
+  --radius: 0;
+
+  background-color: var(--bg);
+  background-image: 
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  
+  background-size: 40px 40px, 40px 40px;
+  background-position: 0 0, 0 0;
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, sans-serif;
+}
+
+/* Hardcore Linear Styling */
+.section-tag-index {
+  font-family: 'SF Mono', 'Roboto Mono', monospace; 
+  font-weight: 700; 
+  letter-spacing: 0.1em;
+  font-size: 14px;
+  padding-left: 0;
+  margin-bottom: 40px;
+}
+
+.philosophy-section, .tech-log-section {
+  padding: 60px 0;
+}
+
+/* Philosophy: 3-Column Grid (ID | Title+Tags | Content) */
+.philosophy-list {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.ph-row {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  align-items: baseline;
+  gap: 24px;
+}
+
+.ph-id {
+  font-family: 'SF Mono', 'Roboto Mono', monospace;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+  opacity: 0.4;
+}
+
+.ph-main {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 40px;
+  align-items: baseline;
+}
+
+.ph-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111;
+  margin: 0;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.ph-meta {
+  display: block;
+}
+
+.ph-tags {
+  font-family: 'SF Mono', 'Roboto Mono', monospace;
+  font-size: 12px;
+  color: #888;
+  display: block;
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+
+.ph-desc {
+  color: #333;
+  font-size: 15px;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+/* Tech Log: Strict Table Row */
+.log-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.log-row {
+  display: grid;
+  grid-template-columns: 120px 1fr; /* 修正为2列: [Date] [Content] */
+  align-items: baseline;
+  font-family: 'SF Mono', 'Roboto Mono', monospace;
+  font-size: 13px;
+  color: #444;
+}
+
+.log-date {
+  color: #999;
+}
+
+.log-content {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap; 
+  align-items: baseline;
+}
+
+.log-type {
+  font-weight: 700;
+  color: #000;
+  min-width: 80px; /* Type 在 Flex 容器中模拟列宽 */
+}
+
+.log-title {
+  font-weight: 700;
+  color: #111;
+  font-family: 'Inter', sans-serif;
+}
+
+.log-tag {
+  color: #888;
+  background: #f4f4f4;
+  padding: 0 4px;
+}
+
+.log-divider {
+  color: #eee;
+}
+
+.log-desc {
+  color: #666;
+  font-family: 'Inter', sans-serif;
+  margin-left: 12px;
+}
+
+/* Footer Container */
+.footer-container {
+  padding: 0 !important;
+}
+
+/* Footer Brand Styles */
+.footer-brand-link {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+  text-decoration: none;
+}
+
+.footer-brand-text {
+  font-weight: 900;
+  font-size: 20px;
+  letter-spacing: -0.02em;
+  color: var(--fg);
+}
+
+.footer-brand-sub {
+  font-family: 'SF Mono', 'Roboto Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.footer-desc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.footer-tech-badge {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.footer-tech-badge span {
+  font-family: 'SF Mono', 'Roboto Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  background: rgba(0, 0, 0, 0.04);
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+}
+
+/* Footer Bottom Styles */
+.footer-legal {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.footer-legal span {
+  color: var(--muted);
+}
+
+.footer-legal a {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-legal a:hover {
+  color: var(--fg);
+}
+
+.footer-separator {
+  color: var(--border);
+}
+
+.footer-locations {
+  font-family: 'SF Mono', 'Roboto Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .ph-main {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ph-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .log-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .log-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .log-divider { display: none; }
+  
+  .log-type {
+    min-width: auto;
+  }
+}
+</style>
+
+<!-- Global: overflow-x on html (not .page) to allow sticky to work -->
+<style>
+html {
+  overflow-x: hidden;
+}
+</style>

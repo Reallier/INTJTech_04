@@ -1,35 +1,21 @@
 <script setup lang="ts">
 // 团队成员
+// 团队成员 - 瑞士网格表版
 const members = [
   {
-    name: "Reallier",
-    role: "前海外独角兽 SDK 效能架构负责人",
-    bullets: [
-      "负责整体技术方案、系统设计和项目把控",
-      "熟悉企业级生产环境、稳定性与可维护性",
-      "擅长把‘想法’拆成能长期维护技术方案"
-    ],
-    summary: "方向与架构把控，强调可维护性与生产可行性。"
+    name: "REALLIER",
+    role: "SDK Efficiency",
+    summary: "前海外独角兽架构负责人。侧重架构解构与生产可行性。"
   },
   {
-    name: "Gzzch",
-    role: "技术极客 / DevOps & 深度开发",
-    bullets: [
-      "长期在一线做深度开发，技术圈小有名气",
-      "容器化、监控、自动化部署经验丰富",
-      "让 Agent 在生产环境稳定、可观测、可追责"
-    ],
-    summary: "系统与运维质量，保障上线后的稳定度。"
+    name: "GZZCH",
+    role: "Infrastructure",
+    summary: "资深 DevOps 专家。侧重全链路观测与系统稳定性。"
   },
   {
-    name: "Rouva",
-    role: "前大厂设计部门 Agent 落地技术负责人",
-    bullets: [
-      "在大厂负责设计团队内部 Agent / 自动化落地",
-      "懂产品与审美，也熟悉 Agent 技术",
-      "擅长把复杂流程做成好用、好看、好上手的工具"
-    ],
-    summary: "体验与落地细节，确保‘能用、好用’。"
+    name: "ROUVA",
+    role: "Interaction",
+    summary: "前大厂 Agent 落地负责人。侧重协议定义与交互闭环。"
   }
 ];
 
@@ -52,25 +38,49 @@ const techNotes = [
   }
 ];
 
-// 核心优势
-const advantages = [
+// 核心优势 - 工程哲学
+const philosophy = [
   {
-    title: "安全可控，数据在你们手里",
-    tag: "安全",
-    detail: "支持私有化 / 专有云部署；权限控制、操作审计、数据脱敏齐备，数据留在你们环境。",
-    icon: "fa-shield-alt"
+    index: "I",
+    title: "数据主权",
+    enTitle: "Data Sovereignty",
+    slogan: "环境感知优于数据托管。",
+    detail: "拒绝黑盒化云服务。坚持 Private-First 部署范式，确保 AI 逻辑流转完全受控于客户的私有网络（VPC）与安全审计体系。交付即物理隔离，将隐私风险降至工程理论值的最低点。"
   },
   {
-    title: "易集成、少侵入，方便维护",
-    tag: "对接",
-    detail: "对接 IM / CRM / 工单 / 知识库 / OA；通过 API / 中间层 / Agent 二开，降低侵入并可版本管理关键逻辑。",
-    icon: "fa-plug"
+    index: "II",
+    title: "原子集成",
+    enTitle: "Atomic Architecture",
+    slogan: "低侵入、低熵值的架构准则。",
+    detail: "摒弃重型工作流框架的逻辑冗余。采用原子化微服务封装 AI 能力，实现对存量业务系统（CRM/OA/ERP）的无感介入与低成本插拔。严禁架构越权。"
   },
   {
-    title: "可观测、可接手，避免锁定",
-    tag: "可控",
-    detail: "代码、脚本、配置优先放在你们仓库；命中率、转人工、覆盖率等指标可观测可导出，附文档与培训便于自查。",
-    icon: "fa-chart-bar"
+    index: "III",
+    title: "链路确定性",
+    enTitle: "Deterministic Observability",
+    slogan: "链路可观测性是生产力的第一命脉。",
+    detail: "引入分布式链路追踪（Deep Trace）标准。通过强类型协议约束，实现模型决策路径的全量透明化。终结随机性猜想，具备秒级的根因溯源能力。"
+  },
+  {
+    index: "IV",
+    title: "动作导向交互",
+    enTitle: "Action-Oriented Interface",
+    slogan: "效率工具应当从“对话”向“动作”回归。",
+    detail: "利用 LLM 提取结构化参数，直接驱动底层工程脚本或 API 动作，实现“意图即执行”的极简交互。拒绝效率损耗，严禁在具备确定性自动化路径的场景中使用多轮自然语言确认。"
+  },
+  {
+    index: "V",
+    title: "结构化协作协议",
+    enTitle: "Schema-First Protocol",
+    slogan: "彻底终结非结构化信息的“有损压缩”。",
+    detail: "强制执行 Schema-based 的模型间通讯。禁止 Agent 之间使用自然语言汇报工作，所有协作指令必须通过标准 JSON 协议传递，隔离幻觉风险，仅交换确定的数据状态。"
+  },
+  {
+    index: "VI",
+    title: "工业级吞吐效能",
+    enTitle: "Production-Grade Throughput",
+    slogan: "极致的执行效能优于拟人化的逻辑堆砌。",
+    detail: "沿袭企业级 SDK 架构范式，深度优化推理路径。在高并发生产环境下，确保 AI 模块具备毫秒级的响应能力与极低的资源熵增。拒绝交付非生产级原型。"
   }
 ];
 </script>
@@ -79,14 +89,12 @@ const advantages = [
   <div class="about-page">
     <!-- 顶部导航 -->
     <header class="about-header">
-      <div class="container">
-        <a href="/" class="brand">
-          <img src="/site-logo.png" alt="简序智能" class="brand-logo" />
-          <span class="brand-name">简序智能</span>
-        </a>
-        <nav class="nav-links">
+      <div class="container header-inner">
+        <a href="/" class="logo">简序智能<span>INTJ Tech</span></a>
+        <nav class="nav">
           <a href="/" class="nav-link">首页</a>
-          <a href="/console" class="nav-link">控制台</a>
+          <a href="#team" class="nav-link">团队</a>
+          <a href="/console" class="btn-login">进入控制台</a>
         </nav>
       </div>
     </header>
@@ -95,48 +103,56 @@ const advantages = [
       <!-- Hero -->
       <section class="hero-section">
         <div class="container">
+          <span class="hero-label">About Us</span>
           <h1 class="page-title">关于我们</h1>
-          <p class="page-subtitle">小而精的工程团队，帮小微企业把重复又重要的工作交给 Agent 处理</p>
+          <p class="page-subtitle">小而精的工程团队，帮小微企业把重复又重要的工作交给 Agent 处理，让自动化落地更省时间、更可控。</p>
         </div>
       </section>
 
       <!-- 团队介绍 -->
-      <section class="team-section">
+      <section id="team" class="team-section">
         <div class="container">
-          <h2 class="section-title">
-            <span class="title-icon"><FaIcon icon="users" /></span>
-            核心团队
-          </h2>
-          <div class="team-grid">
-            <div v-for="member in members" :key="member.name" class="member-card">
-              <div class="member-avatar">{{ member.name.charAt(0) }}</div>
-              <div class="member-info">
-                <h3 class="member-name">{{ member.name }}</h3>
-                <p class="member-role">{{ member.role }}</p>
-                <ul class="member-bullets">
-                  <li v-for="(bullet, i) in member.bullets" :key="i">{{ bullet }}</li>
-                </ul>
-                <p class="member-summary">{{ member.summary }}</p>
+          <div class="section-header">
+            <span class="section-tag">Team</span>
+            <h2 class="section-title">核心团队</h2>
+          </div>
+          <!-- Swiss Spec List -->
+          <div class="team-list">
+            <div v-for="(member, index) in members" :key="member.name" class="member-row">
+              <span class="row-index">{{ (index + 1).toString().padStart(2, '0') }}</span>
+              <div class="row-content">
+                <span class="row-name">{{ member.name }}</span>
+                <span class="row-divider">|</span>
+                <span class="row-role">{{ member.role }}</span>
+                <span class="row-divider mobile-hide">|</span>
+                <p class="row-summary mobile-hide">{{ member.summary }}</p>
               </div>
+            </div>
+            <!-- 移动端额外显示摘要，因为上面的一行放不下 -->
+            <div class="mobile-only-summary">
+              <!-- (可选：如果需要在移动端优化显示) -->
             </div>
           </div>
         </div>
       </section>
 
-      <!-- 技术优势 -->
-      <section class="advantages-section">
+      <!-- 工程哲学 -->
+      <section class="philosophy-section">
         <div class="container">
-          <h2 class="section-title">
-            <span class="title-icon"><FaIcon icon="magic" /></span>
-            我们的优势
-          </h2>
-          <div class="advantages-grid">
-            <div v-for="adv in advantages" :key="adv.title" class="advantage-card">
-              <div class="adv-icon"><FaIcon :icon="adv.icon.replace('fa-', '')" /></div>
-              <div class="adv-content">
-                <span class="adv-tag">{{ adv.tag }}</span>
-                <h3 class="adv-title">{{ adv.title }}</h3>
-                <p class="adv-detail">{{ adv.detail }}</p>
+          <div class="section-header">
+            <span class="section-tag">Engineering Philosophy</span>
+            <h2 class="section-title">工程哲学</h2>
+          </div>
+          <div class="philosophy-grid">
+            <div v-for="item in philosophy" :key="item.index" class="philosophy-card">
+              <div class="ph-index">{{ item.index }}</div>
+              <div class="ph-header">
+                <h3 class="ph-title">{{ item.title }}</h3>
+                <span class="ph-en-title">{{ item.enTitle }}</span>
+              </div>
+              <div class="ph-content">
+                <p class="ph-slogan">{{ item.slogan }}</p>
+                <p class="ph-detail">{{ item.detail }}</p>
               </div>
             </div>
           </div>
@@ -146,10 +162,10 @@ const advantages = [
       <!-- 技术日志 -->
       <section class="notes-section">
         <div class="container">
-          <h2 class="section-title">
-            <span class="title-icon"><FaIcon icon="file-signature" /></span>
-            技术日志
-          </h2>
+          <div class="section-header">
+            <span class="section-tag">Tech Log</span>
+            <h2 class="section-title">技术日志</h2>
+          </div>
           <div class="notes-list">
             <article v-for="note in techNotes" :key="note.title" class="note-card">
               <div class="note-date">{{ note.date }}</div>
@@ -163,10 +179,10 @@ const advantages = [
       <!-- 联系方式 -->
       <section class="contact-section">
         <div class="container">
-          <h2 class="section-title">
-            <span class="title-icon"><FaIcon icon="envelope" /></span>
-            联系我们
-          </h2>
+          <div class="section-header section-header-center">
+            <span class="section-tag">Contact</span>
+            <h2 class="section-title">联系我们</h2>
+          </div>
           <div class="contact-content">
             <p>如有合作意向或技术咨询，欢迎通过以下方式联系：</p>
             <div class="contact-info">
@@ -182,250 +198,423 @@ const advantages = [
 
     <!-- 页脚 -->
     <footer class="about-footer">
-      <div class="container">
-        <p>© 2025 简序智能 · AI Agent 技术服务</p>
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">简序智能</a>
+          <p>构建高效、智能的 AI 工具组件，让逻辑驱动生产力。</p>
+        </div>
+        <div class="footer-bottom">
+          <div>© 2025 深圳简序智能科技有限公司</div>
+          <span>SZ · HK · SH</span>
+        </div>
       </div>
     </footer>
   </div>
 </template>
 
 <style scoped>
+/* ========================================
+   CSS Variables - 黑白灰极简设计系统
+   ======================================== */
 .about-page {
+  /* CSS Variables */
+  --bg: #ffffff;
+  --bg-secondary: #fafafa;
+  --fg: #111111;
+  --muted: #666666;
+  --muted-light: #999999;
+  --border: rgba(0, 0, 0, 0.08);
+  --grid-line: rgba(0, 0, 0, 0.04);
+  --dot-color: rgba(0, 0, 0, 0.15);
+  --radius: 12px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  
+  /* Base Styles */
   min-height: 100vh;
-  background: #f8fafc;
+  color: var(--fg);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+
+  /* 背景层合并：栅格(Top) + 底色(Bottom) */
+  background-color: var(--bg);
+  background-image: 
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  
+  background-size: 40px 40px, 40px 40px;
+  background-position: 0 0, 0 0;
 }
 
-/* Header */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* ========================================
+   Header - 与首页统一
+   ======================================== */
 .about-header {
-  background: white;
-  border-bottom: 1px solid #e2e8f0;
   position: sticky;
   top: 0;
-  z-index: 100;
+  /* 移除背景色，完全透明以透出网格 */
+  background: transparent;
+  backdrop-filter: blur(0); /* 移除模糊，彻底通透 */
+  z-index: 1000;
+  border-bottom: none; /* 移除 Header 分割线 */
 }
 
-.about-header .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 16px 32px;
+.header-inner {
+  height: 72px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.logo {
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: -0.04em;
   text-decoration: none;
+  color: var(--fg);
+  transition: opacity 0.2s var(--ease);
 }
 
-.brand-logo {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
+.logo:hover {
+  opacity: 0.7;
 }
 
-.brand-name {
-  font-size: 18px;
-  font-weight: 700;
-  color: #1e293b;
+.logo span {
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 4px;
 }
 
-.nav-links {
+.nav {
   display: flex;
-  gap: 24px;
+  gap: 40px;
+  align-items: center;
 }
 
 .nav-link {
-  color: #64748b;
-  text-decoration: none;
   font-size: 14px;
   font-weight: 500;
-  transition: color 0.2s;
+  text-decoration: none;
+  color: var(--muted);
+  transition: color 0.2s var(--ease);
 }
 
 .nav-link:hover {
-  color: #6366f1;
+  color: var(--fg);
 }
 
-/* Main */
-.about-main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 32px;
+.btn-login {
+  padding: 8px 16px;
+  border: 1px solid var(--fg);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--fg);
+  transition: all 0.2s var(--ease);
 }
 
-/* Hero */
+.btn-login:hover {
+  background: var(--fg);
+  color: #fff;
+}
+
+/* ========================================
+   Hero Section
+   ======================================== */
 .hero-section {
-  padding: 80px 0 60px;
+  padding: 120px 0 80px;
   text-align: center;
+  background: transparent;
+}
+
+.hero-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: var(--muted);
+  margin-bottom: 24px;
+  display: block;
 }
 
 .page-title {
-  font-size: 48px;
+  font-size: 64px;
   font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 16px;
+  color: var(--fg);
+  margin-bottom: 24px;
+  letter-spacing: -0.04em;
 }
 
 .page-subtitle {
   font-size: 20px;
-  color: #64748b;
-  max-width: 600px;
+  color: var(--muted);
+  max-width: 700px;
   margin: 0 auto;
-}
-
-/* Section Titles */
-.section-title {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 24px;
-  font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 32px;
-}
-
-.title-icon {
-  font-size: 28px;
-}
-
-/* Team Section */
-.team-section {
-  padding: 60px 0;
-}
-
-.team-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-.member-card {
-  background: white;
-  border-radius: 16px;
-  padding: 32px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.member-avatar {
-  width: 56px;
-  height: 56px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 20px;
-}
-
-.member-name {
-  font-size: 20px;
-  font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 4px;
-}
-
-.member-role {
-  font-size: 14px;
-  color: #6366f1;
-  margin-bottom: 16px;
-}
-
-.member-bullets {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 16px;
-}
-
-.member-bullets li {
-  font-size: 14px;
-  color: #64748b;
-  padding-left: 16px;
-  position: relative;
-  margin-bottom: 8px;
-}
-
-.member-bullets li::before {
-  content: '•';
-  position: absolute;
-  left: 0;
-  color: #6366f1;
-}
-
-.member-summary {
-  font-size: 13px;
-  color: #94a3b8;
-  font-style: italic;
-}
-
-/* Advantages Section */
-.advantages-section {
-  padding: 60px 0;
-  background: white;
-  margin: 0 -32px;
-  padding-left: 32px;
-  padding-right: 32px;
-}
-
-.advantages-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-.advantage-card {
-  display: flex;
-  gap: 16px;
-  padding: 24px;
-  background: #f8fafc;
-  border-radius: 12px;
-}
-
-.adv-icon {
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  background: white;
-  border-radius: 12px;
-  flex-shrink: 0;
-}
-
-.adv-tag {
-  display: inline-block;
-  padding: 2px 8px;
-  background: #6366f1;
-  color: white;
-  font-size: 11px;
-  font-weight: 600;
-  border-radius: 4px;
-  margin-bottom: 8px;
-}
-
-.adv-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #1e293b;
-  margin-bottom: 8px;
-}
-
-.adv-detail {
-  font-size: 14px;
-  color: #64748b;
   line-height: 1.6;
 }
 
-/* Notes Section */
+/* ========================================
+   Section Headers
+   ======================================== */
+.section-header {
+  margin-bottom: 48px;
+}
+
+.section-header-center {
+  text-align: center;
+}
+
+.section-tag {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-tag::before {
+  content: "";
+  width: 8px;
+  height: 1px;
+  background: var(--muted);
+}
+
+.section-header-center .section-tag {
+  justify-content: center;
+}
+
+.section-header-center .section-tag::before {
+  display: none;
+}
+
+.section-title {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--fg);
+  letter-spacing: -0.03em;
+}
+
+/* ========================================
+   Team Section
+   ======================================== */
+.team-section {
+  padding: 80px 0;
+  border-top: none; /* 移除分割线 */
+}
+
+.team-grid {
+  /* 废弃网格，改为 flex column 布局 */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Bold Typography List Style (baseline alignment) */
+.member-row {
+  display: flex;
+  align-items: baseline; /* 回归基线对齐，以文字底部为准 */
+  padding: 32px 0;
+  border-bottom: none; 
+  transition: transform 0.3s var(--ease);
+  cursor: default;
+  /* 移除固定高度，让基线自然决定高度，靠 padding 撑开 */
+}
+
+.member-row:hover {
+  background-color: transparent;
+  transform: translateX(10px);
+}
+
+.member-row:first-child {
+  border-top: none;
+}
+
+.row-index {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px; 
+  font-weight: 900;
+  color: var(--fg);
+  width: auto; /* 关键修改: 移除固定宽度，改为自适应 */
+  flex-shrink: 0;
+  opacity: 0.3;
+  margin-right: 6px; 
+}
+
+.row-content {
+  flex: 1;
+  display: flex;
+  align-items: baseline; 
+  gap: 0; /* 移除 gap，完全由子元素 margin 控制 */
+  font-family: 'Inter', sans-serif;
+  flex-wrap: nowrap; 
+  overflow: hidden; 
+}
+
+.row-name {
+  font-size: 64px; 
+  font-weight: 900;
+  color: var(--fg);
+  text-transform: uppercase;
+  letter-spacing: -0.04em; 
+  line-height: 1; 
+  width: auto; /* 移除固定宽度，自然跟随 */
+  margin-right: 16px; /* 名字和角色之间的间距 */
+  flex-shrink: 0; 
+}
+
+.row-divider {
+  display: none;
+}
+
+.row-role {
+  font-size: 20px; 
+  font-weight: 800; 
+  color: var(--fg);
+  text-transform: uppercase;
+  letter-spacing: 0em; 
+  width: auto; /* 移除固定宽度 */
+  margin-right: 24px; /* 角色和简介之间的间距 */
+  flex-shrink: 0;
+}
+
+.row-summary {
+  font-size: 18px; 
+  font-weight: 500;
+  color: var(--muted);
+  margin: 0;
+  line-height: normal; 
+  flex: 1;
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}
+
+/* Mobile Responsive */
+.mobile-hide {
+  display: inline-block;
+}
+
+@media (max-width: 768px) {
+  .mobile-hide {
+    display: none;
+  }
+  
+  .member-row {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  
+  .row-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .row-role {
+    width: auto;
+    font-size: 12px;
+  }
+}
+
+/* ========================================
+   Philosophy Section
+   ======================================== */
+.philosophy-section {
+  padding: 80px 0;
+  border-top: none; /* 移除分割线 */
+}
+
+.philosophy-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.philosophy-card {
+  position: relative;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px;
+  transition: all 0.4s var(--ease);
+  overflow: hidden;
+}
+
+.philosophy-card:hover {
+  border-color: var(--fg);
+  transform: translateY(-2px);
+}
+
+.ph-index {
+  font-family: 'Times New Roman', serif;
+  font-size: 80px;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.03);
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  line-height: 1;
+  pointer-events: none;
+  transition: color 0.4s var(--ease);
+}
+
+.philosophy-card:hover .ph-index {
+  color: rgba(0, 0, 0, 0.08);
+}
+
+.ph-header {
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.ph-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--fg);
+  margin-bottom: 4px;
+}
+
+.ph-en-title {
+  display: block;
+  font-family: 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--muted-light);
+}
+
+.ph-slogan {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--fg);
+  margin-bottom: 8px;
+  border-left: 2px solid var(--fg);
+  padding-left: 12px;
+}
+
+.ph-detail {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin: 0;
+  text-align: justify;
+}
+
+/* ========================================
+   Notes Section
+   ======================================== */
 .notes-section {
-  padding: 60px 0;
+  padding: 80px 0;
+  border-top: none; /* 移除分割线 */
 }
 
 .notes-list {
@@ -435,40 +624,54 @@ const advantages = [
 }
 
 .note-card {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  transition: all 0.4s var(--ease);
+}
+
+.note-card:hover {
+  border-color: var(--fg);
 }
 
 .note-date {
-  font-size: 13px;
-  color: #94a3b8;
-  margin-bottom: 8px;
-}
-
-.note-title {
-  font-size: 18px;
+  font-size: 12px;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--muted-light);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
   margin-bottom: 12px;
 }
 
-.note-summary {
-  font-size: 14px;
-  color: #64748b;
-  line-height: 1.7;
+.note-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--fg);
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
 }
 
-/* Contact Section */
+.note-summary {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ========================================
+   Contact Section
+   ======================================== */
 .contact-section {
-  padding: 60px 0;
+  padding: 80px 0;
   text-align: center;
+  border-top: none; /* 移除分割线 */
 }
 
 .contact-content p {
-  color: #64748b;
-  margin-bottom: 24px;
+  color: var(--muted);
+  margin-bottom: 32px;
+  font-size: 16px;
 }
 
 .contact-info {
@@ -480,51 +683,114 @@ const advantages = [
 .contact-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  background: white;
+  gap: 10px;
+  padding: 16px 32px;
+  background: var(--fg);
+  color: white;
   border-radius: 8px;
   text-decoration: none;
-  color: #1e293b;
-  font-weight: 500;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: all 0.2s;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.3s var(--ease);
 }
 
 .contact-item:hover {
-  background: #6366f1;
-  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 .contact-icon {
   font-size: 18px;
 }
 
-/* Footer */
+/* ========================================
+   Footer
+   ======================================== */
 .about-footer {
-  padding: 32px;
-  text-align: center;
-  color: #94a3b8;
-  font-size: 13px;
-  border-top: 1px solid #e2e8f0;
-  background: white;
+  padding: 80px 0 40px;
+  border-top: none; /* 移除分割线 */
 }
 
-/* Responsive */
+.footer-inner {
+  text-align: center;
+}
+
+.footer-brand {
+  margin-bottom: 40px;
+}
+
+.footer-logo {
+  font-weight: 800;
+  font-size: 18px;
+  color: var(--fg);
+  text-decoration: none;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.footer-logo:hover {
+  opacity: 0.7;
+}
+
+.footer-brand p {
+  color: var(--muted);
+  font-size: 14px;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  padding-top: 24px;
+  border-top: none; /* 移除分割线 */
+  font-size: 13px;
+  color: var(--muted-light);
+}
+
+/* ========================================
+   Responsive
+   ======================================== */
 @media (max-width: 1024px) {
   .team-grid,
   .advantages-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+  
+  .page-title {
+    font-size: 48px;
+  }
 }
 
 @media (max-width: 768px) {
-  .about-main {
+  .container {
     padding: 0 20px;
   }
   
+  .header-inner {
+    height: 64px;
+  }
+  
+  .nav {
+    gap: 20px;
+  }
+  
+  .nav-link {
+    display: none;
+  }
+  
+  .hero-section {
+    padding: 80px 0 60px;
+  }
+  
   .page-title {
-    font-size: 32px;
+    font-size: 36px;
+  }
+  
+  .page-subtitle {
+    font-size: 16px;
   }
   
   .team-grid,
@@ -532,8 +798,19 @@ const advantages = [
     grid-template-columns: 1fr;
   }
   
-  .nav-links {
-    display: none;
+  .section-title {
+    font-size: 28px;
+  }
+  
+  .member-card,
+  .advantage-card,
+  .note-card {
+    padding: 24px;
+  }
+  
+  .footer-bottom {
+    flex-direction: column;
+    gap: 12px;
   }
 }
 </style>
