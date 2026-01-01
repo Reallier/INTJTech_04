@@ -6,37 +6,23 @@ const { user, fetchUser } = useAuth();
 const showProductMenu = ref(false);
 const showTechMenu = ref(false);
 
-// 登录 Modal 状态
+// 登录 Modal 状态（仅用于顶部登录按钮）
 const showLoginModal = ref(false);
-const loginRedirectTarget = ref<string | undefined>(undefined);
 
-// 产品跳转 URL 映射
-const productUrls: Record<string, string> = {
-  talentai: '/api/services/hirestream-redirect',
-  mindai: '/api/services/mindai-redirect',
-  contract: '/api/services/contract-redirect',
+// 产品外部链接 - 直接跳转，登录由产品端处理
+const productLinks: Record<string, string> = {
+  talentai: 'https://talentai.reallier.top:5443',
+  mindai: 'https://mindai.reallier.top',
+  contract: 'https://contract.reallier.top',
 };
 
-// 处理产品点击
+// 处理产品点击 - 直接跳转到产品
 const handleProductClick = (productKey: string, e: Event) => {
   e.preventDefault();
   showProductMenu.value = false;
   
-  if (user.value) {
-    // 已登录，直接跳转
-    window.location.href = productUrls[productKey];
-  } else {
-    // 未登录，弹出登录框
-    loginRedirectTarget.value = productKey;
-    showLoginModal.value = true;
-  }
-};
-
-// 登录成功回调
-const handleLoginSuccess = (redirectTarget?: string) => {
-  if (redirectTarget && productUrls[redirectTarget]) {
-    window.location.href = productUrls[redirectTarget];
-  }
+  // 直接跳转到产品，登录由产品端处理
+  window.open(productLinks[productKey], '_blank');
 };
 
 const toggleProductMenu = () => {
@@ -429,11 +415,7 @@ const engineeringStack = [
     </footer>
 
     <!-- 登录 Modal -->
-    <LoginModal 
-      v-model="showLoginModal" 
-      :redirect-target="loginRedirectTarget"
-      @success="handleLoginSuccess"
-    />
+    <LoginModal v-model="showLoginModal" />
   </div>
 </template>
 
