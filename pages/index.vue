@@ -2,9 +2,10 @@
 import { onMounted, nextTick, ref } from "vue";
 import { useAuth } from "~/composables/useAuth";
 
-const { user, fetchUser } = useAuth();
+const { user, fetchUser, logout } = useAuth();
 const showProductMenu = ref(false);
 const showTechMenu = ref(false);
+const showUserCard = ref(false);
 
 // 登录 Modal 状态（仅用于顶部登录按钮）
 const showLoginModal = ref(false);
@@ -28,11 +29,24 @@ const handleProductClick = (productKey: string, e: Event) => {
 const toggleProductMenu = () => {
   showProductMenu.value = !showProductMenu.value;
   showTechMenu.value = false;
+  showUserCard.value = false;
 };
 
 const toggleTechMenu = () => {
   showTechMenu.value = !showTechMenu.value;
   showProductMenu.value = false;
+  showUserCard.value = false;
+};
+
+const toggleUserCard = () => {
+  showUserCard.value = !showUserCard.value;
+  showProductMenu.value = false;
+  showTechMenu.value = false;
+};
+
+const handleLogout = async () => {
+  showUserCard.value = false;
+  await logout();
 };
 
 // Auto close logic
@@ -183,7 +197,33 @@ const engineeringStack = [
             </button>
           </div>
 
-          <a v-if="user" href="/console" class="btn-login">CONSOLE</a>
+          <!-- 用户信息卡片 -->
+          <div v-if="user" class="user-dropdown">
+            <button class="btn-user" @click.stop="toggleUserCard">
+              {{ user.username || user.email || 'USER' }}
+              <span class="arrow">▼</span>
+            </button>
+            <div v-show="showUserCard" class="user-card">
+              <div class="user-card-header">
+                <div class="user-avatar">{{ (user.username || user.email || 'U')[0].toUpperCase() }}</div>
+                <div class="user-info">
+                  <div class="user-card-name">{{ user.username || user.email }}</div>
+                  <div class="user-card-id">ID: {{ user.id }}</div>
+                </div>
+              </div>
+              <div class="user-card-stats">
+                <div class="stat-row">
+                  <span class="stat-label">账户余额</span>
+                  <span class="stat-value">￥{{ Number(user.balance || 0).toFixed(2) }}</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">免费额度</span>
+                  <span class="stat-value">￥{{ Number(user.freeQuota || 0).toFixed(2) }}</span>
+                </div>
+              </div>
+              <button class="btn-logout" @click="handleLogout">登出账号</button>
+            </div>
+          </div>
           <button v-else @click="showLoginModal = true" class="btn-login">LOGIN</button>
         </nav>
       </div>
@@ -571,6 +611,124 @@ const engineeringStack = [
 .btn-login:hover {
   background: var(--fg);
   color: #fff;
+}
+
+/* 用户下拉卡片 */
+.user-dropdown {
+  position: relative;
+}
+
+.btn-user {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid var(--fg);
+  background: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg);
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+}
+
+.btn-user:hover {
+  background: var(--fg);
+  color: #fff;
+}
+
+.btn-user .arrow {
+  font-size: 10px;
+  opacity: 0.6;
+}
+
+.user-card {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  width: 240px;
+  background: #fff;
+  border: 1px solid var(--fg);
+  z-index: 1001;
+}
+
+.user-card-header {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  background: var(--fg);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-card-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-card-id {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.user-card-stats {
+  padding: 12px 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.stat-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.btn-logout {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-logout:hover {
+  background: #f5f5f5;
+  color: var(--fg);
 }
 
 /* ========================================

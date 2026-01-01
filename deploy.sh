@@ -1,4 +1,4 @@
-#!/bin/bash
+﻿#!/bin/bash
 echo "Starting INTJTech deployment process..."
 
 set -e  # 遇到错误立即退出
