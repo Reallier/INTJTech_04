@@ -31,6 +31,11 @@ import {
     faTachometerAlt,    // 仪表盘
     faHand,             // 欢迎手势
     faCubes,            // 服务管理
+    faExternalLinkAlt,  // 外部链接
+    faBullseye,         // 靶心 - 智能匹配
+    faBolt,             // 闪电 - 快速
+    faFileLines,        // 文件 - 报告
+    faShieldHalved,     // 盾牌 - 安全
 } from '@fortawesome/free-solid-svg-icons'
 
 // 注册图标到库
@@ -39,7 +44,8 @@ library.add(
     faFileAlt, faChartBar, faMagnet, faClipboardList, faUsers, faWallet,
     faChartLine, faExchangeAlt, faGift, faCheckCircle, faExclamationTriangle,
     faShieldAlt, faPlug, faMagic, faPen, faEnvelope, faAt,
-    faTachometerAlt, faHand, faCubes
+    faTachometerAlt, faHand, faCubes, faExternalLinkAlt,
+    faBullseye, faBolt, faFileLines, faShieldHalved
 )
 
 export default defineNuxtPlugin((nuxtApp) => {

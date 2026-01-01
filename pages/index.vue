@@ -6,6 +6,39 @@ const { user, fetchUser } = useAuth();
 const showProductMenu = ref(false);
 const showTechMenu = ref(false);
 
+// 登录 Modal 状态
+const showLoginModal = ref(false);
+const loginRedirectTarget = ref<string | undefined>(undefined);
+
+// 产品跳转 URL 映射
+const productUrls: Record<string, string> = {
+  talentai: '/api/services/hirestream-redirect',
+  mindai: '/api/services/mindai-redirect',
+  contract: '/api/services/contract-redirect',
+};
+
+// 处理产品点击
+const handleProductClick = (productKey: string, e: Event) => {
+  e.preventDefault();
+  showProductMenu.value = false;
+  
+  if (user.value) {
+    // 已登录，直接跳转
+    window.location.href = productUrls[productKey];
+  } else {
+    // 未登录，弹出登录框
+    loginRedirectTarget.value = productKey;
+    showLoginModal.value = true;
+  }
+};
+
+// 登录成功回调
+const handleLoginSuccess = (redirectTarget?: string) => {
+  if (redirectTarget && productUrls[redirectTarget]) {
+    window.location.href = productUrls[redirectTarget];
+  }
+};
+
 const toggleProductMenu = () => {
   showProductMenu.value = !showProductMenu.value;
   showTechMenu.value = false;
@@ -165,7 +198,7 @@ const engineeringStack = [
           </div>
 
           <a v-if="user" href="/console" class="btn-login">CONSOLE</a>
-          <a v-else href="/login" class="btn-login">LOGIN</a>
+          <button v-else @click="showLoginModal = true" class="btn-login">LOGIN</button>
         </nav>
       </div>
       
@@ -173,7 +206,7 @@ const engineeringStack = [
       <div class="dropdown-panel" v-show="showProductMenu">
         <div class="panel-inner">
            <div class="panel-grid cols-3">
-              <a href="/login" class="panel-item">
+              <a href="#" @click="handleProductClick('talentai', $event)" class="panel-item">
                 <div class="panel-icon">[ ]</div>
                 <div class="panel-content">
                   <div class="panel-head">
@@ -279,7 +312,7 @@ const engineeringStack = [
             <h2 class="card-title">TalentAI</h2>
             <p class="card-desc">新一代人才评估引擎。打破简历与岗位间的信息熵增，让每一份才华被精准映射。</p>
             <div class="card-cta">
-              <a href="/login" class="btn">立即开始 →</a>
+              <a href="#" @click="handleProductClick('talentai', $event)" class="btn">立即开始 →</a>
             </div>
             <!-- UI Mockup -->
             <div class="ui-mockup">
@@ -394,6 +427,13 @@ const engineeringStack = [
         </div>
       </div>
     </footer>
+
+    <!-- 登录 Modal -->
+    <LoginModal 
+      v-model="showLoginModal" 
+      :redirect-target="loginRedirectTarget"
+      @success="handleLoginSuccess"
+    />
   </div>
 </template>
 

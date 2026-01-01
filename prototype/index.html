@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>简序智能 | INTJ Tech - 秩序即是自由</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #111111;
+      --muted: #666666;
+      --border: rgba(0, 0, 0, 0.08);
+      --grid-line: rgba(0, 0, 0, 0.03);
+      --accent: #000000;
+      --radius: 12px;
+      --section-padding: 160px;
+      /* 核心动效曲线：先快后慢，极具现代感 */
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* 背景栅格线 - 模拟工业底纸 */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-size: 40px 40px;
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* --- 动效基础类 --- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Header */
+    .header {
+      position: sticky;
+      top: 0;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: -0.04em;
+      text-decoration: none;
+      color: var(--fg);
+      transition: opacity 0.2s var(--ease);
+    }
+
+    .logo:hover {
+      opacity: 0.7;
+    }
+
+    .logo span {
+      font-weight: 400;
+      color: var(--muted);
+      margin-left: 4px;
+    }
+
+    .nav {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .nav-link {
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      color: var(--muted);
+      transition: color 0.2s var(--ease);
+    }
+
+    .nav-link:hover {
+      color: var(--fg);
+    }
+
+    .btn-login {
+      padding: 8px 16px;
+      border: 1px solid var(--fg);
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      color: var(--fg);
+      transition: all 0.2s var(--ease);
+    }
+
+    .btn-login:hover {
+      background: var(--fg);
+      color: #fff;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 220px 0 120px;
+      text-align: center;
+    }
+
+    .hero-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      color: var(--muted);
+      margin-bottom: 32px;
+      display: block;
+      animation: fadeInDown 0.8s var(--ease) both;
+    }
+
+    .hero-title {
+      font-size: 96px;
+      font-weight: 800;
+      line-height: 0.9;
+      letter-spacing: -0.06em;
+      margin-bottom: 40px;
+      animation: fadeInUp 1s var(--ease) 0.1s both;
+    }
+
+    .hero-subtitle {
+      font-size: 24px;
+      max-width: 800px;
+      margin: 0 auto 56px;
+      color: var(--muted);
+      font-weight: 400;
+      line-height: 1.4;
+      animation: fadeInUp 1s var(--ease) 0.2s both;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Bento Grid */
+    .bento {
+      padding: 80px 0;
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: repeat(2, 440px);
+      gap: 24px;
+    }
+
+    .bento-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 56px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.4s var(--ease), border-color 0.4s var(--ease), box-shadow 0.4s var(--ease);
+    }
+
+    .bento-card:hover {
+      border-color: var(--fg);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+    }
+
+    .card-talent {
+      grid-column: span 8;
+    }
+
+    .card-labs {
+      grid-column: span 4;
+      background: #fafafa;
+    }
+
+    .card-bridge {
+      grid-column: span 12;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-tag {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-tag::before {
+      content: "";
+      width: 8px;
+      height: 1px;
+      background: var(--muted);
+    }
+
+    .card-title {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      letter-spacing: -0.03em;
+    }
+
+    .card-desc {
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 440px;
+    }
+
+    /* UI Preview Animation */
+    .ui-mockup {
+      position: absolute;
+      right: 40px;
+      bottom: -20px;
+      width: 400px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px 12px 0 0;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      transition: transform 0.6s var(--ease);
+    }
+
+    .bento-card:hover .ui-mockup {
+      transform: translateY(-20px);
+    }
+
+    /* Feature Deep Dive */
+    .deep-dive {
+      padding: var(--section-padding) 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .feature-row {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 100px;
+      align-items: center;
+      margin-bottom: 160px;
+    }
+
+    .feature-row:nth-child(even) {
+      direction: rtl;
+    }
+
+    .feature-row:nth-child(even) .feature-text {
+      direction: ltr;
+    }
+
+    .feature-visual {
+      background: #fafafa;
+      aspect-ratio: 16/10;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.4s var(--ease);
+    }
+
+    .feature-visual:hover {
+      border-color: #000;
+    }
+
+    .feature-text h3 {
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      margin-bottom: 24px;
+    }
+
+    .feature-text p {
+      font-size: 18px;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    /* Comparison Section */
+    .comparison {
+      padding: var(--section-padding) 0;
+      background: #111;
+      color: #fff;
+      border-radius: 32px;
+      margin: 0 40px;
+    }
+
+    .comp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-top: 1px solid #222;
+    }
+
+    .comp-col {
+      padding: 80px;
+      transition: background 0.4s var(--ease);
+    }
+
+    .comp-col:hover {
+      background: #161616;
+    }
+
+    .comp-col:first-child {
+      border-right: 1px solid #222;
+    }
+
+    .comp-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 40px;
+      display: block;
+    }
+
+    .comp-item {
+      margin-bottom: 48px;
+      opacity: 0.6;
+      transition: opacity 0.4s var(--ease);
+    }
+
+    .comp-col:hover .comp-item {
+      opacity: 1;
+    }
+
+    .comp-item h5 {
+      font-size: 20px;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    .comp-item p {
+      font-size: 15px;
+      color: #777;
+    }
+
+    /* Developer Section */
+    .developer {
+      padding: var(--section-padding) 0;
+    }
+
+    .dev-box {
+      background: #000;
+      color: #fff;
+      border-radius: 24px;
+      padding: 100px;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .code-editor {
+      background: #0a0a0a;
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 32px;
+      font-family: 'Inter', monospace;
+      font-size: 14px;
+      color: #777;
+      line-height: 1.8;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .keyword {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .string {
+      color: #555;
+    }
+
+    /* Manifesto */
+    .manifesto {
+      padding: 160px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .manifesto-text {
+      font-size: 40px;
+      font-weight: 500;
+      line-height: 1.3;
+      max-width: 900px;
+      letter-spacing: -0.03em;
+    }
+
+    .manifesto-text span {
+      color: var(--muted);
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 16px 32px;
+      background: #000;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      transition: transform 0.3s var(--ease), background 0.3s var(--ease), box-shadow 0.3s var(--ease);
+      display: inline-block;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--fg);
+    }
+
+    .btn-ghost:hover {
+      background: #000;
+      color: #fff;
+      border-color: #000;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 100px 0 60px;
+      border-top: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px;
+      margin-bottom: 80px;
+    }
+
+    .footer-col h5 {
+      color: var(--fg);
+      margin-bottom: 24px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .footer-col a {
+      display: block;
+      color: var(--muted);
+      text-decoration: none;
+      margin-bottom: 12px;
+      transition: color 0.2s var(--ease);
+    }
+
+    .footer-col a:hover {
+      color: var(--fg);
+    }
+
+    @media (max-width: 1024px) {
+      .hero-title {
+        font-size: 64px;
+      }
+
+      .bento-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+      }
+
+      .card-talent,
+      .card-labs,
+      .card-bridge {
+        grid-column: span 12;
+      }
+
+      .ui-mockup {
+        position: relative;
+        right: 0;
+        width: 100%;
+        margin-top: 40px;
+      }
+
+      .feature-row,
+      .dev-box,
+      .comp-grid {
+        grid-template-columns: 1fr;
+        gap: 60px;
+      }
+
+      .comp-col:first-child {
+        border-right: none;
+        border-bottom: 1px solid #222;
+      }
+
+      .manifesto-text {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">简序智能<span>INTJ Tech</span></a>
+      <nav class="nav">
+        <a href="#products" class="nav-link">产品矩阵</a>
+        <a href="#deep-dive" class="nav-link">核心技术</a>
+        <a href="/login" class="btn-login">进入控制台</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container">
+        <span class="hero-label">Intelligent System Architect</span>
+        <h1 class="hero-title">秩序，<br>即是自由。</h1>
+        <p class="hero-subtitle">
+          我们重新编排业务的逻辑序数。简序智能（INTJ Tech）致力于将复杂的非结构化碎片，转化为稳健且可进化的生产力组件。
+        </p>
+        <div style="display: flex; gap: 20px; justify-content: center; animation: fadeInUp 1s var(--ease) 0.3s both;">
+          <a href="#products" class="btn">探索产品矩阵</a>
+          <a href="#deep-dive" class="btn btn-ghost">了解核心能力</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bento Products -->
+    <section id="products" class="bento container">
+      <div class="bento-grid">
+        <div class="bento-card card-talent reveal">
+          <span class="card-tag">Flagship</span>
+          <h2 class="card-title">TalentAI</h2>
+          <p class="card-desc">新一代人才评估引擎。打破简历与岗位间的信息熵增，让每一份才华被精准映射。</p>
+          <div style="margin-top: 40px;"><a href="#" class="btn">立即开始 →</a></div>
+          <div class="ui-mockup">
+            <div style="width: 100%; height: 8px; background: #eee; border-radius: 4px; margin-bottom: 12px;"></div>
+            <div style="width: 60%; height: 8px; background: #eee; border-radius: 4px; margin-bottom: 24px;"></div>
+            <div style="display: flex; gap: 12px;">
+              <div style="width: 32px; height: 32px; background: #000; border-radius: 50%;"></div>
+              <div style="flex: 1; height: 32px; background: #f5f5f5; border-radius: 4px;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="bento-card card-labs reveal" style="transition-delay: 0.1s;">
+          <span class="card-tag">Research</span>
+          <h2 class="card-title">实验室</h2>
+          <p class="card-desc" style="font-size: 14px;">AI 知识库、流程引擎、逻辑桥... 更多原子工具正在构建中。</p>
+        </div>
+        <div class="bento-card card-bridge reveal" style="transition-delay: 0.2s;">
+          <div>
+            <span class="card-tag">Custom Service</span>
+            <h2 class="card-title">INTJ Bridge</h2>
+            <p class="card-desc">当标准化工具无法承载您的雄心，我们为您构建专属的 AI 底层。</p>
+          </div>
+          <a href="mailto:contact@intjtech.cn" class="btn btn-ghost">预约咨询</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Deep Dive Features -->
+    <section id="deep-dive" class="deep-dive">
+      <div class="container">
+        <div class="feature-row reveal">
+          <div class="feature-text">
+            <h3>多模态语义解析</h3>
+            <p>不仅仅是文本提取。我们的引擎能识别排版逻辑、隐含意图及跨语境的行为特征。无论原始数据多么零碎，都能转化为极高维度的结构化向量。</p>
+          </div>
+          <div class="feature-visual">
+            <div
+              style="display: flex; height: 100%; align-items: center; justify-content: center; font-weight: 800; font-size: 100px; opacity: 0.03;">
+              0101
+            </div>
+          </div>
+        </div>
+
+        <div class="feature-row reveal">
+          <div class="feature-text">
+            <h3>双向认知匹配</h3>
+            <p>基于 RAG 与自研逻辑框架，我们在模型中植入了“行业常识”。TalentAI 能够像专家一样思考，在简历与岗位之间建立多深度的逻辑链接。</p>
+          </div>
+          <div class="feature-visual">
+            <div
+              style="display: flex; height: 100%; align-items: center; justify-content: center; font-weight: 800; font-size: 100px; opacity: 0.03;">
+              INTJ
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparison -->
+    <section class="comparison reveal">
+      <div class="comp-grid">
+        <div class="comp-col">
+          <span class="comp-label">传统作业模式</span>
+          <div class="comp-item">
+            <h5>线性检索</h5>
+            <p>依赖死板的关键词匹配，错过 40% 以上的适配人才。</p>
+          </div>
+          <div class="comp-item">
+            <h5>手工校验</h5>
+            <p>人力录入与审核，误录率难以避免。</p>
+          </div>
+        </div>
+        <div class="comp-col">
+          <span class="comp-label" style="color: #fff;">简序 AI 范式</span>
+          <div class="comp-item">
+            <h5>语义拓扑</h5>
+            <p>理解文字背后的逻辑链，精准度提升 85% 以上。</p>
+          </div>
+          <div class="comp-item">
+            <h5>全自动引擎</h5>
+            <p>毫秒级处理，0 人工干预，数据准确率高达 99.8%。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Developer Section -->
+    <section class="container developer reveal">
+      <div class="dev-box">
+        <div>
+          <h2 style="font-size: 48px; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 24px;">开发者优先</h2>
+          <p style="color: #777; margin-bottom: 40px;">极简的 API 设计，让您的系统瞬间获得顶级 AI 脑力。</p>
+          <a href="#" class="btn" style="background: #fff; color: #000;">阅读 API 文档 →</a>
+        </div>
+        <div class="code-editor">
+          <span class="keyword">const</span> result = <span class="keyword">await</span> intj.analyze({<br>
+          &nbsp;&nbsp;type: <span class="string">"talent_assessment"</span>,<br>
+          &nbsp;&nbsp;source: resume_file<br>
+          });<br><br>
+          <span class="keyword">return</span> result.match_score;
+        </div>
+      </div>
+    </section>
+
+    <!-- Manifesto -->
+    <section class="manifesto container reveal">
+      <div class="manifesto-text">
+        简序智能（INTJ Tech）是一群对逻辑有偏执的工程师。<span>我们相信，AI 的本质不是替代人类思考，而是消除无序的劳动，让创造力回归人类本身。</span>
+      </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="container" style="padding-bottom: 160px; text-align: center;">
+      <h2 style="font-size: 64px; font-weight: 800; letter-spacing: -0.05em; margin-bottom: 48px;">准备好进入秩序时代吗？</h2>
+      <div style="display: flex; gap: 24px; justify-content: center;">
+        <a href="/login" class="btn">免费开始试用</a>
+        <a href="mailto:contact@intjtech.cn" class="btn btn-ghost">与专家沟通</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <a href="/" class="logo" style="display: block; margin-bottom: 24px;">简序智能</a>
+        <p style="max-width: 260px;">构建高效、智能的 AI 工具组件，让逻辑驱动生产力。</p>
+      </div>
+      <div class="footer-col">
+        <h5>产品中心</h5>
+        <a href="#">TalentAI</a>
+        <a href="#">实验室</a>
+      </div>
+      <div class="footer-col">
+        <h5>企业服务</h5>
+        <a href="#">INTJ Bridge</a>
+        <a href="#">定制咨询</a>
+      </div>
+      <div class="footer-col">
+        <h5>关于</h5>
+        <a href="#">团队故事</a>
+        <a href="#">联系我们</a>
+      </div>
+    </div>
+    <div class="footer-inner">
+      <div>© 2025 深圳简序智能科技有限公司</div>
+      <span>SZ · HK · SH</span>
+    </div>
+  </footer>
+
+  <script>
+    // 简单的滚动揭示逻辑 (Scroll Reveal)
+    const observerOptions = {
+      threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.reveal').forEach(el => {
+      observer.observe(el);
+    });
+  </script>
+
+</body>
+
+</html>

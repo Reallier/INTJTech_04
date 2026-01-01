@@ -1,16 +1,31 @@
-// Nuxt configuration for 简序智能官网 v0
+// Nuxt configuration for 简序智能官网 v1 - 极简工业风
 export default defineNuxtConfig({
   app: {
     head: {
-      title: "简序智能｜面向小微企业的 AI Agent 技术伙伴",
+      title: "简序智能 | INTJ Tech - 秩序即是自由",
       meta: [
         {
           name: "description",
           content:
-            "小而精的工程团队，帮小微企业把重复又重要的工作交给 Agent 处理，让自动化落地更省时间、更可控。"
+            "我们重新编排业务的逻辑序数。简序智能（INTJ Tech）致力于将复杂的非结构化碎片，转化为稳健且可进化的生产力组件。"
         }
       ],
       link: [
+        // Google Fonts - Inter (新设计核心字体)
+        {
+          rel: "preconnect",
+          href: "https://fonts.googleapis.com"
+        },
+        {
+          rel: "preconnect",
+          href: "https://fonts.gstatic.com",
+          crossorigin: "anonymous"
+        },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        },
+        // Favicon
         {
           rel: "icon",
           type: "image/png",
@@ -35,6 +50,7 @@ export default defineNuxtConfig({
           href: "/site-logo.png",
           sizes: "256x256"
         },
+        // FontAwesome (保留兼容性)
         {
           rel: "stylesheet",
           href:

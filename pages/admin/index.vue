@@ -45,6 +45,18 @@
         </div>
       </section>
       
+      <!-- 快捷入口 -->
+      <section class="quick-links-section">
+        <a href="https://docs.intjtech.reallier.top:5443" target="_blank" class="quick-link-card docs-card">
+          <div class="quick-link-icon"><FaIcon icon="book" /></div>
+          <div class="quick-link-info">
+            <div class="quick-link-title">技术文档</div>
+            <div class="quick-link-desc">开发规范 · 项目文档 · 架构设计</div>
+          </div>
+          <FaIcon icon="external-link-alt" class="quick-link-arrow" />
+        </a>
+      </section>
+      
       <!-- 用户列表 -->
       <section class="users-section">
         <div class="section-header">
@@ -681,6 +693,69 @@ onMounted(() => {
 .stat-label {
   font-size: 14px;
   color: #6b7280;
+}
+
+/* 快捷入口 */
+.quick-links-section {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.quick-link-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  transition: all 0.2s;
+  flex: 1;
+  max-width: 400px;
+}
+
+.quick-link-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.docs-card {
+  border-left: 4px solid #6366f1;
+}
+
+.quick-link-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  background: #eef2ff;
+  color: #6366f1;
+  border-radius: 10px;
+}
+
+.quick-link-info {
+  flex: 1;
+}
+
+.quick-link-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.quick-link-desc {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.quick-link-arrow {
+  font-size: 14px;
+  color: #9ca3af;
 }
 
 /* 用户列表 */

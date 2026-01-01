@@ -19,6 +19,11 @@ export const signUserToken = (user: { id: number; email: string | null; name: st
 // 跳转用短期 Token（5分钟，用于 URL 传递）
 export const signRedirectToken = (user: { id: number; email: string | null; name: string | null; avatar?: string | null }) => {
     return jwt.sign({
+        // 核心字段（app01 callback 需要用 id 查询数据库）
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        // 兼容字段（历史格式）
         user_id: `intj_${user.id}`,
         nickname: user.name,
         avatar_url: user.avatar,
