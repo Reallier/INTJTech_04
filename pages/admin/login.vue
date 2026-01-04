@@ -100,46 +100,51 @@ const handleLogin = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-color: #fafafa;
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
   padding: 20px;
 }
 
 .login-container {
   width: 100%;
-  max-width: 420px;
+  max-width: 400px;
 }
 
 .login-card {
   background: #ffffff;
-  border-radius: 16px;
-  padding: 40px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e0e0e0;
+  padding: 48px 40px;
 }
 
 .login-header {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 40px;
 }
 
 .brand-mark {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  margin: 0 auto 16px;
+  width: 4px;
+  height: 32px;
+  background: #000000;
+  margin: 0 auto 20px;
 }
 
 .login-header h1 {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
-  color: #1f2937;
+  color: #000000;
   margin: 0 0 8px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 .login-header p {
-  color: #6b7280;
+  color: #666666;
   margin: 0;
-  font-size: 14px;
+  font-size: 13px;
+  letter-spacing: 0.01em;
 }
 
 .login-form {
@@ -155,75 +160,83 @@ const handleLogin = async () => {
 }
 
 .form-group label {
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 600;
-  color: #374151;
+  color: #666666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .form-group input {
-  padding: 12px 16px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 16px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  padding: 14px 16px;
+  border: 1px solid #e0e0e0;
+  font-size: 15px;
+  background: #fafafa;
+  transition: all 0.2s ease;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  border-color: #000000;
+  background: #ffffff;
 }
 
 .form-group input:disabled {
-  background: #f3f4f6;
+  background: #f0f0f0;
   cursor: not-allowed;
 }
 
+.form-group input::placeholder {
+  color: #999999;
+}
+
 .error-message {
-  padding: 12px;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 8px;
-  color: #dc2626;
-  font-size: 14px;
+  padding: 14px;
+  background: #fff5f5;
+  border: 1px solid #ffcccc;
+  color: #cc0000;
+  font-size: 13px;
   text-align: center;
 }
 
 .btn-login {
-  padding: 14px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  padding: 16px 24px;
+  background: #000000;
   color: #ffffff;
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: all 0.2s ease;
 }
 
 .btn-login:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+  background: #333333;
 }
 
 .btn-login:disabled {
-  opacity: 0.6;
+  background: #cccccc;
   cursor: not-allowed;
 }
 
 .login-footer {
-  margin-top: 24px;
+  margin-top: 32px;
   text-align: center;
 }
 
 .login-footer a {
-  color: #6b7280;
-  font-size: 14px;
+  color: #666666;
+  font-size: 13px;
   text-decoration: none;
   transition: color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .login-footer a:hover {
-  color: #6366f1;
+  color: #000000;
 }
 </style>

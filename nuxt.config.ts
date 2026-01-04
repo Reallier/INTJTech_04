@@ -70,7 +70,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      hirestreamApiUrl: process.env.HIRESTREAM_API_URL || 'https://api.talentai.reallier.top:5443'
+      hirestreamApiUrl: process.env.HIRESTREAM_API_URL || 'https://api.talentai.reallier.top:5443',
+      hirestreamUrl: process.env.HIRESTREAM_URL || 'https://talentai.reallier.top:5443'
     }
   },
   devtools: { enabled: false }

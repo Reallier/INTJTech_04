@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, nextTick, ref } from "vue";
+import { onMounted, nextTick, ref, computed } from "vue";
 import { useAuth } from "~/composables/useAuth";
 
 const { user, fetchUser, logout } = useAuth();
@@ -10,12 +10,15 @@ const showUserCard = ref(false);
 // 登录 Modal 状态（仅用于顶部登录按钮）
 const showLoginModal = ref(false);
 
+// 从运行时配置获取产品链接
+const runtimeConfig = useRuntimeConfig();
+
 // 产品外部链接 - 直接跳转，登录由产品端处理
-const productLinks: Record<string, string> = {
-  talentai: 'https://talentai.reallier.top:5443',
+const productLinks = computed(() => ({
+  talentai: runtimeConfig.public.hirestreamUrl || 'https://talentai.reallier.top:5443',
   mindai: 'https://mindai.reallier.top',
   contract: 'https://contract.reallier.top',
-};
+}));
 
 // 处理产品点击 - 直接跳转到产品
 const handleProductClick = (productKey: string, e: Event) => {
@@ -23,7 +26,7 @@ const handleProductClick = (productKey: string, e: Event) => {
   showProductMenu.value = false;
   
   // 直接跳转到产品，登录由产品端处理
-  window.open(productLinks[productKey], '_blank');
+  window.open(productLinks.value[productKey as keyof typeof productLinks.value], '_blank');
 };
 
 const toggleProductMenu = () => {

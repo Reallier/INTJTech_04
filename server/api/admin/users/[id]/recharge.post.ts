@@ -47,14 +47,22 @@ export default defineEventHandler(async (event) => {
             return { success: false, message: '用户不存在' };
         }
 
-        // 官网目前没有余额字段，这里返回一个模拟的成功响应
-        // 如果需要真正的余额系统，需要在 Prisma schema 中添加相关字段
-        console.log(`Recharge request: user=${userId}, amount=${amount}, remark=${remark}`);
+        // 计算新余额
+        const currentBalance = Number(user.balance) || 0;
+        const newBalance = currentBalance + Number(amount);
+
+        // 更新用户余额
+        const updatedUser = await prisma.user.update({
+            where: { id: userId },
+            data: { balance: newBalance }
+        });
+
+        console.log(`Recharge success: user=${userId}, amount=${amount}, remark=${remark}, new_balance=${newBalance}`);
 
         return {
             success: true,
-            message: '充值功能暂未开放（余额系统尚未集成）',
-            new_balance: amount  // 模拟返回
+            message: '充值成功',
+            new_balance: Number(updatedUser.balance)
         };
     } catch (error: any) {
         console.error('Recharge failed:', error);

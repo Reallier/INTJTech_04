@@ -47,23 +47,29 @@ export default defineEventHandler(async (event) => {
             name: true,
             email: true,
             role: true,
+            balance: true,
+            freeQuota: true,
             createdAt: true,
             updatedAt: true
         }
     });
 
     // 格式化返回数据
-    const formattedUsers = users.map(user => ({
-        user_id: user.id,
-        username: user.username,
-        nickname: user.name,
-        email: user.email,
-        role: user.role,
-        balance: 0,  // 官网暂无余额系统
-        free_quota: 1.0,
-        total_available: 1.0,
-        created_at: user.createdAt
-    }));
+    const formattedUsers = users.map(user => {
+        const balance = Number(user.balance) || 0;
+        const freeQuota = Number(user.freeQuota) || 0;
+        return {
+            user_id: user.id,
+            username: user.username,
+            nickname: user.name,
+            email: user.email,
+            role: user.role,
+            balance: balance,
+            free_quota: freeQuota,
+            total_available: balance + freeQuota,
+            created_at: user.createdAt
+        };
+    });
 
     return {
         users: formattedUsers,
