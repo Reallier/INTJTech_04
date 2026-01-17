@@ -2,22 +2,13 @@
  * 管理员获取用户列表 API
  */
 import { PrismaClient } from '@prisma/client';
-import { verifyUserToken } from '../../utils/jwt';
+import { verifyAdminAuth } from '../../utils/adminAuth';
 
 const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
-    // 验证管理员 Token
-    const adminToken = getCookie(event, 'admin_token');
-    if (!adminToken) {
-        throw createError({ statusCode: 401, message: '需要管理员登录' });
-    }
-
-    // 验证是否为管理员
-    const payload = verifyUserToken(adminToken) as any;
-    if (!payload) {
-        throw createError({ statusCode: 401, message: '无效的 Token' });
-    }
+    // 验证管理员 Token（支持 cookie 和 Authorization header）
+    verifyAdminAuth(event);
 
     // 获取查询参数
     const query = getQuery(event);
@@ -46,11 +37,16 @@ export default defineEventHandler(async (event) => {
             username: true,
             name: true,
             email: true,
+            phone: true,
             role: true,
+            status: true,
             balance: true,
             freeQuota: true,
             createdAt: true,
-            updatedAt: true
+            updatedAt: true,
+            _count: {
+                select: { refreshTokens: true }
+            }
         }
     });
 
@@ -63,10 +59,13 @@ export default defineEventHandler(async (event) => {
             username: user.username,
             nickname: user.name,
             email: user.email,
+            phone: user.phone,
             role: user.role,
+            status: user.status || 'active',
             balance: balance,
             free_quota: freeQuota,
             total_available: balance + freeQuota,
+            device_count: user._count?.refreshTokens || 0,
             created_at: user.createdAt
         };
     });

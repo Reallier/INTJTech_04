@@ -7,7 +7,7 @@
 import { verifyUserToken, signUserToken } from '~/server/utils/jwt';
 import prisma from '~/server/utils/prisma';
 
-const MINDAI_URL = process.env.MINDAI_URL || 'https://mbti.reallier.top:5443';
+const MINDAI_URL = process.env.MINDAI_URL || 'https://mbti.intjsys.com';
 
 export default defineEventHandler(async (event) => {
     // 1. 验证用户身份

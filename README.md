@@ -153,7 +153,7 @@ zilshu-tech-site/
 ## 🌐 部署配置
 
 项目配置了 Traefik 反向代理：
-- **域名**: intjtech.reallier.top
+- **域名**: intjsys.com
 - **HTTPS**: 自动 TLS 证书
 - **网络**: traefik 网络
 
@@ -193,7 +193,7 @@ npm run lint
 
 - **微信**: ________
 - **邮箱**: ________
-- **网站**: https://intjtech.reallier.top
+- **网站**: https://intjsys.com
 
 有任何技术问题或合作需求，请通过以上方式联系我们。
 

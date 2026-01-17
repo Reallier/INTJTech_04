@@ -2,7 +2,7 @@
  * 管理员获取统计数据 API
  */
 import { PrismaClient } from '@prisma/client';
-import { verifyUserToken } from '../../utils/jwt';
+import { verifyAdminAuth } from '../../utils/adminAuth';
 
 const prisma = new PrismaClient();
 
@@ -10,17 +10,8 @@ const prisma = new PrismaClient();
 const APP02_URL = process.env.APP02_URL || 'http://localhost:8000';
 
 export default defineEventHandler(async (event) => {
-    // 验证管理员 Token
-    const adminToken = getCookie(event, 'admin_token');
-    if (!adminToken) {
-        throw createError({ statusCode: 401, message: '需要管理员登录' });
-    }
-
-    // 验证是否为管理员
-    const payload = verifyUserToken(adminToken) as any;
-    if (!payload) {
-        throw createError({ statusCode: 401, message: '无效的 Token' });
-    }
+    // 验证管理员 Token（支持 cookie 和 Authorization header）
+    verifyAdminAuth(event);
 
     // 获取总用户数
     const total_users = await prisma.user.count();

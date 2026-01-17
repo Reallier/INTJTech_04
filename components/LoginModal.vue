@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 
 const props = defineProps<{
   modelValue: boolean;
@@ -13,25 +13,71 @@ const emit = defineEmits<{
 
 const { fetchUser } = useAuth();
 
-const form = ref({
-  username: '',
-  password: ''
-});
+// 表单数据
+const email = ref('');
+const code = ref('');
 
+// 状态
 const loading = ref(false);
+const sendingCode = ref(false);
 const error = ref('');
+const countdown = ref(0);
+
+// 倒计时定时器
+let countdownTimer: ReturnType<typeof setInterval> | null = null;
+
+// 邮箱验证
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const isEmailValid = computed(() => EMAIL_REGEX.test(email.value));
+const isCodeValid = computed(() => /^\d{6}$/.test(code.value));
+
+// 可以发送验证码
+const canSendCode = computed(() => isEmailValid.value && !sendingCode.value && countdown.value === 0);
 
 // 关闭 Modal
 const closeModal = () => {
   emit('update:modelValue', false);
   error.value = '';
-  form.value = { username: '', password: '' };
+  email.value = '';
+  code.value = '';
 };
 
-// 处理登录
+// 发送验证码
+const sendCode = async () => {
+  if (!canSendCode.value) return;
+
+  sendingCode.value = true;
+  error.value = '';
+
+  try {
+    const response = await $fetch<{ success: boolean; message: string }>('/api/auth/email/send', {
+      method: 'POST',
+      body: { email: email.value }
+    });
+
+    if (response.success) {
+      // 开始60秒倒计时
+      countdown.value = 60;
+      countdownTimer = setInterval(() => {
+        countdown.value--;
+        if (countdown.value <= 0) {
+          if (countdownTimer) clearInterval(countdownTimer);
+        }
+      }, 1000);
+    } else {
+      error.value = response.message || '发送失败';
+    }
+  } catch (e: any) {
+    error.value = e.data?.message || '发送失败，请稍后重试';
+  } finally {
+    sendingCode.value = false;
+  }
+};
+
+// 登录/注册
 const handleLogin = async () => {
-  if (!form.value.username || !form.value.password) {
-    error.value = '请输入用户名和密码';
+  if (!isEmailValid.value || !isCodeValid.value) {
+    error.value = '请输入正确的邮箱和验证码';
     return;
   }
 
@@ -39,11 +85,16 @@ const handleLogin = async () => {
   error.value = '';
 
   try {
-    const response = await $fetch('/api/auth/login', {
+    const response = await $fetch<{
+      success: boolean;
+      message: string;
+      accessToken?: string;
+      user?: any;
+    }>('/api/auth/email/verify', {
       method: 'POST',
       body: {
-        username: form.value.username,
-        password: form.value.password
+        email: email.value,
+        code: code.value
       }
     });
 
@@ -85,6 +136,11 @@ if (typeof window !== 'undefined') {
     } else {
       document.removeEventListener('keydown', handleKeydown);
       document.body.style.overflow = '';
+      // 清理倒计时
+      if (countdownTimer) {
+        clearInterval(countdownTimer);
+        countdown.value = 0;
+      }
     }
   });
 }
@@ -105,47 +161,70 @@ if (typeof window !== 'undefined') {
           <!-- Modal 内容 -->
           <div class="modal-content">
             <div class="modal-header">
-              <h2 class="modal-title">登录</h2>
-              <p class="modal-subtitle">登录您的智能工作空间</p>
+              <h2 class="modal-title">登录 / 注册</h2>
+              <p class="modal-subtitle">输入邮箱即可登录，未注册自动创建账号</p>
             </div>
 
             <form @submit.prevent="handleLogin" class="login-form">
+              <!-- 邮箱 -->
               <div class="form-group">
-                <label class="form-label">用户名</label>
+                <label class="form-label">邮箱</label>
                 <input 
-                  v-model="form.username" 
-                  type="text" 
-                  placeholder="请输入用户名"
+                  v-model="email" 
+                  type="email" 
+                  placeholder="请输入邮箱地址"
                   :disabled="loading"
-                  autocomplete="username"
+                  autocomplete="email"
                   class="form-input"
                 />
               </div>
 
+              <!-- 验证码 -->
               <div class="form-group">
-                <label class="form-label">密码</label>
-                <input 
-                  v-model="form.password" 
-                  type="password" 
-                  placeholder="请输入密码"
-                  :disabled="loading"
-                  autocomplete="current-password"
-                  class="form-input"
-                />
+                <label class="form-label">验证码</label>
+                <div class="code-input-wrapper">
+                  <input 
+                    v-model="code" 
+                    type="text" 
+                    inputmode="numeric"
+                    placeholder="请输入6位验证码"
+                    :disabled="loading"
+                    autocomplete="one-time-code"
+                    maxlength="6"
+                    class="form-input code-input"
+                  />
+                  <button 
+                    type="button" 
+                    class="btn-send-code"
+                    :disabled="!canSendCode"
+                    @click="sendCode"
+                  >
+                    <span v-if="sendingCode">发送中...</span>
+                    <span v-else-if="countdown > 0">{{ countdown }}s</span>
+                    <span v-else>获取验证码</span>
+                  </button>
+                </div>
               </div>
 
               <div v-if="error" class="error-message">
                 {{ error }}
               </div>
 
-              <button type="submit" class="btn-submit" :disabled="loading">
+              <button 
+                type="submit" 
+                class="btn-submit" 
+                :disabled="loading || !isEmailValid || !isCodeValid"
+              >
                 <span v-if="loading">登录中...</span>
-                <span v-else>登录</span>
+                <span v-else>登录 / 注册</span>
               </button>
             </form>
 
-            <p class="register-hint">
-              暂不支持自助注册，请联系管理员开通账号
+            <p class="privacy-hint">
+              登录即表示同意
+              <a href="/privacy" target="_blank">隐私政策</a>
+              和
+              <a href="/terms" target="_blank">服务条款</a>
             </p>
           </div>
         </div>
@@ -267,6 +346,41 @@ if (typeof window !== 'undefined') {
   cursor: not-allowed;
 }
 
+/* 验证码输入框布局 */
+.code-input-wrapper {
+  display: flex;
+  gap: 12px;
+}
+
+.code-input {
+  flex: 1;
+}
+
+/* 发送验证码按钮 */
+.btn-send-code {
+  flex-shrink: 0;
+  padding: 14px 20px;
+  background: #fff;
+  border: 1px solid #111;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.btn-send-code:hover:not(:disabled) {
+  background: #111;
+  color: #fff;
+}
+
+.btn-send-code:disabled {
+  border-color: #ddd;
+  color: #999;
+  cursor: not-allowed;
+}
+
 /* 错误消息 */
 .error-message {
   padding: 12px 16px;
@@ -299,12 +413,21 @@ if (typeof window !== 'undefined') {
   cursor: not-allowed;
 }
 
-/* 注册提示 */
-.register-hint {
+/* 隐私提示 */
+.privacy-hint {
   margin-top: 24px;
-  font-size: 13px;
+  font-size: 12px;
   color: #999;
   text-align: center;
+}
+
+.privacy-hint a {
+  color: #666;
+  text-decoration: underline;
+}
+
+.privacy-hint a:hover {
+  color: #111;
 }
 
 /* 过渡动画 */

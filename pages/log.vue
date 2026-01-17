@@ -41,7 +41,7 @@ const logs = [
     <header class="header">
       <!-- Wide Layout (0 padding) to match Bento -->
       <div class="header-inner">
-        <a href="/" class="logo">简序智能<span>INTJ Tech</span></a>
+        <a href="/" class="logo">简序智能<span>INTJsys</span></a>
         <nav class="nav">
           <div class="nav-item">
             <button class="nav-link" @click.stop="toggleProductMenu" :class="{ 'active': showProductMenu }">

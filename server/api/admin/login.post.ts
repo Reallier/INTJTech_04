@@ -2,10 +2,26 @@
  * 管理员登录 API
  */
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
-import { signUserToken } from '../../utils/jwt';
 
 const prisma = new PrismaClient();
+
+// Admin Token 有效期：7 天
+const ADMIN_TOKEN_EXPIRY = '7d';
+
+// 为管理员签发长效 Token
+const signAdminToken = (user: any): string => {
+    const secret = process.env.JWT_SECRET || 'dev_secret_key_123';
+    return jwt.sign({
+        id: user.id,
+        user_id: user.id,
+        username: user.username,
+        name: user.name,
+        role: user.role,
+        type: 'access'  // 保持与 verifyAccessToken 验证逻辑兼容
+    }, secret, { expiresIn: ADMIN_TOKEN_EXPIRY });
+};
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
@@ -63,16 +79,16 @@ export default defineEventHandler(async (event) => {
 
     console.log('[Admin Login] Login successful for:', username);
 
-    // 生成 JWT
-    const token = signUserToken(user);
+    // 生成长效 Admin JWT（7天有效期）
+    const token = signAdminToken(user);
 
-    // 设置 Cookie
+    // 设置 Cookie（与 Token 有效期一致：7天）
     const isDev = process.env.NODE_ENV !== 'production';
     setCookie(event, 'admin_token', token, {
         httpOnly: false,
-        maxAge: 60 * 60 * 24, // 24 小时
+        maxAge: 60 * 60 * 24 * 7, // 7 天
         path: '/',
-        ...(isDev ? {} : { domain: '.reallier.top', secure: true }),
+        ...(isDev ? {} : { domain: '.intjsys.com', secure: true }),
         sameSite: 'lax'
     });
 

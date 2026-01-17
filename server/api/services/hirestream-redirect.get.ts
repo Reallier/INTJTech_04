@@ -2,12 +2,12 @@
  * HireStream 服务跳转 API (TalentAI)
  * 
  * 为已登录用户生成带 JWT token 的跳转链接
- * 跳转到 talentai.reallier.top:5443（智能招聘匹配系统）
+ * 跳转到 talentai.intjsys.com（智能招聘匹配系统）
  */
 import { verifyUserToken, signRedirectToken } from '~/server/utils/jwt';
 import prisma from '~/server/utils/prisma';
 
-const HIRESTREAM_URL = process.env.HIRESTREAM_URL || 'https://talentai.reallier.top:5443?tab=instant';
+const HIRESTREAM_URL = process.env.HIRESTREAM_URL || 'https://talentai.intjsys.com?tab=instant';
 
 export default defineEventHandler(async (event) => {
     // 1. 验证用户身份

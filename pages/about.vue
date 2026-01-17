@@ -90,7 +90,7 @@ const philosophy = [
     <!-- 顶部导航 -->
     <header class="about-header">
       <div class="container header-inner">
-        <a href="/" class="logo">简序智能<span>INTJ Tech</span></a>
+        <a href="/" class="logo">简序智能<span>INTJsys</span></a>
         <nav class="nav">
           <a href="/" class="nav-link">首页</a>
           <a href="#team" class="nav-link">团队</a>

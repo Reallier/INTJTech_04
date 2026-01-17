@@ -63,7 +63,7 @@ export default defineEventHandler(async (event) => {
         httpOnly: false,
         maxAge: 60 * 60 * 24 * 7, // 7 天
         path: '/',
-        ...(isDev ? {} : { domain: '.reallier.top', secure: true }),
+        ...(isDev ? {} : { domain: '.intjsys.com', secure: true }),
         sameSite: 'lax'
     });
 

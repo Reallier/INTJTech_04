@@ -9,6 +9,7 @@ datasource db {
 
 model User {
   id        Int      @id @default(autoincrement())
+  phone     String?  @unique
   email     String?  @unique
   username  String?  @unique
   password  String?
@@ -17,12 +18,40 @@ model User {
   openid    String?  @unique
   unionid   String?  @unique
   role      String   @default("user")
+  status    String   @default("active")
   balance   Decimal  @default(0) @db.Decimal(12, 6)
   freeQuota Decimal  @default(0) @db.Decimal(12, 6) @map("free_quota")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  refreshTokens RefreshToken[]
+
   @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime @map("expires_at")
+  userAgent String?  @map("user_agent")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+model SmsCode {
+  id        String   @id @default(cuid())
+  phone     String
+  code      String
+  expiresAt DateTime @map("expires_at")
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([phone, code])
+  @@map("sms_codes")
 }
 
 model ServiceConfig {

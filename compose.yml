@@ -10,7 +10,7 @@ services:
       - traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.zilshu-tech-site.rule=Host(`intjtech.reallier.top`)"
+      - "traefik.http.routers.zilshu-tech-site.rule=Host(`intjsys.com`)"
       - "traefik.http.routers.zilshu-tech-site.entrypoints=websecure"
       - "traefik.http.routers.zilshu-tech-site.tls=true"
       - "traefik.http.routers.zilshu-tech-site.tls.certresolver=myresolver"

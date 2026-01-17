@@ -2,7 +2,7 @@
  * 管理员获取服务配置列表 API
  */
 import { PrismaClient } from '@prisma/client';
-import { verifyUserToken } from '../../utils/jwt';
+import { verifyAdminAuth } from '../../utils/adminAuth';
 
 const prisma = new PrismaClient();
 
@@ -19,16 +19,8 @@ const DEFAULT_SERVICES = [
 ];
 
 export default defineEventHandler(async (event) => {
-    // 验证管理员 Token
-    const adminToken = getCookie(event, 'admin_token');
-    if (!adminToken) {
-        throw createError({ statusCode: 401, message: '需要管理员登录' });
-    }
-
-    const payload = verifyUserToken(adminToken) as any;
-    if (!payload) {
-        throw createError({ statusCode: 401, message: '无效的 Token' });
-    }
+    // 验证管理员 Token（支持 cookie 和 Authorization header）
+    verifyAdminAuth(event);
 
     // 获取数据库中的服务配置
     let services = await prisma.serviceConfig.findMany({

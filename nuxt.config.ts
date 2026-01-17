@@ -2,12 +2,12 @@
 export default defineNuxtConfig({
   app: {
     head: {
-      title: "简序智能 | INTJ Tech - 秩序即是自由",
+      title: "简序智能 | INTJsys - 秩序即是自由",
       meta: [
         {
           name: "description",
           content:
-            "我们重新编排业务的逻辑序数。简序智能（INTJ Tech）致力于将复杂的非结构化碎片，转化为稳健且可进化的生产力组件。"
+            "我们重新编排业务的逻辑序数。简序智能（INTJsys）致力于将复杂的非结构化碎片，转化为稳健且可进化的生产力组件。"
         }
       ],
       link: [
@@ -70,8 +70,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      hirestreamApiUrl: process.env.HIRESTREAM_API_URL || 'https://api.talentai.reallier.top:5443',
-      hirestreamUrl: process.env.HIRESTREAM_URL || 'https://talentai.reallier.top:5443'
+      hirestreamApiUrl: process.env.HIRESTREAM_API_URL || 'https://api.talentai.intjsys.com',
+      hirestreamUrl: process.env.HIRESTREAM_URL || 'https://talentai.intjsys.com'
     }
   },
   devtools: { enabled: false }

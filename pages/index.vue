@@ -13,20 +13,23 @@ const showLoginModal = ref(false);
 // 从运行时配置获取产品链接
 const runtimeConfig = useRuntimeConfig();
 
-// 产品外部链接 - 直接跳转，登录由产品端处理
-const productLinks = computed(() => ({
-  talentai: runtimeConfig.public.hirestreamUrl || 'https://talentai.reallier.top:5443',
-  mindai: 'https://mindai.reallier.top',
-  contract: 'https://contract.reallier.top',
+// 产品直接跳转 URL - 使用共享 Apex Cookie SSO，直接跳转无需中间 redirect
+const productDirectUrls = computed(() => ({
+  talentai: runtimeConfig.public.hirestreamUrl || 'https://talentai.intjsys.com',
+  mindai: 'https://mbti.intjsys.com',
+  contract: '/api/services/contract-redirect', // 暂时保留 redirect
 }));
 
-// 处理产品点击 - 直接跳转到产品
+// 处理产品点击 - 直接跳转，Cookie 自动携带认证
 const handleProductClick = (productKey: string, e: Event) => {
   e.preventDefault();
   showProductMenu.value = false;
   
-  // 直接跳转到产品，登录由产品端处理
-  window.open(productLinks.value[productKey as keyof typeof productLinks.value], '_blank');
+  // 直接跳转到产品 URL（共享 Cookie 自动传递登录状态）
+  const url = productDirectUrls.value[productKey as keyof typeof productDirectUrls.value];
+  if (url) {
+    window.open(url, '_blank');
+  }
 };
 
 const toggleProductMenu = () => {
@@ -187,7 +190,7 @@ const engineeringStack = [
     <!-- Header -->
     <header class="header">
       <div class="header-inner">
-        <a href="/" class="logo">简序智能<span>INTJ Tech</span></a>
+        <a href="/" class="logo">简序智能<span>INTJsys</span></a>
         <nav class="nav">
           <div class="nav-item">
             <button class="nav-link" @click.stop="toggleProductMenu" :class="{ 'active': showProductMenu }">
@@ -234,7 +237,7 @@ const engineeringStack = [
       <!-- Compact Panels -->
       <div class="dropdown-panel" v-show="showProductMenu">
         <div class="panel-inner">
-           <div class="panel-grid cols-3">
+           <div class="panel-grid" :class="user?.role === 'admin' || user?.role === 'internal' ? 'cols-4' : 'cols-3'">
               <a href="#" @click="handleProductClick('talentai', $event)" class="panel-item">
                 <div class="panel-icon">[ ]</div>
                 <div class="panel-content">
@@ -243,6 +246,17 @@ const engineeringStack = [
                      <span class="panel-meta">PROD</span>
                   </div>
                   <p class="panel-desc">AI 驱动的确定性人才发现引擎。</p>
+                </div>
+              </a>
+              <!-- MindAI Typing - 仅内部用户可见 -->
+              <a v-if="user?.role === 'admin' || user?.role === 'internal'" href="#" @click="handleProductClick('mindai', $event)" class="panel-item">
+                <div class="panel-icon">∞</div>
+                <div class="panel-content">
+                  <div class="panel-head">
+                     <span class="panel-title">MINDAI</span>
+                     <span class="panel-meta">INTERNAL</span>
+                  </div>
+                  <p class="panel-desc">基于荣格八维的 MBTI 判型智能体。</p>
                 </div>
               </a>
               <a href="#products" class="panel-item">
@@ -310,6 +324,16 @@ const engineeringStack = [
                   <p class="panel-desc">标准化接口集成指南。</p>
                 </div>
               </a>
+              <a v-if="user?.role === 'admin' || user?.role === 'internal'" href="https://test.docs.reallier.top:5443" target="_blank" class="panel-item">
+                <div class="panel-icon">≡</div>
+                <div class="panel-content">
+                  <div class="panel-head">
+                     <span class="panel-title">DOCS</span>
+                     <span class="panel-meta">INTERNAL</span>
+                  </div>
+                  <p class="panel-desc">内部技术文档站。</p>
+                </div>
+              </a>
            </div>
         </div>
       </div>
@@ -322,7 +346,7 @@ const engineeringStack = [
           <span class="hero-label">Intelligent System Architect</span>
           <h1 class="hero-title">秩序，<br>即是自由。</h1>
           <p class="hero-subtitle">
-            我们重新编排业务的逻辑序数。简序智能（INTJ Tech）致力于将复杂的非结构化碎片，转化为稳健且可进化的生产力组件。
+            我们重新编排业务的逻辑序数。简序智能（INTJsys）致力于将复杂的非结构化碎片，转化为稳健且可进化的生产力组件。
           </p>
           <div class="hero-cta">
             <a href="#products" class="btn">探索产品矩阵</a>
@@ -425,7 +449,7 @@ const engineeringStack = [
       <div class="footer-inner">
         <!-- Left: Identity & Meta -->
         <div class="footer-identity">
-          <div class="footer-brand">简序智能<span class="brand-en">INTJ Tech</span></div>
+          <div class="footer-brand">简序智能<span class="brand-en">INTJsys</span></div>
           <div class="footer-meta">
             <span>SYSTEM_STATUS: OPERATIONAL</span>
             <span>BUILD: SEAM_V4.8 / OIS_PROTOCOL</span>
@@ -442,6 +466,10 @@ const engineeringStack = [
             <span class="matrix-label">[ SPECS ]</span>
             <span class="matrix-items">工程哲学 / 技术规格 / 研发日志</span>
           </div>
+          <div class="matrix-row" v-if="user?.role === 'admin' || user?.role === 'internal'">
+            <span class="matrix-label">[ DOCS ]</span>
+            <span class="matrix-items"><a href="https://test.docs.reallier.top:5443" target="_blank" class="footer-link">文档站</a></span>
+          </div>
           <div class="matrix-row">
             <span class="matrix-label">[ LEGAL ]</span>
             <span class="matrix-items">隐私政策 / 服务条款</span>
@@ -451,8 +479,8 @@ const engineeringStack = [
         <!-- Right: Nodes & Copyright -->
         <div class="footer-nodes">
           <div class="nodes-location">LOCATIONS: SZ · HK · SH</div>
-          <div class="nodes-copyright">© 2025 INTJ TECH</div>
-          <div class="nodes-reserved">ALL RIGHTS RESERVED.</div>
+          <div class="nodes-copyright">© 2025 INTJsys · ALL RIGHTS RESERVED.</div>
+          <div class="nodes-icp"><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">粤ICP备2026005920号</a></div>
         </div>
       </div>
     </footer>
@@ -1440,6 +1468,17 @@ const engineeringStack = [
   color: var(--muted);
 }
 
+.matrix-items .footer-link {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s var(--ease);
+}
+
+.matrix-items .footer-link:hover {
+  color: var(--fg);
+  text-decoration: underline;
+}
+
 /* Right: Nodes & Copyright */
 .footer-nodes {
   flex: 0 0 auto;
@@ -1468,6 +1507,24 @@ const engineeringStack = [
   font-size: 10px;
   color: var(--muted);
   opacity: 0.6;
+}
+
+.nodes-icp {
+  font-family: 'SF Mono', 'Roboto Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.nodes-icp a {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s var(--ease);
+}
+
+.nodes-icp a:hover {
+  color: var(--fg);
+  text-decoration: underline;
 }
 
 /* ========================================

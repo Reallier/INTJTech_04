@@ -45,17 +45,6 @@
         </div>
       </section>
       
-      <!-- 快捷入口 -->
-      <section class="quick-links-section">
-        <a href="https://docs.intjtech.reallier.top:5443" target="_blank" class="quick-link-card docs-card">
-          <div class="quick-link-icon"><FaIcon icon="book" /></div>
-          <div class="quick-link-info">
-            <div class="quick-link-title">技术文档</div>
-            <div class="quick-link-desc">开发规范 · 项目文档 · 架构设计</div>
-          </div>
-          <FaIcon icon="external-link-alt" class="quick-link-arrow" />
-        </a>
-      </section>
       
       <!-- 用户列表 -->
       <section class="users-section">
@@ -81,33 +70,59 @@
             <thead>
               <tr>
                 <th>用户ID</th>
+                <th>账号</th>
                 <th>昵称</th>
+                <th>角色</th>
+                <th>状态</th>
+                <th>设备</th>
                 <th>余额</th>
-                <th>免费额度</th>
-                <th>可用总额</th>
                 <th>注册时间</th>
                 <th>操作</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="user in users" :key="user.user_id">
+              <tr v-for="user in users" :key="user.user_id" :class="{ 'disabled-row': user.status === 'disabled' }">
                 <td class="user-id">{{ user.user_id }}</td>
+                <td class="user-account">{{ user.email || user.phone || user.username || '-' }}</td>
                 <td>{{ user.nickname || '-' }}</td>
-                <td class="balance">¥{{ formatNumber(user.balance) }}</td>
-                <td class="free-quota">¥{{ formatNumber(user.free_quota) }}</td>
-                <td class="total">¥{{ formatNumber(user.total_available) }}</td>
+                <td class="user-role">
+                  <select 
+                    :value="user.role" 
+                    @change="updateUserRole(user, $event.target.value)"
+                    :disabled="updatingRole === user.user_id"
+                    class="role-select"
+                  >
+                    <option value="user">普通用户</option>
+                    <option value="internal">内部用户</option>
+                    <option value="admin">管理员</option>
+                  </select>
+                </td>
+                <td class="user-status">
+                  <span :class="['status-badge', user.status === 'active' ? 'active' : 'disabled']">
+                    {{ user.status === 'active' ? '正常' : '已禁用' }}
+                  </span>
+                </td>
+                <td class="device-count">
+                  <button class="btn-devices" @click="openSessionsModal(user)" :title="`${user.device_count} 台设备在线`">
+                    {{ user.device_count }} 台
+                  </button>
+                </td>
+                <td class="balance">¥{{ formatNumber(user.total_available) }}</td>
                 <td class="date">{{ formatDate(user.created_at) }}</td>
                 <td class="action-buttons">
-                  <button class="btn-recharge" @click="openRechargeModal(user)">
-                    充值
+                  <button class="btn-recharge" @click="openRechargeModal(user)">充值</button>
+                  <button 
+                    :class="user.status === 'active' ? 'btn-disable' : 'btn-enable'" 
+                    @click="toggleUserStatus(user)"
+                    :disabled="togglingStatus === user.user_id"
+                  >
+                    {{ user.status === 'active' ? '禁用' : '启用' }}
                   </button>
-                  <button class="btn-delete" @click="openDeleteModal(user)">
-                    删除
-                  </button>
+                  <button class="btn-delete" @click="openDeleteModal(user)">删除</button>
                 </td>
               </tr>
               <tr v-if="users.length === 0 && !loading">
-                <td colspan="7" class="empty-row">暂无用户数据</td>
+                <td colspan="9" class="empty-row">暂无用户数据</td>
               </tr>
             </tbody>
           </table>
@@ -291,6 +306,49 @@
         </div>
       </div>
     </div>
+    
+    <!-- 设备管理弹窗 -->
+    <div v-if="showSessionsModal" class="modal-overlay" @click.self="closeSessionsModal">
+      <div class="modal-content sessions-modal">
+        <div class="modal-header">
+          <h3><FaIcon icon="laptop" style="margin-right: 8px;" />登录设备管理</h3>
+          <button class="modal-close" @click="closeSessionsModal">×</button>
+        </div>
+        <div class="modal-body">
+          <p class="user-info">用户：<strong>{{ sessionsUser?.nickname || sessionsUser?.email || sessionsUser?.user_id }}</strong></p>
+          
+          <div v-if="loadingSessions" class="loading-text">加载中...</div>
+          
+          <div v-else-if="sessions.length === 0" class="empty-sessions">
+            暂无登录设备
+          </div>
+          
+          <div v-else class="sessions-list">
+            <div v-for="session in sessions" :key="session.id" class="session-item">
+              <div class="session-info">
+                <div class="session-device">
+                  <FaIcon :icon="session.device === 'iPhone' || session.device === 'Android' ? 'mobile-alt' : 'laptop'" />
+                  {{ session.device }}
+                </div>
+                <div class="session-time">
+                  登录时间：{{ formatDate(session.createdAt) }}
+                </div>
+              </div>
+              <button 
+                class="btn-kick" 
+                @click="kickSession(session.id)"
+                :disabled="deletingSession === session.id"
+              >
+                {{ deletingSession === session.id ? '处理中...' : '踢下线' }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-cancel" @click="closeSessionsModal">关闭</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -339,24 +397,65 @@ const serviceConfigs = ref([]);
 const loadingServices = ref(false);
 const updatingService = ref('');
 
+// 禁用/启用状态
+const togglingStatus = ref(null);
+
+// 角色更新状态
+const updatingRole = ref(null);
+
+// 设备管理弹窗状态
+const showSessionsModal = ref(false);
+const sessionsUser = ref(null);
+const sessions = ref([]);
+const loadingSessions = ref(false);
+const deletingSession = ref('');
+
 // 获取 token
 const getToken = () => {
   const token = useCookie('admin_token');
   return token.value;
 };
 
+// 处理 API 错误 - 401 时跳转登录
+const handleApiError = (e) => {
+  if (e?.status === 401 || e?.statusCode === 401) {
+    console.warn('[Admin] Token 已过期，跳转登录...');
+    const adminToken = useCookie('admin_token');
+    adminToken.value = null;
+    navigateTo('/admin/login');
+    return true;
+  }
+  return false;
+};
+
 // 获取统计数据 - 使用官网 API
 const fetchStats = async () => {
+  const token = getToken();
+  if (!token) {
+    console.error('No token available');
+    return;
+  }
   try {
-    const response = await $fetch('/api/admin/stats');
+    const response = await $fetch('/api/admin/stats', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
     stats.value = response;
   } catch (e) {
-    console.error('Failed to fetch stats:', e);
+    if (!handleApiError(e)) {
+      console.error('Failed to fetch stats:', e);
+    }
   }
 };
 
 // 获取用户列表 - 使用官网 API
 const fetchUsers = async () => {
+  const token = getToken();
+  if (!token) {
+    console.error('No token available');
+    return;
+  }
   loading.value = true;
   try {
     const params = new URLSearchParams({
@@ -367,10 +466,16 @@ const fetchUsers = async () => {
       params.append('search', searchQuery.value);
     }
     
-    const response = await $fetch(`/api/admin/users?${params}`);
+    const response = await $fetch(`/api/admin/users?${params}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
     users.value = response.users;
   } catch (e) {
-    console.error('Failed to fetch users:', e);
+    if (!handleApiError(e)) {
+      console.error('Failed to fetch users:', e);
+    }
   } finally {
     loading.value = false;
   }
@@ -528,6 +633,115 @@ const handleDeleteUser = async () => {
   }
 };
 
+// 禁用/启用用户
+const toggleUserStatus = async (user) => {
+  const token = getToken();
+  if (!token) return;
+  togglingStatus.value = user.user_id;
+  try {
+    const response = await $fetch(
+      `/api/admin/users/${user.user_id}/toggle-status`,
+      { 
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      }
+    );
+    
+    if (response.success) {
+      user.status = response.status;
+      if (response.status === 'disabled') {
+        user.device_count = 0;
+      }
+    } else {
+      alert(response.message || '操作失败');
+    }
+  } catch (e) {
+    console.error('Toggle status failed:', e);
+    alert('操作失败，请稍后重试');
+  } finally {
+    togglingStatus.value = null;
+  }
+};
+
+// 更新用户角色
+const updateUserRole = async (user, newRole) => {
+  if (user.role === newRole) return;
+  const token = getToken();
+  if (!token) return;
+  
+  updatingRole.value = user.user_id;
+  try {
+    const response = await $fetch(
+      `/api/admin/users/${user.user_id}/role`,
+      { 
+        method: 'PATCH', 
+        body: { role: newRole },
+        headers: { 'Authorization': `Bearer ${token}` }
+      }
+    );
+    
+    if (response.success) {
+      user.role = newRole;
+    } else {
+      alert(response.message || '更新失败');
+    }
+  } catch (e) {
+    console.error('Update role failed:', e);
+    alert('更新失败，请稍后重试');
+  } finally {
+    updatingRole.value = null;
+  }
+};
+
+// 打开设备管理弹窗
+const openSessionsModal = async (user) => {
+  sessionsUser.value = user;
+  showSessionsModal.value = true;
+  loadingSessions.value = true;
+  
+  try {
+    const response = await $fetch(`/api/admin/users/${user.user_id}/sessions`);
+    if (response.success) {
+      sessions.value = response.sessions;
+    }
+  } catch (e) {
+    console.error('Fetch sessions failed:', e);
+  } finally {
+    loadingSessions.value = false;
+  }
+};
+
+// 关闭设备管理弹窗
+const closeSessionsModal = () => {
+  showSessionsModal.value = false;
+  sessionsUser.value = null;
+  sessions.value = [];
+};
+
+// 踢下线
+const kickSession = async (sessionId) => {
+  deletingSession.value = sessionId;
+  try {
+    const response = await $fetch(`/api/admin/sessions/${sessionId}`, {
+      method: 'DELETE'
+    });
+    
+    if (response.success) {
+      sessions.value = sessions.value.filter(s => s.id !== sessionId);
+      if (sessionsUser.value) {
+        sessionsUser.value.device_count--;
+      }
+    } else {
+      alert(response.message || '操作失败');
+    }
+  } catch (e) {
+    console.error('Kick session failed:', e);
+    alert('操作失败');
+  } finally {
+    deletingSession.value = '';
+  }
+};
+
 // 登出
 const handleLogout = () => {
   const token = useCookie('admin_token');
@@ -550,14 +764,20 @@ const formatDate = (dateStr) => {
 
 // 获取服务配置列表
 const fetchServiceConfigs = async () => {
+  const token = getToken();
+  if (!token) return;
   loadingServices.value = true;
   try {
-    const response = await $fetch('/api/admin/services');
+    const response = await $fetch('/api/admin/services', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
     if (response.success) {
       serviceConfigs.value = response.services;
     }
   } catch (e) {
-    console.error('Failed to fetch service configs:', e);
+    if (!handleApiError(e)) {
+      console.error('Failed to fetch service configs:', e);
+    }
   } finally {
     loadingServices.value = false;
   }
@@ -1285,5 +1505,177 @@ onMounted(() => {
   font-size: 13px;
   color: #6b7280;
   min-width: 32px;
+}
+
+/* 用户状态标记 */
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.status-badge.active {
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+.status-badge.disabled {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.disabled-row {
+  background: #fafafa;
+  opacity: 0.7;
+}
+
+.user-account {
+  font-size: 12px;
+  color: #666;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 设备数量按钮 */
+.btn-devices {
+  padding: 4px 10px;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-devices:hover {
+  background: #e0e0e0;
+  border-color: #ccc;
+}
+
+/* 禁用/启用按钮 */
+.btn-disable {
+  padding: 6px 12px;
+  background: #fff;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-disable:hover:not(:disabled) {
+  background: #dc2626;
+  color: #fff;
+}
+
+.btn-enable {
+  padding: 6px 12px;
+  background: #fff;
+  border: 1px solid #86efac;
+  color: #16a34a;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-enable:hover:not(:disabled) {
+  background: #16a34a;
+  color: #fff;
+}
+
+/* 设备管理弹窗 */
+.sessions-modal {
+  max-width: 500px;
+}
+
+.sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.session-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+}
+
+.session-device {
+  font-weight: 600;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.session-time {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
+
+.btn-kick {
+  padding: 6px 12px;
+  background: #fff;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-kick:hover:not(:disabled) {
+  background: #dc2626;
+  color: #fff;
+}
+
+.btn-kick:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.empty-sessions {
+  text-align: center;
+  padding: 32px;
+  color: #999;
+}
+
+.loading-text {
+  text-align: center;
+  padding: 24px;
+  color: #666;
+}
+/* 角色选择器 */
+.role-select {
+  padding: 4px 8px;
+  font-size: 12px;
+  border: 1px solid #e0e0e0;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.role-select:hover:not(:disabled) {
+  border-color: #333;
+}
+
+.role-select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.role-select option[value="admin"] {
+  color: #dc2626;
+  font-weight: 600;
 }
 </style>

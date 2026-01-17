@@ -87,12 +87,12 @@ export default defineEventHandler(async (event) => {
     console.log('[Auth Callback] Generated Token');
 
     // 5. Redirect to Home (or specific callback page)
-    // Cookie 设置为跨子域共享，支持 app.reallier.top 等子域读取
+    // Cookie 设置为根域名共享
     setCookie(event, 'auth_token', token, {
         httpOnly: false,
         maxAge: 60 * 60 * 24 * 7,
         path: '/',
-        domain: '.reallier.top',  // 允许所有子域访问
+        domain: '.intjsys.com',  // 允许所有子域访问
         secure: true,             // HTTPS 环境必须
         sameSite: 'lax'           // 允许跨子域导航时携带
     });
