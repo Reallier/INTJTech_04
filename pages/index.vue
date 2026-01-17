@@ -466,10 +466,6 @@ const engineeringStack = [
             <span class="matrix-label">[ SPECS ]</span>
             <span class="matrix-items">工程哲学 / 技术规格 / 研发日志</span>
           </div>
-          <div class="matrix-row" v-if="user?.role === 'admin' || user?.role === 'internal'">
-            <span class="matrix-label">[ DOCS ]</span>
-            <span class="matrix-items"><a href="https://test.docs.reallier.top:5443" target="_blank" class="footer-link">文档站</a></span>
-          </div>
           <div class="matrix-row">
             <span class="matrix-label">[ LEGAL ]</span>
             <span class="matrix-items">隐私政策 / 服务条款</span>

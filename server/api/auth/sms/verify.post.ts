@@ -121,6 +121,8 @@ export default defineEventHandler(async (event) => {
         user: {
             id: user.id,
             phone: phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2'),
+            email: user.email?.replace(/(.{2}).*(@.*)/, '$1***$2'),
+            username: user.username,
             name: user.name,
             avatar: user.avatar,
             role: user.role,

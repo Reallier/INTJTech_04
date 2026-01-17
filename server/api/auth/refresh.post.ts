@@ -75,7 +75,9 @@ export default defineEventHandler(async (event) => {
         accessToken,
         user: {
             id: user.id,
-            phone: user.phone?.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2'),
+            phone: user.phone,
+            email: user.email,
+            username: user.username,
             name: user.name,
             avatar: user.avatar,
             role: user.role,

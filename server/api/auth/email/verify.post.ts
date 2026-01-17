@@ -124,7 +124,9 @@ export default defineEventHandler(async (event) => {
         accessToken,
         user: {
             id: user.id,
-            email: normalizedEmail.replace(/(.{2}).*(@.*)/, '$1***$2'),  // 脱敏
+            email: user.email,
+            username: user.username,
+            phone: user.phone,
             name: user.name,
             avatar: user.avatar,
             role: user.role,
