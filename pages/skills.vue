@@ -288,8 +288,7 @@ const marketStats = {
       </section>
 
       <!-- 核心资产 -->
-      <section class="section core-section">
-        <div class="container">
+      <section class="section container core-section">
           <div class="section-header">
             <div class="section-title-group">
               <span class="section-tag">[ CORE ASSETS ]</span>
@@ -358,12 +357,10 @@ const marketStats = {
               </div>
             </div>
           </div>
-        </div>
       </section>
 
       <!-- 精选开源 Skills -->
-      <section class="section curated-section">
-        <div class="container">
+      <section class="section container curated-section">
           <div class="section-header">
             <div class="section-title-group">
               <span class="section-tag">[ CURATED SKILLS ]</span>
@@ -417,12 +414,10 @@ const marketStats = {
               探索全球 63,000+ Skills →
             </a>
           </div>
-        </div>
       </section>
 
       <!-- MCP Servers -->
-      <section class="section mcp-section">
-        <div class="container">
+      <section class="section container mcp-section">
           <div class="section-header">
             <div class="section-title-group">
               <span class="section-tag">[ MCP SERVERS ]</span>
@@ -474,12 +469,10 @@ const marketStats = {
               </div>
             </div>
           </div>
-        </div>
       </section>
 
       <!-- 商业化入口 -->
-      <section class="section pricing-section">
-        <div class="container">
+      <section class="section container pricing-section">
           <div class="section-header center">
             <span class="section-tag">[ SOLUTIONS ]</span>
             <h2 class="section-title">商业解决方案</h2>
@@ -541,12 +534,10 @@ const marketStats = {
               </div>
             </div>
           </div>
-        </div>
       </section>
 
       <!-- 快速接入 -->
-      <section class="section connect-section">
-        <div class="container">
+      <section class="section container connect-section">
           <div class="section-header">
             <span class="section-tag">[ QUICK START ]</span>
             <h2 class="section-title">快速接入</h2>
@@ -585,7 +576,6 @@ const marketStats = {
             <span class="platform">GitHub Copilot</span>
             <span class="platform">VS Code</span>
           </div>
-        </div>
       </section>
     </main>
 
@@ -947,7 +937,7 @@ const marketStats = {
 }
 
 /* ========================================
-   Section 通用样式
+   Section 通用样式 (与首页 bento 一致)
    ======================================== */
 .section {
   padding: 80px 0;
