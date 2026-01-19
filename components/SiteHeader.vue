@@ -286,7 +286,6 @@ onMounted(async () => {
   font-weight: 600;
   text-decoration: none;
   color: var(--fg);
-  transition: opacity 0.2s var(--ease);
   background: none;
   border: none;
   cursor: pointer;
@@ -303,10 +302,6 @@ onMounted(async () => {
   background: var(--fg);
   transform: scaleX(0);
   transition: transform 0.2s var(--ease);
-}
-
-.nav-link:hover {
-  opacity: 0.7;
 }
 
 .nav-link.active::after {

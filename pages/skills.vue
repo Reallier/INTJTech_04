@@ -589,42 +589,8 @@ const marketStats = {
       </section>
     </main>
 
-    <!-- Footer: System Status Bar -->
-    <footer class="system-footer">
-      <div class="footer-inner">
-        <!-- Left: Identity & Meta -->
-        <div class="footer-identity">
-          <div class="footer-brand">简序智能<span class="brand-en">INTJsys</span></div>
-          <div class="footer-meta">
-            <span>SYSTEM_STATUS: OPERATIONAL</span>
-            <span>BUILD: SEAM_V4.8 / OIS_PROTOCOL</span>
-          </div>
-        </div>
-        
-        <!-- Center: Resource Matrix -->
-        <div class="footer-matrix">
-          <div class="matrix-row">
-            <span class="matrix-label">[ PRODUCT ]</span>
-            <span class="matrix-items">TalentAI / INTJ Bridge / Labs</span>
-          </div>
-          <div class="matrix-row">
-            <span class="matrix-label">[ SPECS ]</span>
-            <span class="matrix-items">工程哲学 / 技术规格 / 研发日志</span>
-          </div>
-          <div class="matrix-row">
-            <span class="matrix-label">[ LEGAL ]</span>
-            <span class="matrix-items">隐私政策 / 服务条款</span>
-          </div>
-        </div>
-        
-        <!-- Right: Nodes & Copyright -->
-        <div class="footer-nodes">
-          <div class="nodes-location">LOCATIONS: SZ · HK · SH</div>
-          <div class="nodes-copyright">© 2025 INTJsys · ALL RIGHTS RESERVED.</div>
-          <div class="nodes-icp"><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">粤ICP备2026005920号</a></div>
-        </div>
-      </div>
-    </footer>
+    <!-- 使用共享 Footer 组件 -->
+    <SiteFooter />
 
     <!-- 登录 Modal -->
     <LoginModal v-model="showLoginModal" />
