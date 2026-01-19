@@ -266,6 +266,15 @@ const engineeringStack = [
           <div class="nodes-copyright">© 2025 INTJsys · ALL RIGHTS RESERVED.</div>
           <div class="nodes-icp"><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">粤ICP备2026005920号</a></div>
         </div>
+        
+        <!-- Contact: WeChat QR Code -->
+        <div class="footer-contact">
+          <div class="contact-label">[ CONTACT ]</div>
+          <div class="contact-qr">
+            <img src="/wechat-contact.png" alt="企业微信" class="qr-image" />
+          </div>
+          <div class="contact-hint">扫码添加企业微信</div>
+        </div>
       </div>
     </footer>
 
@@ -1874,6 +1883,41 @@ const engineeringStack = [
   font-size: 12px;
   color: var(--muted);
   letter-spacing: 0.1em;
+}
+
+/* Footer Contact QR Code */
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.contact-label {
+  font-family: 'SF Mono', 'Roboto Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+.contact-qr {
+  width: 100px;
+  height: 100px;
+  padding: 6px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.qr-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.contact-hint {
+  font-size: 11px;
+  color: var(--muted);
 }
 
 /* Responsive */
