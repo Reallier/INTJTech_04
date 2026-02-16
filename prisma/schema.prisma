@@ -20,11 +20,14 @@ model User {
   role      String   @default("user")
   status    String   @default("active")
   balance   Decimal  @default(0) @db.Decimal(12, 6)
-  freeQuota Decimal  @default(0) @db.Decimal(12, 6) @map("free_quota")
+  freeQuota Decimal  @default(10) @db.Decimal(12, 6) @map("free_quota")
+  aiNewsletterSubscribed Boolean @default(false) @map("ai_newsletter_subscribed")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   refreshTokens RefreshToken[]
+  refundRequests RefundRequest[]
+  balanceAdjustments BalanceAdjustment[]
 
   @@map("users")
 }
@@ -64,3 +67,95 @@ model ServiceConfig {
 
   @@map("service_configs")
 }
+
+model PaymentOrder {
+  id             String    @id @default(cuid())
+  orderId        String    @unique @map("order_id")
+  userId         Int       @map("user_id")
+  amount         Decimal   @db.Decimal(10, 2)
+  refundedAmount Decimal   @default(0) @db.Decimal(10, 2) @map("refunded_amount")
+  tradeNo        String?   @map("trade_no")
+  status         String    @default("PENDING")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  paidAt         DateTime? @map("paid_at")
+
+  refundRequests RefundRequest[]
+  statusLogs     OrderStatusLog[]
+
+  @@index([userId])
+  @@index([status])
+  @@map("payment_orders")
+}
+
+model RefundRequest {
+  id            String        @id @default(cuid())
+  userId        Int           @map("user_id")
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orderId       String?       @map("order_id")
+  paymentOrder  PaymentOrder? @relation(fields: [orderId], references: [id])
+  amount        Decimal       @db.Decimal(10, 2)
+  reason        String?
+  status        String        @default("PENDING")
+  tradeNo       String?       @map("trade_no")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  processedAt   DateTime?     @map("processed_at")
+  processedBy   String?       @map("processed_by")
+
+  @@index([userId])
+  @@index([orderId])
+  @@index([status])
+  @@map("refund_requests")
+}
+
+// Admin audit log for tracking all administrative actions
+model AdminAuditLog {
+  id          String   @id @default(cuid())
+  adminName   String   @map("admin_name")
+  action      String   // Action type: REFUND_APPROVE, BALANCE_ADJUST, USER_UPDATE, etc.
+  targetType  String   @map("target_type")  // Target type: RefundRequest, User, etc.
+  targetId    String   @map("target_id")    // Target ID
+  details     String?  @db.Text            // Details JSON
+  ipAddress   String?  @map("ip_address")
+  userAgent   String?  @map("user_agent")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([adminName])
+  @@index([action])
+  @@index([targetType, targetId])
+  @@index([createdAt])
+  @@map("admin_audit_logs")
+}
+
+// Order status change log for audit trail
+model OrderStatusLog {
+  id         String       @id @default(cuid())
+  orderId    String       @map("order_id")
+  order      PaymentOrder @relation(fields: [orderId], references: [id])
+  fromStatus String       @map("from_status")
+  toStatus   String       @map("to_status")
+  reason     String?
+  operator   String?      // Who made the change (system/admin)
+  createdAt  DateTime     @default(now()) @map("created_at")
+
+  @@index([orderId])
+  @@index([createdAt])
+  @@map("order_status_logs")
+}
+
+// Balance adjustment for compensation/deduction
+model BalanceAdjustment {
+  id           String   @id @default(cuid())
+  userId       Int      @map("user_id")
+  user         User     @relation(fields: [userId], references: [id])
+  amount       Decimal  @db.Decimal(10, 2)  // Positive=credit, Negative=debit
+  type         String   // COMPENSATION, DEDUCTION, PROMOTION, REFUND
+  reason       String
+  operatorName String   @map("operator_name")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@index([type])
+  @@index([createdAt])
+  @@map("balance_adjustments")
+}
+

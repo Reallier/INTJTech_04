@@ -2,13 +2,13 @@
 echo Starting deployment process...
 
 echo Building Docker image...
-docker build --no-cache -t zilshu-tech-site:latest .
+docker build --no-cache -t intjsys-official:latest .
 
 echo Tagging Docker image...
-docker tag zilshu-tech-site:latest ccr.ccs.tencentyun.com/reallier/zilshu-tech-site:latest
+docker tag intjsys-official:latest ccr.ccs.tencentyun.com/reallier/intjsys-official:latest
 
 echo Pushing Docker image...
-docker push ccr.ccs.tencentyun.com/reallier/zilshu-tech-site:latest
+docker push ccr.ccs.tencentyun.com/reallier/intjsys-official:latest
 
 echo Connecting to server and updating containers...
 ssh -i "C:\Users\admin\Downloads\reallier.pem" root@119.29.166.51 "cd /data/app-stack/intjtech && docker compose pull && docker compose up -d"

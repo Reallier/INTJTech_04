@@ -8,17 +8,16 @@ const redirectTarget = computed(() => route.query.redirect as string || '');
 // Redirect mapping
 const redirectUrls: Record<string, string> = {
     'hirestream': '/api/services/hirestream-redirect',
-    'mindai': '/api/services/mindai-redirect',
+    'mindai': 'https://mbti.intjsys.com',
     'contract': '/api/services/contract-redirect',
-    'console': '/console',
 };
 
-// If already logged in, redirect to target or console (default)
+// If already logged in, redirect to target or home
 if (user.value) {
     if (redirectTarget.value && redirectUrls[redirectTarget.value]) {
         navigateTo(redirectUrls[redirectTarget.value], { external: true });
     } else {
-        navigateTo('/console');
+        navigateTo('/');
     }
 }
 
@@ -52,11 +51,11 @@ const handleLogin = async () => {
             // 登录成功，刷新用户状态
             await fetchUser();
             
-            // 跳转到目标服务或控制台
+            // 跳转到目标服务或首页
             if (redirectTarget.value && redirectUrls[redirectTarget.value]) {
                 navigateTo(redirectUrls[redirectTarget.value], { external: true });
             } else {
-                navigateTo('/console');
+                navigateTo('/');
             }
         } else {
             error.value = response.message || '登录失败';

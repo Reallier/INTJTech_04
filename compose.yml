@@ -1,6 +1,6 @@
 services:
-  zilshu-tech-site:
-    image: ccr.ccs.tencentyun.com/reallier/zilshu-tech-site:latest
+  intjsys-official:
+    image: ccr.ccs.tencentyun.com/reallier/intjsys-official:latest
     environment:
       - NODE_ENV=production
       - NITRO_HOST=0.0.0.0
@@ -10,11 +10,11 @@ services:
       - traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.zilshu-tech-site.rule=Host(`intjsys.com`)"
-      - "traefik.http.routers.zilshu-tech-site.entrypoints=websecure"
-      - "traefik.http.routers.zilshu-tech-site.tls=true"
-      - "traefik.http.routers.zilshu-tech-site.tls.certresolver=myresolver"
-      - "traefik.http.services.zilshu-tech-site.loadbalancer.server.port=3000"
+      - "traefik.http.routers.intjsys-official.rule=Host(`intjsys.com`)"
+      - "traefik.http.routers.intjsys-official.entrypoints=websecure"
+      - "traefik.http.routers.intjsys-official.tls=true"
+      - "traefik.http.routers.intjsys-official.tls.certresolver=myresolver"
+      - "traefik.http.services.intjsys-official.loadbalancer.server.port=3000"
 
 networks:
   traefik:

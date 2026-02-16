@@ -56,12 +56,58 @@ export default defineEventHandler(async (event) => {
     if (!user) {
         console.log('[Email Verify] 新用户注册:', normalizedEmail);
         isNewUser = true;
-        user = await prisma.user.create({
-            data: {
-                email: normalizedEmail,
-                name: normalizedEmail.split('@')[0]  // 用邮箱前缀作为默认昵称
+
+        // 获取客户端 IP
+        const clientIp = getHeader(event, 'x-forwarded-for')?.split(',')[0]?.trim()
+            || getHeader(event, 'x-real-ip')
+            || 'unknown';
+
+        // 防刷检查：24小时内同一 IP 最多注册 3 个账号
+        const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        const recentRegistrations = await prisma.balanceAdjustment.count({
+            where: {
+                type: 'PROMOTION',
+                reason: '新用户注册赠送',
+                createdAt: { gte: oneDayAgo },
+                // 通过 operatorName 记录 IP（复用字段）
+                operatorName: { startsWith: `system:${clientIp}` }
             }
         });
+
+        if (recentRegistrations >= 3) {
+            console.log('[Email Verify] IP 注册频率限制:', clientIp, recentRegistrations);
+            return { success: false, message: '注册过于频繁，请稍后再试' };
+        }
+
+        // 新用户赠送额度
+        const NEW_USER_BONUS = 10.0;
+
+        // 使用事务确保原子性
+        const result = await prisma.$transaction(async (tx) => {
+            const newUser = await tx.user.create({
+                data: {
+                    email: normalizedEmail,
+                    name: normalizedEmail.split('@')[0],
+                    freeQuota: NEW_USER_BONUS
+                }
+            });
+
+            // 记录赠送流水（用于审计），operatorName 包含 IP 用于防刷统计
+            await tx.balanceAdjustment.create({
+                data: {
+                    userId: newUser.id,
+                    amount: NEW_USER_BONUS,
+                    type: 'PROMOTION',
+                    reason: '新用户注册赠送',
+                    operatorName: `system:${clientIp}`
+                }
+            });
+
+            return newUser;
+        });
+
+        user = result;
+        console.log('[Email Verify] 赠送新用户额度:', NEW_USER_BONUS, 'IP:', clientIp);
     }
 
     // 检查设备数量限制（最多3台设备）

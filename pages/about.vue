@@ -94,7 +94,6 @@ const philosophy = [
         <nav class="nav">
           <a href="/" class="nav-link">首页</a>
           <a href="#team" class="nav-link">团队</a>
-          <a href="/console" class="btn-login">进入控制台</a>
         </nav>
       </div>
     </header>

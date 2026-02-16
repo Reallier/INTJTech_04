@@ -216,6 +216,11 @@ const mcpServers = [
   },
 ];
 
+// ============ Agent 精选 ============
+const curatedAgents = [
+  // 暂无纯评测项目
+];
+
 // 筛选后的项目
 const filteredCoreAssets = computed(() => {
   if (activeCategory.value === 'all') return coreAssets;
@@ -467,117 +472,10 @@ const marketStats = {
                   </div>
                 </a>
               </div>
-            </div>
-          </div>
-      </section>
-
-      <!-- 商业化入口 -->
-      <section class="section container pricing-section">
-          <div class="section-header center">
-            <span class="section-tag">[ SOLUTIONS ]</span>
-            <h2 class="section-title">商业解决方案</h2>
-            <p class="section-desc">灵活的交付模式，满足不同阶段的企业需求</p>
-          </div>
-
-          <div class="pricing-grid">
-            <div class="pricing-card">
-              <div class="pricing-header">
-                <h3 class="pricing-name">Cloud SaaS</h3>
-                <div class="pricing-tag">按需计费</div>
-              </div>
-              <div class="pricing-body">
-                <ul class="pricing-features">
-                  <li>5 分钟快速接入</li>
-                  <li>按 API 调用计费</li>
-                  <li>自动扩缩容</li>
-                  <li>99.9% SLA 保障</li>
-                </ul>
-              </div>
-              <div class="pricing-action">
-                <a href="https://talentai.intjsys.com" target="_blank" class="btn-pricing">立即开始</a>
-              </div>
-            </div>
-
-            <div class="pricing-card featured">
-              <div class="pricing-header">
-                <h3 class="pricing-name">私有部署</h3>
-                <div class="pricing-tag">推荐</div>
-              </div>
-              <div class="pricing-body">
-                <ul class="pricing-features">
-                  <li>VPC 网络隔离</li>
-                  <li>数据完全自主</li>
-                  <li>永久授权可选</li>
-                  <li>源码级定制</li>
-                </ul>
-              </div>
-              <div class="pricing-action">
-                <button @click="showLoginModal = true" class="btn-pricing featured">咨询方案</button>
-              </div>
-            </div>
-
-            <div class="pricing-card">
-              <div class="pricing-header">
-                <h3 class="pricing-name">Bundle 全栈</h3>
-                <div class="pricing-tag">VIP</div>
-              </div>
-              <div class="pricing-body">
-                <ul class="pricing-features">
-                  <li>Skill + MCP 打包</li>
-                  <li>专属部署支持</li>
-                  <li>7×24 技术响应</li>
-                  <li>定制化培训</li>
-                </ul>
-              </div>
-              <div class="pricing-action">
-                <button @click="showLoginModal = true" class="btn-pricing">联系我们</button>
-              </div>
-            </div>
-          </div>
-      </section>
-
-      <!-- 快速接入 -->
-      <section class="section container connect-section">
-          <div class="section-header">
-            <span class="section-tag">[ QUICK START ]</span>
-            <h2 class="section-title">快速接入</h2>
-          </div>
-
-          <div class="connect-grid">
-            <div class="connect-block">
-              <h3>Skill 安装</h3>
-              <div class="code-block">
-                <code># 用户级安装 (推荐)</code>
-                <code>git clone https://github.com/intjsys/skill-name ~/.gemini/skills/name</code>
-                <code></code>
-                <code># 项目级安装</code>
-                <code>git clone https://github.com/intjsys/skill-name .gemini/skills/name</code>
-              </div>
-            </div>
-            <div class="connect-block">
-              <h3>MCP 配置</h3>
-              <div class="code-block">
-                <code>{</code>
-                <code>  "mcpServers": {</code>
-                <code>    "intjsys-talentai": {</code>
-                <code>      "url": "https://mcp.intjsys.com/talentai",</code>
-                <code>      "auth": { "type": "bearer", "token": "..." }</code>
-                <code>    }</code>
-                <code>  }</code>
-                <code>}</code>
-              </div>
-            </div>
-          </div>
-
-          <div class="platform-row">
-            <span class="platform">Claude Code</span>
-            <span class="platform">Cursor</span>
-            <span class="platform">Gemini CLI</span>
-            <span class="platform">GitHub Copilot</span>
-            <span class="platform">VS Code</span>
-          </div>
-      </section>
-    </main>
+	            </div>
+		          </div>
+		      </section>
+	    </main>
 
     <!-- 使用共享 Footer 组件 -->
     <SiteFooter />
@@ -1154,6 +1052,10 @@ const marketStats = {
 /* ========================================
    Assets Grid
    ======================================== */
+.core-section {
+  background: transparent;
+}
+
 .assets-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1241,7 +1143,7 @@ const marketStats = {
    Curated Skills
    ======================================== */
 .curated-section {
-  background: #fafafa;
+  background: transparent;
 }
 
 .filter-row {
@@ -1256,7 +1158,7 @@ const marketStats = {
   font-size: 13px;
   font-weight: 500;
   background: #fff;
-  border: 1px solid var(--border);
+  border: 1px solid var(--fg);
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -1281,7 +1183,7 @@ const marketStats = {
 .skill-card {
   padding: 24px;
   background: #fff;
-  border: 1px dashed var(--border);
+  border: 1px solid var(--fg);
   text-decoration: none;
   color: inherit;
   transition: all 0.2s;
@@ -1376,6 +1278,10 @@ const marketStats = {
 /* ========================================
    MCP Servers
    ======================================== */
+.mcp-section {
+  background: transparent;
+}
+
 .mcp-grid {
   display: grid;
   grid-template-columns: 1fr 2fr;
@@ -1410,7 +1316,7 @@ const marketStats = {
 }
 
 .mcp-card.curated {
-  border: 1px dashed var(--border);
+  border: 1px solid var(--fg);
 }
 
 .mcp-card:hover {
@@ -1485,6 +1391,10 @@ const marketStats = {
 /* ========================================
    Pricing
    ======================================== */
+.pricing-section {
+  background: transparent;
+}
+
 .pricing-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1493,7 +1403,7 @@ const marketStats = {
 
 .pricing-card {
   padding: 32px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--fg);
   background: #fff;
   text-align: center;
   transition: all 0.2s;
@@ -1592,7 +1502,7 @@ const marketStats = {
    Connect Section
    ======================================== */
 .connect-section {
-  background: #fafafa;
+  background: transparent;
 }
 
 .connect-grid {
@@ -1640,7 +1550,7 @@ const marketStats = {
   color: var(--muted);
   padding: 10px 20px;
   background: #fff;
-  border: 1px solid var(--border);
+  border: 1px solid var(--fg);
 }
 
 /* ========================================
@@ -1668,12 +1578,124 @@ const marketStats = {
 .nodes-copyright, .nodes-icp { font-size: 12px; color: var(--muted); text-align: right; }
 .nodes-icp a { color: inherit; text-decoration: none; }
 
+
+/* ========================================
+   Agent 精选
+   ======================================== */
+.agent-section {
+  padding-top: 100px;
+  padding-bottom: 100px;
+  background: transparent;
+}
+
+.agents-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.agent-card {
+  padding: 28px;
+  background: #fff;
+  border: 1px solid var(--fg);
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s var(--ease);
+  display: flex;
+  flex-direction: column;
+}
+
+.agent-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.08);
+}
+
+.agent-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.agent-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--fg);
+}
+
+.agent-badges {
+  display: flex;
+  gap: 6px;
+}
+
+.service-badge {
+  font-size: 10px;
+  padding: 3px 8px;
+  background: #fef3c7;
+  color: #92400e;
+  font-weight: 600;
+}
+
+.agent-desc {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin: 0 0 16px;
+  line-height: 1.6;
+  flex: 1;
+}
+
+.agent-features {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.feature-tag {
+  font-size: 11px;
+  padding: 4px 10px;
+  background: #f0f0f0;
+  color: var(--fg);
+  font-weight: 500;
+}
+
+.agent-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.agent-meta {
+  display: flex;
+  gap: 12px;
+}
+
+.agent-source {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.agent-license {
+  font-size: 11px;
+  padding: 2px 6px;
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.view-detail {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
 /* ========================================
    Responsive
    ======================================== */
 @media (max-width: 1200px) {
   .assets-grid { grid-template-columns: repeat(2, 1fr); }
   .skills-grid { grid-template-columns: repeat(2, 1fr); }
+  .agents-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 1024px) {
@@ -1689,6 +1711,7 @@ const marketStats = {
   .stat-divider { display: none; }
   .assets-grid { grid-template-columns: 1fr; }
   .skills-grid { grid-template-columns: 1fr; }
+  .agents-grid { grid-template-columns: 1fr; }
   .flagship-meta { flex-direction: column; gap: 16px; }
   .flagship-actions { flex-direction: column; }
   .panel-grid { grid-template-columns: 1fr !important; }

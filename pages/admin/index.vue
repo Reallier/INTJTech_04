@@ -111,6 +111,8 @@
                 <td class="date">{{ formatDate(user.created_at) }}</td>
                 <td class="action-buttons">
                   <button class="btn-recharge" @click="openRechargeModal(user)">充值</button>
+                  <button class="btn-adjust" @click="openBalanceAdjustModal(user)">调余额</button>
+                  <button class="btn-password" @click="openPasswordModal(user)">改密</button>
                   <button 
                     :class="user.status === 'active' ? 'btn-disable' : 'btn-enable'" 
                     @click="toggleUserStatus(user)"
@@ -120,6 +122,7 @@
                   </button>
                   <button class="btn-delete" @click="openDeleteModal(user)">删除</button>
                 </td>
+
               </tr>
               <tr v-if="users.length === 0 && !loading">
                 <td colspan="9" class="empty-row">暂无用户数据</td>
@@ -140,7 +143,77 @@
         </div>
       </section>
       
+      <!-- 订单管理 -->
+      <section class="orders-section">
+        <div class="section-header">
+          <h2><FaIcon icon="receipt" style="margin-right: 8px;" />订单管理</h2>
+          <div class="header-actions">
+            <div class="search-box">
+              <input 
+                v-model="orderSearch" 
+                type="text" 
+                placeholder="搜索订单号/交易号"
+                @input="debouncedOrderSearch"
+              />
+            </div>
+            <select v-model="orderStatusFilter" @change="fetchOrders" class="status-filter">
+              <option value="ALL">全部状态</option>
+              <option value="PENDING">待支付</option>
+              <option value="PAID">已支付</option>
+              <option value="CLOSED">已关闭</option>
+              <option value="REFUNDED">已退款</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="orders-table-container">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>订单号</th>
+                <th>用户</th>
+                <th>金额</th>
+                <th>状态</th>
+                <th>创建时间</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="order in orders" :key="order.id">
+                <td class="order-id">{{ order.orderId }}</td>
+                <td class="order-user">{{ order.user?.email || order.user?.username || order.userId }}</td>
+                <td class="order-amount">¥{{ order.amount.toFixed(2) }}</td>
+                <td>
+                  <span :class="['status-badge', order.status.toLowerCase()]">
+                    {{ getStatusLabel(order.status) }}
+                  </span>
+                </td>
+                <td class="date">{{ formatDate(order.createdAt) }}</td>
+                <td class="action-buttons">
+                  <button class="btn-status" @click="openOrderStatusModal(order)">改状态</button>
+                </td>
+              </tr>
+              <tr v-if="orders.length === 0 && !loadingOrders">
+                <td colspan="6" class="empty-row">暂无订单数据</td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <div v-if="loadingOrders" class="loading-overlay">
+            加载中...
+          </div>
+        </div>
+        
+        <!-- 分页 -->
+        <div class="pagination">
+          <button :disabled="orderPage === 0" @click="orderPage--; fetchOrders()">上一页</button>
+          <span>第 {{ orderPage + 1 }} 页 / 共 {{ orderTotalPages }} 页</span>
+          <button :disabled="orderPage >= orderTotalPages - 1" @click="orderPage++; fetchOrders()">下一页</button>
+        </div>
+      </section>
+      
       <!-- 服务管理 -->
+
       <section class="services-section">
         <div class="section-header">
           <h2><FaIcon icon="cubes" style="margin-right: 8px;" />服务管理</h2>
@@ -181,6 +254,166 @@
           </table>
           
           <div v-if="loadingServices" class="loading-overlay">
+            加载中...
+          </div>
+        </div>
+      </section>
+      
+      <!-- License 授权管理 -->
+      <section class="license-section">
+        <div class="section-header">
+          <h2><FaIcon icon="key" style="margin-right: 8px;" />License 授权</h2>
+        </div>
+        
+        <div class="license-content">
+          <div class="license-form">
+            <h3>生成新授权</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>客户名称 *</label>
+                <input 
+                  v-model="licenseForm.customer" 
+                  type="text" 
+                  placeholder="如：老王科技有限公司"
+                />
+              </div>
+              <div class="form-group">
+                <label>机器指纹 *</label>
+                <input 
+                  v-model="licenseForm.machine_id" 
+                  type="text" 
+                  placeholder="客户服务器的 Machine ID"
+                />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>授权版本</label>
+                <select v-model="licenseForm.edition">
+                  <option value="standard">标准版 (50用户)</option>
+                  <option value="professional">专业版 (200用户)</option>
+                  <option value="enterprise">企业版 (1000用户)</option>
+                  <option value="flagship">旗舰版 (无限)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>有效天数</label>
+                <input 
+                  v-model.number="licenseForm.days" 
+                  type="number" 
+                  min="1"
+                />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label>客户邮箱 (可选，填写后自动发送授权邮件)</label>
+                <input 
+                  v-model="licenseForm.customer_email" 
+                  type="email" 
+                  placeholder="zhangsan@example.com"
+                />
+              </div>
+            </div>
+            <div class="form-actions">
+              <button 
+                class="btn-generate" 
+                @click="handleGenerateLicense" 
+                :disabled="generatingLicense"
+              >
+                <FaIcon icon="magic" style="margin-right: 6px;" />
+                {{ generatingLicense ? '生成中...' : '生成 License' }}
+              </button>
+            </div>
+          </div>
+          
+          <!-- 生成结果 -->
+          <div v-if="generatedLicense" class="license-result">
+            <div class="result-header">
+              <FaIcon icon="check-circle" style="color: #22c55e; margin-right: 8px;" />
+              <span>License 生成成功</span>
+              <span v-if="generatedLicense.email_sent" class="email-badge">
+                <FaIcon icon="envelope" /> 邮件已发送
+              </span>
+            </div>
+            <div class="result-info">
+              <div class="info-item">
+                <span class="label">License ID:</span>
+                <span class="value">{{ generatedLicense.lic_id }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">有效期至:</span>
+                <span class="value">{{ formatDate(generatedLicense.expires_at) }}</span>
+              </div>
+            </div>
+            <div class="license-key-box">
+              <label>License Key (点击复制):</label>
+              <div 
+                class="key-content" 
+                @click="copyLicenseKey"
+                title="点击复制"
+              >
+                {{ generatedLicense.license_key }}
+              </div>
+              <span v-if="keyCopied" class="copy-hint">✓ 已复制</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- 退款申请审核 -->
+      <section class="refund-section">
+        <div class="section-header">
+          <h2><FaIcon icon="undo" style="margin-right: 8px;" />退款申请审核</h2>
+          <button class="btn-refresh" @click="fetchRefundRequests">
+            <FaIcon icon="sync" :class="{ spinning: loadingRefunds }" />
+          </button>
+        </div>
+        
+        <div class="refund-table-container">
+          <table class="refund-table">
+            <thead>
+              <tr>
+                <th>申请ID</th>
+                <th>用户</th>
+                <th>退款金额</th>
+                <th>申请原因</th>
+                <th>申请时间</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="refund in refundRequests" :key="refund.id">
+                <td class="refund-id">{{ refund.id }}</td>
+                <td class="refund-user">{{ refund.user?.name || refund.user?.email || refund.userId }}</td>
+                <td class="refund-amount">¥{{ Number(refund.amount).toFixed(2) }}</td>
+                <td class="refund-reason">{{ refund.reason || '-' }}</td>
+                <td class="refund-date">{{ formatDate(refund.createdAt) }}</td>
+                <td class="refund-status">
+                  <span :class="['status-badge', getRefundStatusClass(refund.status)]">
+                    {{ getRefundStatusText(refund.status) }}
+                  </span>
+                </td>
+                <td class="action-buttons" v-if="refund.status === 'PENDING'">
+                  <button class="btn-approve" @click="handleRefundAction(refund, 'approve')" :disabled="processingRefund === refund.id">
+                    通过
+                  </button>
+                  <button class="btn-reject" @click="handleRefundAction(refund, 'reject')" :disabled="processingRefund === refund.id">
+                    拒绝
+                  </button>
+                </td>
+                <td v-else class="action-buttons">
+                  <span class="processed-hint">{{ refund.status === 'APPROVED' ? '已退款' : '已拒绝' }}</span>
+                </td>
+              </tr>
+              <tr v-if="refundRequests.length === 0 && !loadingRefunds">
+                <td colspan="7" class="empty-row">暂无退款申请</td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <div v-if="loadingRefunds" class="loading-overlay">
             加载中...
           </div>
         </div>
@@ -349,8 +582,138 @@
         </div>
       </div>
     </div>
+    
+    <!-- 余额调整弹窗 -->
+    <div v-if="showBalanceAdjustModal" class="modal-overlay" @click.self="closeBalanceAdjustModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>余额调整</h3>
+          <button class="modal-close" @click="closeBalanceAdjustModal">×</button>
+        </div>
+        <div class="modal-body">
+          <p class="user-info">
+            用户：<strong>{{ balanceAdjustUser?.nickname || balanceAdjustUser?.email || balanceAdjustUser?.user_id }}</strong>
+          </p>
+          <p class="user-info">
+            当前余额：<strong>¥{{ formatNumber(balanceAdjustUser?.total_available || 0) }}</strong>
+          </p>
+          <div class="form-group">
+            <label>调整类型</label>
+            <select v-model="balanceAdjustType">
+              <option value="COMPENSATION">补偿（增加余额）</option>
+              <option value="DEDUCTION">扣减（减少余额）</option>
+              <option value="PROMOTION">促销赠送</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>调整金额</label>
+            <input 
+              v-model.number="balanceAdjustAmount" 
+              type="number" 
+              min="0.01"
+              step="0.01"
+              placeholder="请输入金额（正数）"
+            />
+          </div>
+          <div class="form-group">
+            <label>调整原因 *</label>
+            <textarea 
+              v-model="balanceAdjustReason" 
+              placeholder="请输入调整原因（必填）"
+              rows="3"
+            ></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-cancel" @click="closeBalanceAdjustModal">取消</button>
+          <button class="btn-confirm" @click="handleBalanceAdjust" :disabled="adjustingBalance">
+            {{ adjustingBalance ? '处理中...' : '确认调整' }}
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 密码修改弹窗 -->
+    <div v-if="showPasswordModal" class="modal-overlay" @click.self="closePasswordModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>修改密码</h3>
+          <button class="modal-close" @click="closePasswordModal">×</button>
+        </div>
+        <div class="modal-body">
+          <p class="user-info">
+            用户：<strong>{{ passwordUser?.nickname || passwordUser?.username || passwordUser?.email || passwordUser?.user_id }}</strong>
+          </p>
+          <div class="form-group">
+            <label>新密码</label>
+            <input 
+              v-model="newPassword" 
+              type="password" 
+              placeholder="请输入新密码（至少8位）"
+            />
+          </div>
+          <div class="form-group">
+            <label>确认密码</label>
+            <input 
+              v-model="confirmPassword" 
+              type="password" 
+              placeholder="请再次输入新密码"
+            />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-cancel" @click="closePasswordModal">取消</button>
+          <button class="btn-confirm" @click="handlePasswordChange" :disabled="changingPassword">
+            {{ changingPassword ? '处理中...' : '确认修改' }}
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 订单状态修改弹窗 -->
+    <div v-if="showOrderStatusModal" class="modal-overlay" @click.self="closeOrderStatusModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>修改订单状态</h3>
+          <button class="modal-close" @click="closeOrderStatusModal">×</button>
+        </div>
+        <div class="modal-body">
+          <p class="user-info">
+            订单号：<strong>{{ orderToUpdate?.orderId }}</strong>
+          </p>
+          <p class="user-info">
+            当前状态：<strong>{{ getStatusLabel(orderToUpdate?.status || '') }}</strong>
+          </p>
+          <div class="form-group">
+            <label>新状态</label>
+            <select v-model="newOrderStatus">
+              <option value="PENDING">待支付</option>
+              <option value="PAID">已支付</option>
+              <option value="CLOSED">已关闭</option>
+              <option value="REFUNDED">已退款</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>修改原因（可选）</label>
+            <textarea 
+              v-model="orderStatusReason" 
+              placeholder="请输入修改原因"
+              rows="2"
+            ></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-cancel" @click="closeOrderStatusModal">取消</button>
+          <button class="btn-confirm" @click="handleOrderStatusChange" :disabled="updatingOrderStatus">
+            {{ updatingOrderStatus ? '处理中...' : '确认修改' }}
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
+
+
 
 <script setup>
 definePageMeta({
@@ -377,7 +740,38 @@ const rechargeAmount = ref(null);
 const rechargeRemark = ref('');
 const recharging = ref(false);
 
+// 余额调整弹窗状态
+const showBalanceAdjustModal = ref(false);
+const balanceAdjustUser = ref(null);
+const balanceAdjustAmount = ref(null);
+const balanceAdjustType = ref('COMPENSATION');
+const balanceAdjustReason = ref('');
+const adjustingBalance = ref(false);
+
+// 密码修改弹窗状态
+const showPasswordModal = ref(false);
+const passwordUser = ref(null);
+const newPassword = ref('');
+const confirmPassword = ref('');
+const changingPassword = ref(false);
+
+// 订单管理状态
+const orders = ref([]);
+const loadingOrders = ref(false);
+const orderPage = ref(0);
+const orderTotalPages = ref(1);
+const orderSearch = ref('');
+const orderStatusFilter = ref('ALL');
+
+// 订单状态修改弹窗
+const showOrderStatusModal = ref(false);
+const orderToUpdate = ref(null);
+const newOrderStatus = ref('');
+const orderStatusReason = ref('');
+const updatingOrderStatus = ref(false);
+
 // 创建用户弹窗状态
+
 const showCreateUserModal = ref(false);
 const newUsername = ref('');
 const newUserNickname = ref('');
@@ -409,6 +803,23 @@ const sessionsUser = ref(null);
 const sessions = ref([]);
 const loadingSessions = ref(false);
 const deletingSession = ref('');
+
+// License 生成状态
+const licenseForm = ref({
+  customer: '',
+  machine_id: '',
+  edition: 'professional',
+  days: 365,
+  customer_email: ''
+});
+const generatingLicense = ref(false);
+const generatedLicense = ref(null);
+const keyCopied = ref(false);
+
+// 退款审核状态
+const refundRequests = ref([]);
+const loadingRefunds = ref(false);
+const processingRefund = ref(null);
 
 // 获取 token
 const getToken = () => {
@@ -541,7 +952,235 @@ const handleRecharge = async () => {
   }
 };
 
+// 打开余额调整弹窗
+const openBalanceAdjustModal = (user) => {
+  balanceAdjustUser.value = user;
+  balanceAdjustAmount.value = null;
+  balanceAdjustType.value = 'COMPENSATION';
+  balanceAdjustReason.value = '';
+  showBalanceAdjustModal.value = true;
+};
+
+// 关闭余额调整弹窗
+const closeBalanceAdjustModal = () => {
+  showBalanceAdjustModal.value = false;
+  balanceAdjustUser.value = null;
+};
+
+// 处理余额调整
+const handleBalanceAdjust = async () => {
+  if (!balanceAdjustAmount.value || balanceAdjustAmount.value === 0) {
+    alert('请输入有效的调整金额');
+    return;
+  }
+  if (!balanceAdjustReason.value.trim()) {
+    alert('请输入调整原因');
+    return;
+  }
+  
+  adjustingBalance.value = true;
+  try {
+    const response = await $fetch(
+      `/api/admin/users/${balanceAdjustUser.value.user_id}/balance-adjust`,
+      {
+        method: 'POST',
+        body: {
+          amount: balanceAdjustType.value === 'DEDUCTION' ? -Math.abs(balanceAdjustAmount.value) : Math.abs(balanceAdjustAmount.value),
+          type: balanceAdjustType.value,
+          reason: balanceAdjustReason.value.trim()
+        }
+      }
+    );
+    
+    if (response.success) {
+      alert(response.message);
+      closeBalanceAdjustModal();
+      fetchUsers();
+      fetchStats();
+    } else {
+      alert(response.message || '调整失败');
+    }
+  } catch (e) {
+    console.error('Balance adjust failed:', e);
+    alert(e?.data?.message || '调整失败，请稍后重试');
+  } finally {
+    adjustingBalance.value = false;
+  }
+};
+
+// 打开密码修改弹窗
+const openPasswordModal = (user) => {
+  passwordUser.value = user;
+  newPassword.value = '';
+  confirmPassword.value = '';
+  showPasswordModal.value = true;
+};
+
+// 关闭密码修改弹窗
+const closePasswordModal = () => {
+  showPasswordModal.value = false;
+  passwordUser.value = null;
+  newPassword.value = '';
+  confirmPassword.value = '';
+};
+
+// 处理密码修改
+const handlePasswordChange = async () => {
+  if (!newPassword.value || newPassword.value.length < 8) {
+    alert('密码长度至少8位');
+    return;
+  }
+  if (newPassword.value !== confirmPassword.value) {
+    alert('两次输入的密码不一致');
+    return;
+  }
+  
+  changingPassword.value = true;
+  try {
+    const response = await $fetch(
+      `/api/admin/users/${passwordUser.value.user_id}/password`,
+      {
+        method: 'PUT',
+        body: {
+          password: newPassword.value
+        }
+      }
+    );
+    
+    if (response.success) {
+      alert('密码修改成功');
+      closePasswordModal();
+    } else {
+      alert(response.message || '修改失败');
+    }
+  } catch (e) {
+    console.error('Password change failed:', e);
+    alert(e?.data?.message || '修改失败，请稍后重试');
+  } finally {
+    changingPassword.value = false;
+  }
+};
+
+// ==== 订单管理函数 ====
+
+// 状态标签映射
+const getStatusLabel = (status) => {
+  const labels = {
+    'PENDING': '待支付',
+    'PAID': '已支付',
+    'CLOSED': '已关闭',
+    'REFUNDED': '已退款',
+  };
+  return labels[status] || status;
+};
+
+// 获取订单列表
+const fetchOrders = async () => {
+  const token = getToken();
+  if (!token) {
+    console.error('No token available');
+    return;
+  }
+  loadingOrders.value = true;
+  try {
+    const params = new URLSearchParams({
+      page: orderPage.value.toString(),
+      pageSize: '15',
+    });
+    if (orderStatusFilter.value !== 'ALL') {
+      params.append('status', orderStatusFilter.value);
+    }
+    if (orderSearch.value.trim()) {
+      params.append('search', orderSearch.value.trim());
+    }
+    
+    const response = await $fetch(`/api/admin/orders?${params.toString()}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
+    if (response.success) {
+      orders.value = response.orders;
+      orderTotalPages.value = response.pagination.totalPages || 1;
+    }
+  } catch (e) {
+    console.error('Fetch orders failed:', e);
+    if (!handleApiError(e)) {
+      alert('获取订单列表失败');
+    }
+  } finally {
+    loadingOrders.value = false;
+  }
+};
+
+// 订单搜索防抖
+let orderSearchTimeout;
+const debouncedOrderSearch = () => {
+  clearTimeout(orderSearchTimeout);
+  orderSearchTimeout = setTimeout(() => {
+    orderPage.value = 0;
+    fetchOrders();
+  }, 300);
+};
+
+// 打开订单状态修改弹窗
+const openOrderStatusModal = (order) => {
+  orderToUpdate.value = order;
+  newOrderStatus.value = order.status;
+  orderStatusReason.value = '';
+  showOrderStatusModal.value = true;
+};
+
+// 关闭订单状态修改弹窗
+const closeOrderStatusModal = () => {
+  showOrderStatusModal.value = false;
+  orderToUpdate.value = null;
+  newOrderStatus.value = '';
+  orderStatusReason.value = '';
+};
+
+// 处理订单状态修改
+const handleOrderStatusChange = async () => {
+  if (!newOrderStatus.value) {
+    alert('请选择新状态');
+    return;
+  }
+  if (newOrderStatus.value === orderToUpdate.value.status) {
+    alert('新状态与当前状态相同');
+    return;
+  }
+  
+  updatingOrderStatus.value = true;
+  try {
+    const response = await $fetch(
+      `/api/admin/orders/${orderToUpdate.value.id}/status`,
+      {
+        method: 'PUT',
+        body: {
+          status: newOrderStatus.value,
+          reason: orderStatusReason.value.trim() || undefined,
+        },
+      }
+    );
+    
+    if (response.success) {
+      alert(response.message);
+      closeOrderStatusModal();
+      fetchOrders();
+    } else {
+      alert(response.message || '修改失败');
+    }
+  } catch (e) {
+    console.error('Order status change failed:', e);
+    alert(e?.data?.message || '修改失败，请稍后重试');
+  } finally {
+    updatingOrderStatus.value = false;
+  }
+};
+
 // 关闭创建用户弹窗
+
 const closeCreateUserModal = () => {
   showCreateUserModal.value = false;
   newUsername.value = '';
@@ -809,11 +1448,160 @@ const toggleServiceVisibility = async (service) => {
   }
 };
 
+// ============ License 生成 ============
+
+// 生成 License
+const handleGenerateLicense = async () => {
+  if (!licenseForm.value.customer.trim()) {
+    alert('请输入客户名称');
+    return;
+  }
+  if (!licenseForm.value.machine_id.trim()) {
+    alert('请输入机器指纹');
+    return;
+  }
+  
+  const token = getToken();
+  if (!token) return;
+  
+  generatingLicense.value = true;
+  generatedLicense.value = null;
+  keyCopied.value = false;
+  
+  try {
+    const response = await $fetch('/api/admin/license', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` },
+      body: {
+        customer: licenseForm.value.customer,
+        machine_id: licenseForm.value.machine_id,
+        edition: licenseForm.value.edition,
+        days: licenseForm.value.days,
+        customer_email: licenseForm.value.customer_email || undefined
+      }
+    });
+    
+    if (response.success) {
+      generatedLicense.value = response;
+      // 清空表单（保留版本和天数）
+      licenseForm.value.customer = '';
+      licenseForm.value.machine_id = '';
+      licenseForm.value.customer_email = '';
+    } else {
+      alert(response.message || 'License 生成失败');
+    }
+  } catch (e) {
+    console.error('Generate license failed:', e);
+    alert(e.data?.message || 'License 生成失败，请检查服务器配置');
+  } finally {
+    generatingLicense.value = false;
+  }
+};
+
+// 复制 License Key
+const copyLicenseKey = async () => {
+  if (!generatedLicense.value?.license_key) return;
+  
+  try {
+    await navigator.clipboard.writeText(generatedLicense.value.license_key);
+    keyCopied.value = true;
+    setTimeout(() => { keyCopied.value = false; }, 2000);
+  } catch (e) {
+    // 降级方案
+    const textarea = document.createElement('textarea');
+    textarea.value = generatedLicense.value.license_key;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    keyCopied.value = true;
+    setTimeout(() => { keyCopied.value = false; }, 2000);
+  }
+};
+
+// ============ 退款审核 ============
+
+// 获取退款申请列表
+const fetchRefundRequests = async () => {
+  const token = getToken();
+  if (!token) return;
+  loadingRefunds.value = true;
+  try {
+    const response = await $fetch('/api/admin/refunds', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (response.success) {
+      refundRequests.value = response.refunds;
+    }
+  } catch (e) {
+    if (!handleApiError(e)) {
+      console.error('Failed to fetch refund requests:', e);
+    }
+  } finally {
+    loadingRefunds.value = false;
+  }
+};
+
+// 退款状态文本
+const getRefundStatusText = (status) => {
+  const map = {
+    'PENDING': '待审核',
+    'APPROVED': '已通过',
+    'REJECTED': '已拒绝'
+  };
+  return map[status] || status;
+};
+
+// 退款状态样式类
+const getRefundStatusClass = (status) => {
+  const map = {
+    'PENDING': 'pending',
+    'APPROVED': 'active',
+    'REJECTED': 'disabled'
+  };
+  return map[status] || '';
+};
+
+// 处理退款审核
+const handleRefundAction = async (refund, action) => {
+  const token = getToken();
+  if (!token) return;
+  
+  const confirmMsg = action === 'approve' 
+    ? `确定通过此退款申请吗？将退还 ¥${Number(refund.amount).toFixed(2)} 给用户` 
+    : '确定拒绝此退款申请吗？';
+    
+  if (!confirm(confirmMsg)) return;
+  
+  processingRefund.value = refund.id;
+  try {
+    const response = await $fetch(`/api/admin/refunds/${refund.id}/${action}`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    if (response.success) {
+      alert(response.message);
+      fetchRefundRequests();
+      fetchStats();
+    } else {
+      alert(response.message || '操作失败');
+    }
+  } catch (e) {
+    console.error('Refund action failed:', e);
+    alert('操作失败，请稍后重试');
+  } finally {
+    processingRefund.value = null;
+  }
+};
+
 // 初始化
 onMounted(() => {
   fetchStats();
   fetchUsers();
+  fetchOrders();
   fetchServiceConfigs();
+  fetchRefundRequests();
 });
 </script>
 
@@ -1131,6 +1919,40 @@ onMounted(() => {
   border-color: #cc0000;
 }
 
+.btn-adjust {
+  padding: 8px 14px;
+  background: transparent;
+  color: #059669;
+  border: 1px solid #059669;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-adjust:hover {
+  background: #f0fdf4;
+}
+
+.btn-password {
+  padding: 8px 14px;
+  background: transparent;
+  color: #6366f1;
+  border: 1px solid #6366f1;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-password:hover {
+  background: #eef2ff;
+}
+
 .btn-danger {
   padding: 12px 20px;
   background: #cc0000;
@@ -1390,8 +2212,119 @@ onMounted(() => {
   color: #059669;
 }
 
+/* 订单管理区块 */
+.orders-section {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.orders-section .header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.orders-section .search-box input {
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  font-size: 13px;
+  width: 200px;
+}
+
+.orders-section .status-filter {
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  font-size: 13px;
+  background: #fff;
+}
+
+.orders-table-container {
+  position: relative;
+  overflow-x: auto;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.orders-table th,
+.orders-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.orders-table th {
+  background: #fafafa;
+  font-weight: 600;
+  color: #666;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.order-id {
+  font-family: monospace;
+  font-size: 12px;
+  color: #666;
+}
+
+.order-user {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.order-amount {
+  font-weight: 600;
+  color: #059669;
+}
+
+.status-badge.pending {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.status-badge.paid {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.status-badge.closed {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.status-badge.refunded {
+  background: #fce7f3;
+  color: #db2777;
+}
+
+.btn-status {
+  padding: 6px 12px;
+  background: transparent;
+  color: #3b82f6;
+  border: 1px solid #3b82f6;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-status:hover {
+  background: #eff6ff;
+}
+
 /* 服务管理区块 */
 .services-section {
+
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -1677,5 +2610,271 @@ onMounted(() => {
 .role-select option[value="admin"] {
   color: #dc2626;
   font-weight: 600;
+}
+
+/* ============ License 授权管理样式 ============ */
+.license-section {
+  background: transparent;
+  border: 1px solid #e0e0e0;
+  margin-top: 32px;
+}
+
+.license-content {
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.license-form {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  padding: 24px;
+}
+
+.license-form h3 {
+  margin: 0 0 20px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-actions {
+  margin-top: 24px;
+  text-align: right;
+}
+
+.btn-generate {
+  padding: 12px 24px;
+  background: #111;
+  color: #fff;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-generate:hover:not(:disabled) {
+  background: #333;
+}
+
+.btn-generate:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.license-result {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  padding: 24px;
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 16px;
+}
+
+.email-badge {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 400;
+  color: #059669;
+  background: #d1fae5;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.result-info {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 20px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-item .label {
+  font-size: 12px;
+  color: #666;
+}
+
+.info-item .value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+}
+
+.license-key-box {
+  margin-top: 16px;
+}
+
+.license-key-box label {
+  display: block;
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.key-content {
+  background: #111;
+  color: #22c55e;
+  padding: 16px;
+  font-family: monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  word-break: break-all;
+  cursor: pointer;
+  transition: all 0.2s;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.key-content:hover {
+  background: #222;
+}
+
+.copy-hint {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #22c55e;
+  font-weight: 600;
+}
+
+/* 退款审核样式 */
+.refund-section {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.refund-table-container {
+  position: relative;
+  overflow-x: auto;
+}
+
+.refund-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.refund-table th,
+.refund-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.refund-table th {
+  background: #fafafa;
+  font-weight: 600;
+  color: #666;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.refund-id {
+  font-family: monospace;
+  color: #666;
+}
+
+.refund-amount {
+  font-weight: 600;
+  color: #e74c3c;
+}
+
+.refund-reason {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.btn-approve {
+  padding: 6px 12px;
+  background: #22c55e;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 8px;
+}
+
+.btn-approve:hover:not(:disabled) {
+  background: #16a34a;
+}
+
+.btn-reject {
+  padding: 6px 12px;
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.btn-reject:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.btn-refresh {
+  background: none;
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-refresh:hover {
+  background: #f5f5f5;
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.status-badge.pending {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.processed-hint {
+  color: #999;
+  font-size: 12px;
+}
+
+@media (max-width: 1024px) {
+  .license-content {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

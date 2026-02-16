@@ -1,0 +1,35 @@
+services:
+  intjsys-official:
+    image: ccr.ccs.tencentyun.com/reallier/intjsys-official:latest
+    environment:
+      - NODE_ENV=production
+      - NITRO_HOST=0.0.0.0
+      - NITRO_PORT=3000
+      - JWT_SECRET=WCTlMJ4RbBVEn_SdHcatxLG3yNOrhmPDpk8zw02jfIi
+      - NUXT_PUBLIC_HIRESTREAM_URL=https://talentai.intjsys.com
+      - NUXT_PUBLIC_HIRESTREAM_API_URL=https://api.talentai.intjsys.com
+      - DATABASE_URL=postgresql://talentai:7a9d1834ad23433780b82dab10528932@talentai_db:5432/talentai
+      - RESEND_API_KEY=re_VkmfMo1t_PMegp7acDv5cph7L8zXoNK42
+      - NEWSLETTER_API_KEY=WCTlMJ4RbBVEn_SdHcatxLG3yNOrhmPDpk8zw02jfIi
+      - ALIPAY_APP_ID=2021006129619227
+      - ALIPAY_PRIVATE_KEY=MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCGX/eWNKYfKzxDXy78ws4E/NXVKBm/rPjqRecH0blHMhNAsoSe8LmLw3uHddBTqIaYXyjGkUHSLTjCTgsk/5fosjZSqqR28Lj7ygbDUNpMk4P22XJqqHqZOu58yTTCKlClDn6Q1+jAREHw3s6SV83+kwxw0OFt+b8X/AaZ8I6/E3JVEJCcyNj8SFQ4DvIokf+lMhH0t30g2ggncypNyv9l0wOkEoJ3ij6qV4WDwXzVillFAYU9VQ+Nk3wwAxCMIxYDSkrrrXxX8KSddhmiY3wAub+ySe+k5r5u2/HnfBt2684bBSLTwxPEZ+fypbqm6f4rX34KW2c4Weo58Khh+KSPAgMBAAECggEAPYLQo0GWic4Q2AZKTAogpMfYWqrwnn1ftF4rU7j9R0n05jjR3K/1P7VMZsXXh3QtqLJmx/7WUo/A27E+CMG3mB18IHtcrdWj2B6y2dW5GDSuw+DmL0zQUjRX12eDbx5PrD7mUQeE0/5q8QgNJ5BqC47ksv/rMZyRjTkhDHbB4VUmfkYhhZNss0NnnbfrMc3Tnq0aW22UUVGA28eVt7mfirSpeODpNrh0sx+mpoqnUKukXnAuNv1lDfXRTQltbg5a57JjE7OG1VWkBFowk87jkGiLLGKEdwrgDMd47GTR09pekEq0Asz9IcCB3AtWssYps+F4GwortJfstDEEJWgaAQKBgQDtybi6QMDruw4YibZIt3arf+dfqlqdx7ERQtxmXf5DssRQZNaPiTPMAmtZ8zSb0doeFjp4tYWQ1YDT4ZF9nmEaYubrDC5vLxbdTY8QJRoSfvTTLvvCm4qjAyxLc09CTgdEB3dqZMhFjYx2CcprHhEMU+Ui0ITznoJuGe4wMWG9nwKBgQCQqqNXjoGO/V6YPbXWjSfX7iBLRYQyO8F0Hf9WTmxHVgrXcwc6rrLrhpI/chedeGYv5qYsSBZAxcUc4avrv4JIK4nr537TMZ5xe+GrklFEph7M7oD1hb9OazZcJY0elMlZPjWepmdZoCUBb4ChD6Hzqt9s3ldIDq7sY3oAZS/TEQKBgQDLrLhM2MAmaj+Fpxd6q6K6/UBqwdkCQpSZS2LLUAFFbW8XyXe61HOIcB4Rmu7Z9OLWWIXW9OymBSpm0lQzfCCCYGqYtANl+rij8BX1Z0Iwy4vbA+hjZaVXQZWEPw2Jppo0nAyeFhsw8DB6vqIiJEvH+mhO7LqkjYX81rsdjn7A0wKBgHDqT14a4/MIvlnT6OdS++NlgR1fYCSZUZDhjRf/VDKF7SZnKSBblVmSivosglQt0ozW2aM8jOn3s7esSTVUIEtWeGuCIBKV6xam2+i/5uDPTMEl89AvmbeKpT5dLP3Ooi4fCVkQhyCEh/3L2zlba0w2dfeSv8uFcnEd3+8JC8ARAoGBAKoyvfQH0lZMR0UrlxcInQsw5YjQwP+62mmWhrrDixm5AtXIp3mXVhxd9fXKnWZZKXMsC88vqT4dS1SB1IJc0SpYFZHns1/JVqZSdEuTQ9BqPVYXvPEENdCO2C3D73UgSBMLVGC1w9oiGe6KtdXeQ4UbHaAz1II4VJkZt4oqim+8
+      - ALIPAY_PUBLIC_KEY=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2q7pQYwAcExXGZas/dCRRZwp8AMPRQt9MJluxvzmv2+O8NNPZgB44l89UjkB65IdARjGmvQajxujZCmi/Z+rbatzgROXlMBzwZVTGoMh0EZiSC3C84G7cmcD9iEFuTIQKhVx034mZxm8wZkqVJPcZV9ETc4ZT+TagSUPnO7edR2QvrgsjkZDkCHdNT3tGh8YExlXk+0j2seDdbJ30VueYGcF+4pqIGWSmspoz/dJgb8ETM5AlwZxUfc4JwwJ8tOXuiAVUJsi67vrAAMWn8p5f7HphDAYt/au+7ZUnVME4xfYBjyk+ymacouebL8EkKzzSCKU+rKta0ud68AfzY6fLwIDAQAB
+      - ALIPAY_NOTIFY_URL=https://intjsys.com/api/payment/notify
+    volumes:
+      - ./data:/app/data
+    restart: always
+    networks:
+      - traefik
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.intjsys-official.rule=Host(`intjsys.com`)
+      - traefik.http.routers.intjsys-official.entrypoints=websecure443
+      - traefik.http.routers.intjsys-official.tls=true
+      - traefik.http.routers.intjsys-official.tls.certresolver=myresolver
+      - traefik.http.routers.intjsys-official-http.rule=Host(`intjsys.com`)
+      - traefik.http.routers.intjsys-official-http.entrypoints=web
+      - traefik.http.services.intjsys-official.loadbalancer.server.port=3000
+
+networks:
+  traefik:
+    external: true
