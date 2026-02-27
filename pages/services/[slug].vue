@@ -58,6 +58,90 @@
         </div>
       </section>
 
+      <section v-if="service.researchSummary" class="content-card research-summary">
+        <h2>GitHub 实战调研（{{ service.researchDate || '2026-02-24' }}）</h2>
+        <p class="research-note">{{ service.researchSummary }}</p>
+      </section>
+
+      <section v-if="service.deploymentSchemes?.length" class="content-card">
+        <h2>主流部署方案</h2>
+        <div class="scheme-grid">
+          <article v-for="scheme in service.deploymentSchemes" :key="scheme.name" class="scheme-card">
+            <h3>{{ scheme.name }}</h3>
+            <p class="scheme-stack">{{ scheme.stack }}</p>
+            <p class="scheme-scenario">{{ scheme.scenario }}</p>
+            <ul class="scheme-list">
+              <li v-for="point in scheme.highlights" :key="point">{{ point }}</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section v-if="service.hardwareProfiles?.length" class="content-card">
+        <h2>硬件建议（按负载分层）</h2>
+        <div class="hardware-table-wrap">
+          <table class="hardware-table">
+            <thead>
+              <tr>
+                <th>档位</th>
+                <th>CPU</th>
+                <th>内存</th>
+                <th>磁盘</th>
+                <th>适用场景</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="tier in service.hardwareProfiles" :key="tier.tier">
+                <td>{{ tier.tier }}</td>
+                <td>{{ tier.cpu }}</td>
+                <td>{{ tier.memory }}</td>
+                <td>{{ tier.disk }}</td>
+                <td>{{ tier.useCase }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section v-if="service.mcpProfiles?.length" class="content-card">
+        <h2>MCP 配置方案</h2>
+        <div class="config-grid">
+          <article v-for="profile in service.mcpProfiles" :key="profile.name" class="config-card">
+            <h3>{{ profile.name }}</h3>
+            <p>{{ profile.desc }}</p>
+            <pre class="config-block"><code>{{ profile.config }}</code></pre>
+            <ul class="tips-list">
+              <li v-for="tip in profile.tips" :key="tip">{{ tip }}</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section v-if="service.skillsProfiles?.length" class="content-card">
+        <h2>Skills 配置方案</h2>
+        <div class="config-grid">
+          <article v-for="profile in service.skillsProfiles" :key="profile.name" class="config-card">
+            <h3>{{ profile.name }}</h3>
+            <p>{{ profile.desc }}</p>
+            <pre class="config-block"><code>{{ profile.config }}</code></pre>
+            <ul class="tips-list">
+              <li v-for="tip in profile.tips" :key="tip">{{ tip }}</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section v-if="service.references?.length" class="content-card">
+        <h2>参考仓库（实时调研）</h2>
+        <ul class="ref-list">
+          <li v-for="repo in service.references" :key="repo.url" class="ref-item">
+            <a :href="repo.url" target="_blank" rel="noopener">{{ repo.name }}</a>
+            <span>★ {{ repo.stars }}</span>
+            <span>最近更新：{{ repo.updated }}</span>
+          </li>
+        </ul>
+      </section>
+
       <!-- 为什么选择我们 -->
       <section class="content-card why-us">
         <h2>为什么选择我们</h2>
@@ -96,32 +180,248 @@ const servicesData = {
     projectName: 'OpenClaw',
     rating: 5,
     github: 'https://github.com/openclaw/openclaw',
-    docs: 'https://openclaw.org/docs',
-    intro: 'OpenClaw 是开源的个人 AI 助手网关，可在你自己的服务器上本地运行。通过统一的 Gateway 控制中心连接 WhatsApp、Telegram、Discord、iMessage、Slack 等 12+ 主流消息平台，让你随时随地通过日常使用的聊天应用与 AI 进行自然对话。',
+    docs: 'https://docs.openclaw.ai',
+    intro: 'OpenClaw 是开源的本地优先 AI Assistant Gateway。它把 WhatsApp、Telegram、Discord、Slack、iMessage 等多渠道消息统一进一个控制面，可结合 MCP 工具链与 Skills 实现自动化工作流。我们基于 2026-02-24 的 GitHub 最新实践，提供从 PoC 到生产的部署、加固、运维和持续优化。',
+    researchSummary: '本页结论来自 openclaw/openclaw 官方仓库 + 社区部署仓库（RunClawd、ClawBot、openclaw-docker-compose）+ MCP 生态头部仓库（modelcontextprotocol/servers、github/github-mcp-server、upstash/context7、openai/skills）。重点覆盖可复用部署拓扑、MCP 接入方式、Skills 治理和硬件档位。',
     features: [
       { icon: '🏠', title: '本地优先', desc: '所有数据和处理在本地服务器运行，隐私完全可控' },
-      { icon: '📱', title: '12+ 消息通道', desc: '支持 WhatsApp、Telegram、Discord、iMessage、Slack 等主流平台' },
-      { icon: '🔒', title: '安全可控', desc: '配对机制、白名单、Docker 沙箱等多层安全防护' },
-      { icon: '💻', title: '跨平台', desc: '支持 macOS、Linux、Windows 及移动端 Companion App' },
+      { icon: '📱', title: '多通道控制面', desc: '统一管理多平台消息入口、会话与路由规则' },
+      { icon: '🔌', title: 'MCP 原生扩展', desc: '可挂载本地/远程 MCP Server，把工具能力注入对话' },
+      { icon: '🧰', title: 'Skills 体系', desc: '支持 bundled / managed / workspace skills，便于团队沉淀 SOP' },
     ],
     deployment: [
-      { title: '环境搭建', desc: 'Node.js 22+ 环境配置、依赖安装、Gateway 初始化' },
-      { title: '通道对接', desc: 'WhatsApp/Telegram/Discord/Slack 等账号绑定配置' },
-      { title: '安全配置', desc: 'Token 认证、白名单、DM 配对策略、Docker 沙箱' },
-      { title: '服务化部署', desc: 'launchd/systemd/Windows Task 守护进程配置' },
-      { title: '远程访问', desc: 'Tailscale/VPN/SSH 隧道配置，移动端接入' },
+      { title: '部署拓扑设计', desc: '按团队规模设计单机版 / VPS 安全版 / 生产增强版部署结构' },
+      { title: 'MCP 接入落地', desc: '接入 GitHub、Context7 和自建 MCP，统一认证与权限边界' },
+      { title: 'Skills 治理', desc: '配置 skills.entries/allowBundled/load.extraDirs，建立技能白名单机制' },
+      { title: '通道与会话策略', desc: '多平台账号接入、分组路由、会话隔离与回复策略' },
+      { title: '安全加固', desc: '反向代理、鉴权、容器沙箱、备份与回滚机制' },
     ],
     maintenance: [
-      { title: '监控告警', desc: 'Gateway 健康检查、通道连接状态、进程存活监控' },
-      { title: '版本升级', desc: '跟踪官方 CHANGELOG、平滑升级、回滚保障' },
-      { title: '故障响应', desc: '问题诊断、快速恢复、openclaw doctor 定期巡检' },
-      { title: '定期巡检', desc: '安全审计、配置优化、会话清理、配额管理' },
+      { title: '监控告警', desc: 'Gateway 存活、通道状态、队列延迟、Token 消耗多维监控' },
+      { title: '版本升级', desc: '跟踪 upstream 发布，执行灰度升级与可回滚变更' },
+      { title: '故障响应', desc: '基于日志与健康检查定位问题，快速恢复服务' },
+      { title: '成本优化', desc: '模型路由、心跳模型下沉（Ollama）与请求节流优化' },
+    ],
+    deploymentSchemes: [
+      {
+        name: '官方标准版（openclaw/openclaw）',
+        stack: 'openclaw onboard --install-daemon + launchd/systemd + Tailscale Serve/Funnel。',
+        scenario: '适合个人和 1-3 人小团队，追求快速上线与稳定运行。',
+        highlights: [
+          '官方推荐安装路径，升级与文档一致性最好',
+          'gateway.bind 保持 loopback，远程接入通过 Tailscale 暴露',
+          '配合 openclaw doctor/health 做例行巡检',
+        ],
+      },
+      {
+        name: '生产增强版（RunClawd/runclawd）',
+        stack: 'OpenClaw + Caddy + Cloudflared + docker-socket-proxy + explorer。',
+        scenario: '适合需要公网访问、快速运维与备份机制的生产场景。',
+        highlights: [
+          'Cloudflare Tunnel 快速发布公网入口',
+          '通过 docker-socket-proxy 限制 Docker API 暴露面',
+          '内置备份/恢复脚本与定时任务范式',
+        ],
+      },
+      {
+        name: '安全优先版（Laso37/clawbot）',
+        stack: 'Traefik + Authelia + OpenClaw + Ollama + Next.js Dashboard。',
+        scenario: '适合对认证、HTTPS、预算控制要求更高的团队。',
+        highlights: [
+          '前置统一认证与反向代理，服务默认不裸露',
+          '通过本地 Ollama 承接心跳任务降低长期成本',
+          '提供服务器安全加固清单（UFW/Fail2Ban/SSH hardening）',
+        ],
+      },
+      {
+        name: '隔离开发版（openclaw-docker-compose）',
+        stack: 'OpenClaw 单容器 + Browserless（2GB shared memory，10 并发）。',
+        scenario: '适合本地开发、回归测试与快速复现实验环境。',
+        highlights: [
+          '配置与工作区持久化，便于测试迭代',
+          '浏览器能力从主容器卸载，降低主进程干扰',
+          '适合作为团队内标准化开发模板',
+        ],
+      },
+    ],
+    hardwareProfiles: [
+      {
+        tier: 'PoC / 个人版',
+        cpu: '2 vCPU',
+        memory: '4-8 GB',
+        disk: '40+ GB SSD',
+        useCase: '单账号、低并发、以云端模型为主（可选 tinyllama 心跳）',
+      },
+      {
+        tier: '标准生产版',
+        cpu: '4 vCPU',
+        memory: '8-16 GB',
+        disk: '80-160 GB NVMe',
+        useCase: '多通道稳定运行，含反向代理、监控、备份任务',
+      },
+      {
+        tier: '高负载团队版',
+        cpu: '8+ vCPU',
+        memory: '16-32 GB',
+        disk: '200+ GB NVMe',
+        useCase: '多账号并发、更多 MCP/Skills、长期会话与日志留存',
+      },
+    ],
+    mcpProfiles: [
+      {
+        name: '本地 MCP（stdio）',
+        desc: '适用于内网与私有化场景，稳定且易于权限收敛。',
+        config: `{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/srv/workspace"]
+    },
+    "git": {
+      "command": "uvx",
+      "args": ["mcp-server-git", "--repository", "/srv/workspace/repo"]
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"]
+    }
+  }
+}`,
+        tips: [
+          'filesystem 路径务必限制在业务目录，避免误暴露主机文件。',
+          '按项目拆分 git/repository，降低跨项目数据泄漏风险。',
+        ],
+      },
+      {
+        name: '远程 MCP：GitHub 官方',
+        desc: '通过 GitHub 托管 MCP（HTTP）直连仓库、Issue、PR 和工作流。',
+        config: `{
+  "servers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer \${input:github_mcp_pat}"
+      }
+    }
+  }
+}`,
+        tips: [
+          'PAT 最小权限授权，按环境拆分 token 并定期轮换。',
+          '生产环境优先使用远程 OAuth/PAT，减少本地长驻凭据风险。',
+        ],
+      },
+      {
+        name: '远程 MCP：Context7 文档增强',
+        desc: '给编码场景注入最新版库文档，减少过时 API 误用。',
+        config: `{
+  "mcpServers": {
+    "context7": {
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "YOUR_API_KEY"
+      }
+    }
+  }
+}`,
+        tips: [
+          '建议在规则中强制“文档查询类任务优先调用 context7”。',
+          '可按团队共享 API Key，并在网关层做请求审计。',
+        ],
+      },
+    ],
+    skillsProfiles: [
+      {
+        name: 'OpenClaw Skills（openclaw.json）',
+        desc: '通过 allowBundled/load/entries 做技能白名单、热更新和凭据注入。',
+        config: `{
+  "skills": {
+    "allowBundled": ["security-best-practices", "doc"],
+    "load": {
+      "extraDirs": ["/srv/openclaw/skills"],
+      "watch": true,
+      "watchDebounceMs": 500
+    },
+    "entries": {
+      "server-health": { "enabled": true },
+      "nano-banana-pro": {
+        "enabled": true,
+        "apiKey": "YOUR_API_KEY",
+        "env": { "GEMINI_API_KEY": "YOUR_API_KEY" }
+      }
+    }
+  }
+}`,
+        tips: [
+          '关键技能走 Git + PR 审核，避免线上直接改 SKILL.md。',
+          'apiKey 与 env 优先接 secret manager，不直接入库。',
+        ],
+      },
+      {
+        name: 'OpenAI Skills Catalog（Codex 生态）',
+        desc: '从 openai/skills curated 集合快速安装通用能力并纳入团队基线。',
+        config: `# 列出可安装技能
+$skill-installer
+
+# 按名称安装 curated 技能
+$skill-installer gh-fix-ci
+$skill-installer playwright
+
+# 安装后重启 Codex 以加载新技能`,
+        tips: [
+          '优先使用 curated 集合，减少第三方来源不确定性。',
+          '把常用技能固化到内部基线文档，避免个人环境漂移。',
+        ],
+      },
+    ],
+    references: [
+      { name: 'openclaw/openclaw', stars: '222k', updated: '2026-02-24', url: 'https://github.com/openclaw/openclaw' },
+      { name: 'modelcontextprotocol/servers', stars: '79.2k', updated: '2026-02-23', url: 'https://github.com/modelcontextprotocol/servers' },
+      { name: 'github/github-mcp-server', stars: '27.1k', updated: '2026-02-23', url: 'https://github.com/github/github-mcp-server' },
+      { name: 'upstash/context7', stars: '46.6k', updated: '2026-02-23', url: 'https://github.com/upstash/context7' },
+      { name: 'openai/skills', stars: '9.5k', updated: '2026-02-21', url: 'https://github.com/openai/skills' },
+      { name: 'RunClawd/runclawd', stars: '4', updated: '2026-02-24', url: 'https://github.com/RunClawd/runclawd' },
+      { name: 'joshua5201/openclaw-docker-compose', stars: '4', updated: '2026-02-24', url: 'https://github.com/joshua5201/openclaw-docker-compose' },
+      { name: 'Laso37/clawbot', stars: '1', updated: '2026-02-24', url: 'https://github.com/Laso37/clawbot' },
     ],
     whyUs: [
-      { title: '专业运维团队', desc: 'Node.js 服务及容器化运维经验丰富' },
-      { title: '中心化监控', desc: 'Loki 日志监控体系，问题实时可见' },
-      { title: '快速响应', desc: '本地化服务，沟通无时差' },
-      { title: '持续跟进', desc: '紧跟官方更新，第一时间升级' },
+      { title: '实战基线', desc: '方案来自官方 + 社区生产仓库，不做纸面架构' },
+      { title: 'MCP/Skills 一体交付', desc: '不只部署网关，同时交付可复用配置模板' },
+      { title: '安全与成本并重', desc: '上线前做鉴权、网络边界与预算控制设计' },
+      { title: '持续演进', desc: '按 release 节奏迭代并维护可回滚升级路径' },
+    ],
+  },
+  'lean': {
+    name: 'Lean 量化交易引擎部署运维服务',
+    projectName: 'QuantConnect Lean',
+    rating: 5,
+    github: 'https://github.com/QuantConnect/Lean',
+    docs: 'https://www.lean.io/docs/',
+    intro: 'QuantConnect Lean 是开源的事件驱动量化交易引擎，支持 Python/C# 策略开发、多资产回测、参数优化与实盘交易。配套 Lean CLI 与 Docker 工作流，可在本地完成 research/backtest/live 全流程。我们提供从环境部署、数据与券商接入到实盘运维的完整交付。',
+    features: [
+      { icon: '⚡', title: '事件驱动引擎', desc: '专业级事件驱动架构，支持分钟级到 Tick 级策略执行与回放' },
+      { icon: '🐍', title: '双语言支持', desc: '支持 Python 与 C# 策略开发，兼顾研发效率与执行性能' },
+      { icon: '📈', title: '回测到实盘一体化', desc: '统一策略代码可贯通研究、回测、参数优化与实盘交易' },
+      { icon: '🧩', title: '模块化可插拔', desc: '数据源、券商、风控模型与执行模块可按业务场景扩展' },
+    ],
+    deployment: [
+      { title: '基础环境部署', desc: 'Docker + Lean CLI + .NET SDK 环境搭建，完成本地运行与依赖基线' },
+      { title: '策略工程化', desc: '建立项目模板、回测脚本、参数优化流程与版本化配置' },
+      { title: '数据源接入', desc: '按品类配置历史/实时数据接入，完善数据校验与更新任务' },
+      { title: '券商网关对接', desc: '按目标券商完成实盘连接、账户鉴权、交易权限与沙盒验证' },
+      { title: '上线验收', desc: '回测基线、风控规则、订单链路与异常场景联调验收' },
+    ],
+    maintenance: [
+      { title: '交易运行监控', desc: '策略进程、订单状态、成交质量、延迟与异常日志监控告警' },
+      { title: '版本升级', desc: '跟踪 Lean 官方更新与依赖变更，执行兼容性验证和回滚保障' },
+      { title: '数据治理', desc: '企业动作、换月处理、缺失补齐与质量巡检，保障回测与实盘一致性' },
+      { title: '实盘应急响应', desc: '断线重连、订单失败恢复、风控熔断与交易日值守支持' },
+    ],
+    whyUs: [
+      { title: '量化工程交付能力', desc: '覆盖策略开发、回测评估、交易接入与运维保障的全链路能力' },
+      { title: '工程化优先', desc: '强调脚本化与可复现流程，降低人为操作风险与交付波动' },
+      { title: '私有化可控', desc: '支持本地或私有云部署，策略代码与交易数据边界清晰可控' },
+      { title: '快速响应', desc: '本地化技术支持，问题定位与修复响应更及时' },
     ],
   },
 	  'eigent': {
@@ -353,6 +653,148 @@ const servicesData = {
 	      { title: '工程化集成', desc: '可集成到 CI 与发布流程，形成持续机制' },
 	    ],
 	  },
+	  'gitnexus': {
+	    name: 'GitNexus 代码知识图谱落地服务',
+	    projectName: 'GitNexus',
+	    rating: 4,
+	    github: 'https://github.com/abhigyanpatwari/GitNexus',
+	    docs: 'https://www.npmjs.com/package/gitnexus',
+	    researchDate: '2026-02-27',
+	    intro: 'GitNexus 是面向 AI 编程助手的代码知识图谱引擎，支持 CLI + MCP + Web UI 双模式。它可以把仓库索引成可查询图谱，提供 impact / context / query / rename 等能力，降低 AI 改代码时漏依赖、断调用链的风险。我们提供从 PoC 到团队接入的落地与运维服务。',
+	    researchSummary: '截至 2026-02-27：GitHub 约 5.5k Stars、482 Fork，最近代码提交在 2026-02-26；npm 最新版本 1.3.3（2026-02-26），近 30 天下载约 3901。当前许可证为 PolyForm Noncommercial 1.0.0，商业场景需先做授权与合规评估。',
+	    features: [
+	      { icon: '🧠', title: '代码知识图谱', desc: '将调用链、依赖关系、执行流程结构化，给 AI 提供稳定上下文' },
+	      { icon: '🔌', title: 'MCP 工具链', desc: '通过 MCP 暴露 query/context/impact 等工具，支持 Claude Code、Cursor 等编辑器' },
+	      { icon: '🖥️', title: '双运行模式', desc: 'Web UI 快速探索，CLI + MCP 用于持续开发与多仓索引管理' },
+	      { icon: '🔒', title: '本地优先', desc: '索引与查询可在本地完成，适配私有代码仓和内网场景' },
+	    ],
+	    deployment: [
+	      { title: 'PoC 试点部署', desc: '选定 1-2 个关键仓库，安装 Node 20 + GitNexus，完成首次索引和工具验收' },
+	      { title: 'MCP 接入落地', desc: '为 Claude Code/Cursor 配置全局 MCP，打通团队统一调用入口' },
+	      { title: '多仓治理', desc: '建立索引仓库清单、命名规范和更新策略，避免上下文污染与误用' },
+	      { title: 'IDE 工作流接入', desc: '把影响分析、重构检查、提交前检查纳入研发流程' },
+	      { title: '授权与合规评估', desc: '针对商业使用场景梳理许可证边界，给出替代或授权方案' },
+	    ],
+	    maintenance: [
+	      { title: '版本跟踪', desc: '跟踪 npm 快速迭代版本，执行灰度升级与回滚预案' },
+	      { title: '兼容性巡检', desc: '重点关注 Node 版本、Windows 环境、serve 连接链路的兼容问题' },
+	      { title: '索引质量维护', desc: '定期校验关键服务模块召回质量，修正缺失调用链或低置信度结果' },
+	      { title: '运行指标监控', desc: '监控索引耗时、查询响应、失败率与磁盘占用，定位瓶颈' },
+	    ],
+	    deploymentSchemes: [
+	      {
+	        name: 'Web UI 快速调研版',
+	        stack: 'gitnexus.vercel.app + ZIP/GitHub 仓导入（浏览器模式）。',
+	        scenario: '适合产品经理、架构师做短期代码探索与演示。',
+	        highlights: [
+	          '零安装，最快 5 分钟出图谱',
+	          '受浏览器内存影响，适合中小仓或抽样分析',
+	          '用于前期评估，不建议直接作为生产研发主链路',
+	        ],
+	      },
+	      {
+	        name: 'CLI + MCP 团队版（推荐）',
+	        stack: 'npx gitnexus analyze + npx gitnexus mcp + 编辑器 MCP 配置。',
+	        scenario: '适合研发团队持续使用，强调可靠上下文与变更影响分析。',
+	        highlights: [
+	          '本地索引持久化，支持多仓统一管理',
+	          '可直接给编码 Agent 提供结构化工具结果',
+	          '便于纳入日常开发、评审和重构流程',
+	        ],
+	      },
+	      {
+	        name: 'Bridge 混合版',
+	        stack: 'gitnexus serve + Web UI 自动连接本地后端。',
+	        scenario: '适合需要可视化图谱 + 本地多仓能力并行的团队。',
+	        highlights: [
+	          '无需重复上传或重复索引',
+	          '前端可视化与后端查询能力合并',
+	          '适配演示、培训和跨角色协作场景',
+	        ],
+	      },
+	    ],
+	    hardwareProfiles: [
+	      {
+	        tier: '浏览器试用档',
+	        cpu: '2 vCPU',
+	        memory: '8 GB',
+	        disk: '20+ GB SSD',
+	        useCase: 'Web UI 轻量探索（建议 < 5k 文件仓库）',
+	      },
+	      {
+	        tier: '团队标准档',
+	        cpu: '4 vCPU',
+	        memory: '16 GB',
+	        disk: '80+ GB NVMe',
+	        useCase: 'CLI + MCP 持续使用，支持多仓索引与日常查询',
+	      },
+	      {
+	        tier: '大仓增强档',
+	        cpu: '8+ vCPU',
+	        memory: '32 GB',
+	        disk: '200+ GB NVMe',
+	        useCase: '大型代码仓、高频查询与多成员并发使用',
+	      },
+	    ],
+	    mcpProfiles: [
+	      {
+	        name: '快速接入（npx）',
+	        desc: '适合先验证价值，按编辑器写入 MCP 配置即可使用。',
+	        config: `{
+  "mcpServers": {
+    "gitnexus": {
+      "command": "npx",
+      "args": ["-y", "gitnexus@latest", "mcp"]
+    }
+  }
+}`,
+	        tips: [
+	          '建议在团队内先锁定版本，避免每次拉取 latest 带来行为漂移。',
+	          'Node 版本建议统一为 20 LTS，降低依赖兼容问题。',
+	        ],
+	      },
+	      {
+	        name: '多仓本地持久化',
+	        desc: '先分析仓库，再由 MCP 统一服务多个已索引项目。',
+	        config: `# 在每个仓库执行
+npx gitnexus analyze
+
+# 一次性全局配置
+npx gitnexus setup
+
+# 启动 MCP 服务
+npx gitnexus mcp`,
+	        tips: [
+	          '多仓场景下需规范 repo 命名，避免工具调用误指向。',
+	          '将 analyze 纳入仓库更新后的例行任务，保持索引新鲜度。',
+	        ],
+	      },
+	    ],
+	    skillsProfiles: [
+	      {
+	        name: 'Claude Code 增强',
+	        desc: '利用 analyze 自动生成的技能与上下文文件，让 Agent 持续使用图谱能力。',
+	        config: `# 在项目根目录执行
+npx gitnexus analyze
+
+# 自动写入/更新 AGENTS.md 与 CLAUDE.md`,
+	        tips: [
+	          '建议把关键工作流写入团队 AGENTS 约定，减少个人配置差异。',
+	          '索引变化较大时执行全量重建，避免旧图谱影响决策。',
+	        ],
+	      },
+	    ],
+	    references: [
+	      { name: 'abhigyanpatwari/GitNexus', url: 'https://github.com/abhigyanpatwari/GitNexus', stars: '5.5k', updated: '2026-02-27' },
+	      { name: 'gitnexus (npm)', url: 'https://www.npmjs.com/package/gitnexus', stars: 'v1.3.3', updated: '2026-02-26' },
+	    ],
+	    whyUs: [
+	      { title: '先验证后推广', desc: '先用真实仓库做 PoC 指标评估，再决定是否团队级推广' },
+	      { title: '许可证把关', desc: '明确 PolyForm Noncommercial 边界，避免商业使用合规风险' },
+	      { title: '工程化接入', desc: '把 impact/context 查询纳入代码评审和重构流程，不停留在演示' },
+	      { title: '持续迭代保障', desc: '针对快速迭代项目建立升级、回滚与兼容性巡检机制' },
+	    ],
+	  },
 	  'ragflow': {
 	    name: 'RAGFlow 部署运维服务',
 	    projectName: 'RAGFlow',
@@ -395,9 +837,15 @@ const service = computed(() => {
     rating: 0,
     github: '#',
     intro: '该服务不存在',
+    researchDate: '',
     features: [],
     deployment: [],
     maintenance: [],
+    deploymentSchemes: [],
+    hardwareProfiles: [],
+    mcpProfiles: [],
+    skillsProfiles: [],
+    references: [],
     whyUs: [],
   };
 });
@@ -587,6 +1035,153 @@ useSeoMeta({
   color: #666;
 }
 
+.research-note {
+  margin: 0;
+  color: #444;
+  line-height: 1.8;
+}
+
+.scheme-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.scheme-card {
+  border: 1px solid #ddd;
+  padding: 20px;
+  background: #fcfcfc;
+}
+
+.scheme-card h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  color: #111;
+}
+
+.scheme-stack {
+  margin: 0 0 8px;
+  color: #333;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.scheme-scenario {
+  margin: 0 0 12px;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.scheme-list {
+  margin: 0;
+  padding-left: 18px;
+  color: #444;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.88rem;
+}
+
+.hardware-table-wrap {
+  overflow-x: auto;
+}
+
+.hardware-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.hardware-table th,
+.hardware-table td {
+  border: 1px solid #e5e5e5;
+  padding: 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.hardware-table th {
+  background: #f5f5f5;
+  color: #111;
+  font-weight: 600;
+}
+
+.config-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.config-card h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.config-card p {
+  margin: 0 0 12px;
+  color: #555;
+  line-height: 1.6;
+  font-size: 0.9rem;
+}
+
+.config-block {
+  margin: 0 0 12px;
+  padding: 14px;
+  border: 1px solid #ddd;
+  background: #f8f8f8;
+  overflow-x: auto;
+}
+
+.config-block code {
+  font-family: 'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.82rem;
+  color: #111;
+}
+
+.tips-list {
+  margin: 0;
+  padding-left: 18px;
+  color: #444;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.88rem;
+}
+
+.ref-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ref-item {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid #e5e5e5;
+  background: #fcfcfc;
+  font-size: 0.9rem;
+}
+
+.ref-item a {
+  color: #111;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.ref-item a:hover {
+  text-decoration: underline;
+}
+
+.ref-item span {
+  color: #666;
+}
+
 /* Why Us */
 .why-grid {
   display: grid;
@@ -677,7 +1272,8 @@ useSeoMeta({
   }
   
   .features-grid,
-  .why-grid {
+  .why-grid,
+  .scheme-grid {
     grid-template-columns: 1fr;
   }
   
@@ -688,6 +1284,12 @@ useSeoMeta({
   
   .service-item strong {
     min-width: auto;
+  }
+
+  .ref-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
   }
 }
 </style>

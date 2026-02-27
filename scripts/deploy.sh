@@ -3,11 +3,11 @@ echo "Starting INTJsys Official Site deployment process..."
 
 set -e  # 遇到错误立即退出
 
-# SSH 密钥路径（Mac）
-SSH_KEY="${SSH_KEY:-$HOME/Downloads/reallier.pem}"
+# SSH 密钥路径
+SSH_KEY="${SSH_KEY:-$HOME/.ssh/reallier.pem}"
 
-echo "Building Docker image (linux/amd64)..."
-docker buildx build --platform linux/amd64 --no-cache -t intjsys-official:latest --load .
+echo "Building Docker image..."
+docker build --no-cache -t intjsys-official:latest .
 
 echo "Tagging Docker image..."
 docker tag intjsys-official:latest ccr.ccs.tencentyun.com/reallier/intjsys-official:latest

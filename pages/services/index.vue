@@ -38,7 +38,10 @@
           >
             <div class="service-ribbon">可提供服务</div>
             <div class="service-header">
-              <span class="service-name">{{ svc.name }}</span>
+              <div class="service-title-wrapper">
+                <i :class="svc.icon" class="service-icon"></i>
+                <span class="service-name">{{ svc.name }}</span>
+              </div>
               <div class="service-badges">
                 <span class="badge stars-badge">★ {{ svc.stars }}</span>
               </div>
@@ -79,6 +82,7 @@ const activeCategory = ref('all');
 const services = [
   {
     id: 'openclaw',
+    icon: 'fa-regular fa-message',
     name: 'OpenClaw 部署运维',
     desc: '12+ 消息平台统一接入的个人 AI 助手网关。支持 WhatsApp、Telegram、Discord、iMessage 等，本地优先架构，隐私完全可控。',
     stars: '2.1k',
@@ -87,7 +91,18 @@ const services = [
     features: ['本地优先', '多通道', '安全可控', '专业服务'],
   },
   {
+    id: 'lean',
+    icon: 'fa-solid fa-chart-line',
+    name: 'Lean 量化交易引擎部署',
+    desc: 'QuantConnect 开源事件驱动量化交易引擎（C#/Python），支持本地回测、参数优化与实盘接入。我们提供 Docker 私有化部署、数据源/券商连接与策略工程化交付。',
+    stars: '16.7k',
+    source: 'QuantConnect',
+    category: 'ops',
+    features: ['回测与优化', '实盘接入', 'Docker 部署', '专业服务'],
+  },
+  {
     id: 'langfuse',
+    icon: 'fa-solid fa-microscope',
     name: 'Langfuse 部署运维',
     desc: '开源 LLM 可观测与评测闭环平台：Trace、Prompt 管理、数据集与对比评测。我们提供私有部署与运维服务。',
     stars: '21.6k',
@@ -97,6 +112,7 @@ const services = [
   },
   {
     id: 'promptfoo',
+    icon: 'fa-solid fa-vial-circle-check',
     name: 'Promptfoo 回归测试体系',
     desc: 'LLM Prompt/Agent 回归测试框架，可在 CI 中做准入门禁。我们提供用例集、指标与流水线接入。',
     stars: '10.3k',
@@ -106,6 +122,7 @@ const services = [
   },
   {
     id: 'deepeval',
+    icon: 'fa-solid fa-scale-balanced',
     name: 'DeepEval 评测体系',
     desc: 'LLM 评测与单元测试框架（metrics + LLM-as-judge）。我们提供指标体系、数据集与 CI 集成。',
     stars: '13.5k',
@@ -115,6 +132,7 @@ const services = [
   },
   {
     id: 'ragas',
+    icon: 'fa-solid fa-magnifying-glass-chart',
     name: 'Ragas RAG 评测',
     desc: 'RAG 质量评测框架（忠实度/相关性/回答质量等）。我们提供评测集构建、指标解释与持续评测。',
     stars: '12.5k',
@@ -124,6 +142,7 @@ const services = [
   },
   {
     id: 'garak',
+    icon: 'fa-solid fa-shield-halved',
     name: 'Garak 红队扫描',
     desc: 'LLM 安全红队扫描器，覆盖越狱、提示注入、敏感信息泄露等风险。我们提供基线扫描与整改复测。',
     stars: '6.9k',
@@ -133,6 +152,7 @@ const services = [
   },
   {
     id: 'pyrit',
+    icon: 'fa-solid fa-bolt',
     name: 'PyRIT 对抗测试',
     desc: 'Microsoft 开源对抗测试编排框架，用于系统化生成攻击用例与评估防护效果。我们提供攻击库定制与报告。',
     stars: '3.4k',
@@ -142,6 +162,7 @@ const services = [
   },
   {
     id: 'eigent',
+    icon: 'fa-solid fa-robot',
     name: 'Eigent 部署运维',
     desc: '基于 CAMEL-AI 的开源多智能体协作桌面应用。35+ 内置工具包与 MCP 集成，打造专属 AI Workforce，本地部署隐私可控。',
     stars: '1.8k',
@@ -150,7 +171,18 @@ const services = [
     features: ['多智能体', '本地部署', 'MCP 集成', '专业服务'],
   },
   {
+    id: 'gitnexus',
+    icon: 'fa-solid fa-code-branch',
+    name: 'GitNexus 代码知识图谱落地',
+    desc: 'GitNexus 是本地优先的代码知识图谱引擎（CLI + MCP + Web UI）。截至 2026-02-27，GitHub 约 5.5k Stars，适合做 AI 编程助手上下文增强与变更影响分析。',
+    stars: '5.5k',
+    source: 'GitNexus',
+    category: 'knowledge',
+    features: ['代码图谱', 'MCP 工具链', '本地优先', 'PoC 落地'],
+  },
+  {
     id: 'ragflow',
+    icon: 'fa-solid fa-diagram-project',
     name: 'RAGFlow 部署运维',
     desc: '开源 RAG 引擎，深度文档理解驱动的检索增强生成。支持复杂格式文档解析、可视化分块、多路召回与可溯源引用，开箱即用的知识库问答。',
     stars: '25.3k',
@@ -339,6 +371,17 @@ useSeoMeta({
 .service-name {
   font-size: 1.25rem;
   font-weight: 700;
+  color: var(--fg);
+}
+
+.service-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.service-icon {
+  font-size: 1.25rem;
   color: var(--fg);
 }
 

@@ -15,5 +15,8 @@ useHead({
 </script>
 
 <template>
-  <NuxtPage />
+  <div>
+    <NuxtPage />
+    <CustomerService />
+  </div>
 </template>

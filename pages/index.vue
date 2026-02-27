@@ -173,6 +173,9 @@ const engineeringStack = [
             <p class="card-desc card-desc-sm">AI 知识库、流程引擎、逻辑桥... 更多原子工具正在构建中。</p>
           </div>
 
+
+
+
           <!-- Bridge Custom Service Card -->
           <div class="bento-card card-bridge reveal">
             <div class="bridge-content">
@@ -723,7 +726,7 @@ const engineeringStack = [
 .bento-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: repeat(2, 440px);
+  grid-auto-rows: minmax(440px, auto);
   gap: 24px;
 }
 
@@ -756,6 +759,126 @@ const engineeringStack = [
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.card-mind {
+  grid-column: span 12;
+  background: #111;
+  color: #fff;
+  border: none;
+  padding: 0;
+}
+
+.mind-content {
+  display: flex;
+  height: 100%;
+}
+
+.mind-left {
+  flex: 5;
+  padding: 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mind-tag {
+  color: #888;
+}
+
+.mind-tag::before {
+  background: #888;
+}
+
+.mind-title {
+  font-size: 40px;
+  font-weight: 800;
+  margin-bottom: 24px;
+  letter-spacing: -0.03em;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.mind-badge {
+  font-size: 13px;
+  font-weight: 800;
+  padding: 4px 10px;
+  background: #fff;
+  color: #111;
+  letter-spacing: 0;
+  border-radius: 4px;
+}
+
+.mind-desc {
+  font-size: 16px;
+  color: #aaa;
+  max-width: 440px;
+  line-height: 1.6;
+}
+
+.btn-mind {
+  background: #fff;
+  color: #111;
+  border: 1px solid #fff;
+}
+
+.btn-mind:hover {
+  background: transparent;
+  color: #fff;
+}
+
+.mind-right {
+  flex: 7;
+  padding: 56px;
+  background: radial-gradient(circle at top right, #1a1a1a 0%, #0a0a0a 100%);
+  display: flex;
+  align-items: center;
+}
+
+.mind-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  width: 100%;
+}
+
+.mind-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.feature-icon {
+  font-size: 20px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 8px;
+}
+
+.feature-text h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 8px 0;
+}
+
+.feature-text p {
+  font-size: 13px;
+  color: #888;
+  margin: 0;
+  line-height: 1.6;
 }
 
 .card-tag {
@@ -1848,12 +1971,26 @@ const engineeringStack = [
     grid-template-columns: 1fr;
     gap: 8px;
   }
+  .mind-content {
+    flex-direction: column;
+  }
+  .mind-left {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
 }
 
 @media (max-width: 768px) {
   .ph-row {
     grid-template-columns: 1fr;
     gap: 16px;
+  }
+  .mind-features {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .mind-left, .mind-right {
+    padding: 32px;
   }
   
   .log-row {
