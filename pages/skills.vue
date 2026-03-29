@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 
-const showLoginModal = ref(false);
+
 const activeCategory = ref('all');
 
 // ============ 核心资产 - 自研能力 ============
@@ -254,7 +254,7 @@ const marketStats = {
 <template>
   <div class="page">
     <!-- 使用共享 Header 组件 -->
-    <SiteHeader @open-login="showLoginModal = true" />
+    <SiteHeader />
 
     <main>
       <!-- Hero - 技术选型中心 -->
@@ -339,7 +339,7 @@ const marketStats = {
             <div class="flagship-actions">
               <a href="https://talentai.intjsys.com" target="_blank" class="btn-primary">立即体验</a>
               <a href="/docs" class="btn-secondary">技术文档</a>
-              <button class="btn-outline" @click="showLoginModal = true">咨询私有部署</button>
+              <a href="mailto:reallier@intjsys.com" class="btn-outline">咨询私有部署</a>
             </div>
           </div>
 
@@ -480,8 +480,7 @@ const marketStats = {
     <!-- 使用共享 Footer 组件 -->
     <SiteFooter />
 
-    <!-- 登录 Modal -->
-    <LoginModal v-model="showLoginModal" />
+
   </div>
 </template>
 

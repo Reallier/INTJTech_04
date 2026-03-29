@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { onMounted, nextTick, ref } from "vue";
+import { onMounted, nextTick } from "vue";
 
-// 登录 Modal 状态（仅用于顶部登录按钮）
-const showLoginModal = ref(false);
 
 onMounted(async () => {
   // 使用 nextTick 确保 DOM 完全渲染后再初始化动画
@@ -125,7 +123,7 @@ const engineeringStack = [
 <template>
   <div class="page">
     <!-- 使用共享 Header 组件 -->
-    <SiteHeader @open-login="showLoginModal = true" />
+    <SiteHeader />
 
     <main>
       <!-- Hero Section -->
@@ -238,8 +236,7 @@ const engineeringStack = [
     <!-- 使用共享 Footer 组件 -->
     <SiteFooter />
 
-    <!-- 登录 Modal -->
-    <LoginModal v-model="showLoginModal" />
+
   </div>
 </template>
 

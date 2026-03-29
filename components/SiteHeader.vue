@@ -1,67 +1,28 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { useAuth } from '~/composables/useAuth';
+import { ref } from 'vue';
 
-const emit = defineEmits(['open-login']);
-
-const { user, fetchUser, logout } = useAuth();
 const showProductMenu = ref(false);
 const showTechMenu = ref(false);
-const showUserCard = ref(false);
-
-const runtimeConfig = useRuntimeConfig();
-
-const productDirectUrls = computed(() => ({
-  talentai: runtimeConfig.public.hirestreamUrl || 'https://talentai.intjsys.com',
-  mindai: 'https://mbti.intjsys.com',
-  contract: '/api/services/contract-redirect',
-}));
-
-const handleProductClick = (productKey: string, e: Event) => {
-  e.preventDefault();
-  showProductMenu.value = false;
-  const url = productDirectUrls.value[productKey as keyof typeof productDirectUrls.value];
-  if (url) {
-    window.open(url, '_blank');
-  }
-};
 
 const toggleProductMenu = () => {
   showProductMenu.value = !showProductMenu.value;
   showTechMenu.value = false;
-  showUserCard.value = false;
 };
 
 const toggleTechMenu = () => {
   showTechMenu.value = !showTechMenu.value;
   showProductMenu.value = false;
-  showUserCard.value = false;
-};
-
-const toggleUserCard = () => {
-  showUserCard.value = !showUserCard.value;
-  showProductMenu.value = false;
-  showTechMenu.value = false;
-};
-
-const handleLogout = async () => {
-  showUserCard.value = false;
-  await logout();
 };
 
 if (typeof window !== 'undefined') {
   window.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
-    if (!target.closest('.nav-dropdown')) {
+    if (!target.closest('.nav-dropdown') && !target.closest('.nav-item')) {
       showProductMenu.value = false;
       showTechMenu.value = false;
     }
   });
 }
-
-onMounted(async () => {
-  await fetchUser();
-});
 </script>
 
 <template>
@@ -89,43 +50,14 @@ onMounted(async () => {
             MCP & Skill
           </NuxtLink>
         </div>
-
-        <!-- 用户信息卡片 -->
-        <div v-if="user" class="user-dropdown">
-          <button class="btn-user" @click.stop="toggleUserCard">
-            {{ user.username || user.email || 'USER' }}
-            <span class="arrow">▼</span>
-          </button>
-          <div v-show="showUserCard" class="user-card">
-            <div class="user-card-header">
-              <div class="user-avatar">{{ (user.username || user.email || 'U')[0].toUpperCase() }}</div>
-              <div class="user-info">
-                <div class="user-card-name">{{ user.username || user.email }}</div>
-                <div class="user-card-id">ID: {{ user.id }}</div>
-              </div>
-            </div>
-            <div class="user-card-stats">
-              <div class="stat-row">
-                <span class="stat-label">账户余额</span>
-                <span class="stat-value">￥{{ Number(user.balance || 0).toFixed(2) }}</span>
-              </div>
-              <div class="stat-row">
-                <span class="stat-label">免费额度</span>
-                <span class="stat-value">￥{{ Number(user.freeQuota || 0).toFixed(2) }}</span>
-              </div>
-            </div>
-            <button class="btn-logout" @click="handleLogout">登出账号</button>
-          </div>
-        </div>
-        <button v-else @click="emit('open-login')" class="btn-login">LOGIN</button>
       </nav>
     </div>
     
-    <!-- Compact Panels -->
+    <!-- Product Menu -->
     <div class="dropdown-panel" v-show="showProductMenu">
       <div class="panel-inner">
-         <div class="panel-grid" :class="user?.role === 'admin' || user?.role === 'internal' ? 'cols-4' : 'cols-3'">
-            <a href="#" @click="handleProductClick('talentai', $event)" class="panel-item">
+         <div class="panel-grid cols-4">
+            <a href="https://talentai.intjsys.com" target="_blank" class="panel-item">
               <div class="panel-icon">[ ]</div>
               <div class="panel-content">
                 <div class="panel-head">
@@ -135,12 +67,12 @@ onMounted(async () => {
                 <p class="panel-desc">AI 驱动的确定性人才发现引擎。</p>
               </div>
             </a>
-            <a v-if="user?.role === 'admin' || user?.role === 'internal'" href="#" @click="handleProductClick('mindai', $event)" class="panel-item">
+            <a href="https://mbti.intjsys.com" target="_blank" class="panel-item">
               <div class="panel-icon">∞</div>
               <div class="panel-content">
                 <div class="panel-head">
                    <span class="panel-title">MINDAI</span>
-                   <span class="panel-meta">INTERNAL</span>
+                   <span class="panel-meta">BETA</span>
                 </div>
                 <p class="panel-desc">基于荣格八维的 MBTI 判型智能体。</p>
               </div>
@@ -169,6 +101,7 @@ onMounted(async () => {
       </div>
     </div>
 
+    <!-- Tech Menu -->
     <div class="dropdown-panel" v-show="showTechMenu">
       <div class="panel-inner">
          <div class="panel-grid cols-4">
@@ -207,17 +140,7 @@ onMounted(async () => {
                    <span class="panel-title">API</span>
                    <span class="panel-meta">DOCS</span>
                 </div>
-                <p class="panel-desc">标准化接口集成指南。</p>
-              </div>
-            </a>
-            <a v-if="user?.role === 'admin' || user?.role === 'internal'" href="https://docs.intjsys.com" target="_blank" class="panel-item">
-              <div class="panel-icon">≡</div>
-              <div class="panel-content">
-                <div class="panel-head">
-                   <span class="panel-title">DOCS</span>
-                   <span class="panel-meta">INTERNAL</span>
-                </div>
-                <p class="panel-desc">内部技术文档站。</p>
+                <p class="panel-desc">统一文档中心与标准化集成指南。</p>
               </div>
             </a>
          </div>

@@ -1,4 +1,4 @@
-// Nuxt configuration for 简序智能官网 v1 - 极简工业风
+// Nuxt configuration for 简序智能国内宣传站 - intjsys.com
 export default defineNuxtConfig({
   app: {
     head: {
@@ -11,7 +11,7 @@ export default defineNuxtConfig({
         }
       ],
       link: [
-        // Google Fonts - Inter (新设计核心字体)
+        // Google Fonts - Inter
         {
           rel: "preconnect",
           href: "https://fonts.googleapis.com"
@@ -50,7 +50,7 @@ export default defineNuxtConfig({
           href: "/site-logo.png",
           sizes: "256x256"
         },
-        // FontAwesome (保留兼容性)
+        // FontAwesome
         {
           rel: "stylesheet",
           href:
@@ -67,12 +67,6 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-09-27",
   nitro: {
     preset: "node-server"
-  },
-  runtimeConfig: {
-    public: {
-      hirestreamApiUrl: process.env.HIRESTREAM_API_URL || 'https://api.talentai.intjsys.com',
-      hirestreamUrl: process.env.HIRESTREAM_URL || 'https://talentai.intjsys.com'
-    }
   },
   devtools: { enabled: false }
 });

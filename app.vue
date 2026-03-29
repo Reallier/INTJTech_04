@@ -17,6 +17,5 @@ useHead({
 <template>
   <div>
     <NuxtPage />
-    <CustomerService />
   </div>
 </template>

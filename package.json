@@ -1,36 +1,23 @@
 {
-  "name": "intjsys-official",
-  "version": "0.1.0",
+  "name": "intjsys-domestic",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "nuxt dev",
     "build": "nuxt build",
     "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "lint": "eslint ."
+    "preview": "nuxt preview"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/vue-fontawesome": "^3.0.8",
-    "@prisma/client": "^5.10.0",
-    "@types/nodemailer": "^7.0.5",
-    "@types/uuid": "^10.0.0",
-    "alipay-sdk": "^4.0.0",
-    "bcryptjs": "^3.0.3",
-    "jsonwebtoken": "^9.0.3",
-    "nodemailer": "^7.0.12",
-    "nuxt": "^3.12.0",
-    "resend": "^6.7.0",
-    "tencentcloud-sdk-nodejs": "^4.1.171",
-    "uuid": "^13.0.0"
+    "gray-matter": "^4.0.3",
+    "markdown-it": "^14.1.1",
+    "nuxt": "^3.12.0"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^18.0.0",
-    "eslint": "^8.57.0",
-    "eslint-config-prettier": "^9.1.0",
-    "prisma": "^5.10.0"
+    "@types/node": "^18.0.0"
   }
 }

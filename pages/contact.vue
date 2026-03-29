@@ -1,6 +1,6 @@
 <template>
   <div class="page contact-page">
-    <SiteHeader @open-login="showLoginModal = true" />
+    <SiteHeader />
 
     <main class="container">
       <header class="page-header">
@@ -51,12 +51,11 @@
     </main>
 
     <SiteFooter />
-    <LoginModal v-model="showLoginModal" />
   </div>
 </template>
 
 <script setup lang="ts">
-const showLoginModal = ref(false);
+
 
 useSeoMeta({
   title: '联系咨询 - 简序智能',

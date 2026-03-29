@@ -22,3 +22,6 @@ setup-admin.sh
 fix-admin.sh
 check-admin.sh
 list-users.sh
+
+# Runtime-managed docs visibility overrides
+runtime-data/
