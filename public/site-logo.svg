@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="Reallier logo">
-  <rect width="96" height="96" rx="10" fill="#0b0b0f"/>
-  <path fill="#ffffff" d="M22 20h13v56H22z"/>
-  <path fill="#ffffff" d="M34 20h27c7.9 0 14.2 2.1 18.8 6.4 4.4 4.1 6.6 9.6 6.6 16.5 0 6.5-2.1 11.7-6.2 15.7-4.2 4.1-10.1 6.1-17.8 6.1H48.5V53.2h13.1c3.8 0 6.7-.9 8.7-2.8 2-1.8 3-4.4 3-7.7s-1-5.9-3.1-7.9c-2.1-2-5.1-3-9.1-3H34z"/>
-  <path fill="#bfdbfe" d="M48.5 52.8h14.2L82 76H66.1z"/>
-  <path fill="#bfdbfe" d="M49 37h15v10H49z"/>
+  <rect width="96" height="96" rx="10" fill="#10251d"/>
+  <path fill="#fffdf6" d="M22 20h13v56H22z"/>
+  <path fill="#fffdf6" d="M34 20h27c7.9 0 14.2 2.1 18.8 6.4 4.4 4.1 6.6 9.6 6.6 16.5 0 6.5-2.1 11.7-6.2 15.7-4.2 4.1-10.1 6.1-17.8 6.1H48.5V53.2h13.1c3.8 0 6.7-.9 8.7-2.8 2-1.8 3-4.4 3-7.7s-1-5.9-3.1-7.9c-2.1-2-5.1-3-9.1-3H34z"/>
+  <path fill="#82aaa6" d="M48.5 52.8h14.2L82 76H66.1z"/>
+  <path fill="#82aaa6" d="M49 37h15v10H49z"/>
 </svg>

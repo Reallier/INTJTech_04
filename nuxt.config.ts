@@ -16,27 +16,18 @@ export default defineNuxtConfig({
         // Favicon
         {
           rel: "icon",
-          type: "image/png",
-          href: "/site-logo.png",
-          sizes: "32x32"
+          type: "image/svg+xml",
+          href: "/site-logo.svg?v=20260729"
         },
         {
           rel: "icon",
           type: "image/png",
-          href: "/site-logo.png",
-          sizes: "64x64"
+          href: "/site-logo.png?v=20260729",
+          sizes: "1024x1024"
         },
         {
-          rel: "icon",
-          type: "image/png",
-          href: "/site-logo.png",
-          sizes: "128x128"
-        },
-        {
-          rel: "icon",
-          type: "image/png",
-          href: "/site-logo.png",
-          sizes: "256x256"
+          rel: "apple-touch-icon",
+          href: "/site-logo.png?v=20260729"
         }
       ]
     }

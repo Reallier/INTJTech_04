@@ -70,9 +70,21 @@ for (const file of displaySourceFiles) {
 const headerSource = readFileSync('components/SiteHeader.vue', 'utf8');
 const homeSource = readFileSync('pages/index.vue', 'utf8');
 const promoSource = readFileSync('pages/promo.vue', 'utf8');
+const nuxtConfigSource = readFileSync('nuxt.config.ts', 'utf8');
 
 assert.ok(existsSync('public/site-logo.svg'), 'domestic site should carry the international logo SVG asset');
+assert.ok(existsSync('public/site-logo.png'), 'domestic site should carry the international logo PNG asset');
 assert.match(headerSource, /src="\/site-logo\.svg"/, 'header should use the international logo SVG');
+assert.match(
+  nuxtConfigSource,
+  /href: "\/site-logo\.svg\?v=\d+"/,
+  'favicon should use the versioned international logo SVG',
+);
+assert.match(
+  nuxtConfigSource,
+  /rel: "apple-touch-icon",\s+href: "\/site-logo\.png\?v=\d+"/,
+  'apple touch icon should use the versioned international logo PNG',
+);
 assert.doesNotMatch(headerSource, />INTJ</, 'header should not use a handcrafted INTJ text logo');
 assert.match(
   headerSource,
