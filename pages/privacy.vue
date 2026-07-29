@@ -1,242 +1,192 @@
 <script setup lang="ts">
 useHead({
-    title: '隐私政策 - 简序智能 INTJsys'
+  title: "隐私政策｜Reallier 简序智能",
+  meta: [
+    {
+      name: "description",
+      content: "简序智能国内展示站隐私政策。",
+    },
+  ],
 });
 </script>
 
 <template>
-    <div class="legal-page">
-        <!-- Header -->
-        <SiteHeader />
+  <main class="legal-page">
+    <header class="legal-hero">
+      <p>LEGAL / PRIVACY</p>
+      <h1>隐私政策</h1>
+      <span>更新日期：2026 年 7 月 29 日</span>
+    </header>
 
-        <main class="container">
-            <h1>隐私政策</h1>
-            <p class="update-date">更新日期：2026年1月</p>
+    <div class="legal-content">
+      <section>
+        <h2>一、适用范围</h2>
+        <p>
+          本政策适用于深圳市简序智能科技有限责任公司运营的国内官方网站
+          <strong>intjsys.com</strong>。当前网站仅提供品牌、能力、脱敏案例、联系方式和法务信息展示，
+          不提供用户注册、评论、订阅、支付、公开生成式 AI、算法推荐或可搜索知识库功能。
+        </p>
+        <p>独立产品、项目交付或第三方平台适用其各自的隐私说明和合同约定，不属于本政策覆盖范围。</p>
+      </section>
 
-            <section>
-                <h2>一、适用范围</h2>
-                <p>本隐私政策适用于<strong>深圳市简序智能科技有限责任公司</strong>（品牌名：简序智能/INTJsys，以下简称"我们"）运营的官方网站及相关产品服务，包括但不限于：</p>
-                <ul>
-                    <li><strong>官方网站</strong>：intjsys.com</li>
-                    <li><strong>TalentAI</strong>：智能招聘匹配服务</li>
-                    <li><strong>MindAI</strong>：MBTI 人格分析服务</li>
-                    <li><strong>其他产品</strong>：未来发布的相关 AI 服务</li>
-                </ul>
-                <p>各产品可能有更详细的隐私条款，请以具体产品页面为准。</p>
-            </section>
+      <section>
+        <h2>二、我们处理的信息</h2>
+        <h3>2.1 主动联系信息</h3>
+        <p>
+          当你通过电子邮件、企业微信或其他公开联系方式与我们沟通时，我们会处理你主动提供的姓名、
+          公司、联系方式、项目背景及附件，用于回复咨询、判断合作范围和履行后续约定。
+        </p>
+        <h3>2.2 基础访问日志</h3>
+        <p>
+          为保障网站安全和稳定运行，托管与网络设施可能记录访问时间、IP 地址、请求路径、设备/浏览器类型、
+          错误和安全事件等必要日志。我们不在本网站建立用户画像，也不基于个人特征进行推荐。
+        </p>
+      </section>
 
-            <section>
-                <h2>二、信息收集</h2>
-                <h3>2.1 账户信息</h3>
-                <p>当您注册或登录我们的服务时，我们可能收集：</p>
-                <ul>
-                    <li>电子邮箱地址</li>
-                    <li>用户名/昵称</li>
-                    <li>第三方登录授权的基本资料（如微信昵称、头像）</li>
-                </ul>
-                
-                <h3>2.2 业务数据</h3>
-                <p>根据您使用的具体产品，我们可能收集：</p>
-                <ul>
-                    <li>您主动上传或输入的业务内容（如简历、JD、测试答案等）</li>
-                    <li>服务生成的分析结果和报告</li>
-                    <li>服务使用记录、消费记录</li>
-                </ul>
-                
-                <h3>2.3 技术信息</h3>
-                <ul>
-                    <li>设备信息：浏览器类型、操作系统</li>
-                    <li>访问日志：IP 地址、访问时间、页面浏览记录</li>
-                    <li>Cookie 数据（详见第六节）</li>
-                </ul>
-                
-                <h3>2.4 敏感个人信息</h3>
-                <p>根据《个人信息保护法》，敏感个人信息包括生物识别、宗教信仰、特定身份、医疗健康、金融账户等信息。如我们的服务需要处理您的敏感个人信息，我们将：</p>
-                <ul>
-                    <li>在收集前单独向您告知处理目的和必要性</li>
-                    <li>取得您的<strong>明确单独同意</strong></li>
-                    <li>采取更严格的保护措施</li>
-                </ul>
-            </section>
+      <section>
+        <h2>三、Cookie 与第三方资源</h2>
+        <p>
+          当前网站不使用广告、个性化推荐或跨站追踪 Cookie。若为安全、负载均衡或基础会话使用必要 Cookie，
+          其用途仅限于网站正常运行。
+        </p>
+        <p>
+          国内构建不加载 Google Fonts、境外 Font Awesome CDN 或国际站实时演示。页面中的备案链接会跳转至
+          工业和信息化部备案管理系统，跳转后由该网站按照其规则处理信息。
+        </p>
+      </section>
 
-            <section>
-                <h2>三、信息使用</h2>
-                <p>我们收集的信息用于以下目的：</p>
-                <ol>
-                    <li><strong>提供服务</strong>：账户创建、身份验证、产品功能交付</li>
-                    <li><strong>服务优化</strong>：分析使用模式、改进用户体验</li>
-                    <li><strong>安全保障</strong>：防止滥用、检测异常行为、保护系统安全</li>
-                    <li><strong>客户服务</strong>：响应咨询、处理投诉反馈</li>
-                    <li><strong>法律合规</strong>：满足法律法规要求</li>
-                </ol>
-            </section>
+      <section>
+        <h2>四、保存、共享与安全</h2>
+        <p>
+          我们仅在实现沟通、履约、安全审计或法定义务所需期间保存信息，并采取合理的访问控制、备份和安全措施。
+          除依法提供、取得你的授权、完成你要求的服务或使用必要服务商外，我们不会出售或无关共享个人信息。
+        </p>
+        <p>
+          国内网站本身不主动将访问者信息传输至国际站产品后台。具体项目如涉及数据处理、委托处理或跨境场景，
+          将在项目启动前另行评估并通过合同明确。
+        </p>
+      </section>
 
-            <section>
-                <h2>四、信息存储与安全</h2>
-                <h3>4.1 存储位置与数据境内存储</h3>
-                <p>所有用户数据均存储于中国境内的云服务器，符合国家数据安全法规要求。<strong>我们不会将您的个人数据传输至中国境外。</strong></p>
-                
-                <h3>4.2 安全措施</h3>
-                <ul>
-                    <li>传输加密：全站 HTTPS 加密</li>
-                    <li>存储加密：敏感数据加密存储</li>
-                    <li>访问控制：严格的权限管理和审计日志</li>
-                    <li>备份机制：定期数据备份与灾备</li>
-                </ul>
-                
-                <h3>4.3 保留期限</h3>
-                <ul>
-                    <li>账户信息：账户存续期间及注销后 30 天</li>
-                    <li>业务数据：根据产品特性保留，用户可申请删除</li>
-                    <li>日志数据：通常保留 90 天</li>
-                </ul>
-            </section>
+      <section>
+        <h2>五、你的权利</h2>
+        <p>
+          你可以依法请求查阅、更正、复制或删除我们持有的个人信息，也可以撤回同意或要求说明处理规则。
+          请通过 <a href="mailto:reallier@intjsys.com">reallier@intjsys.com</a> 联系我们。
+          为保护信息安全，我们可能需要核验请求人的身份。
+        </p>
+      </section>
 
-            <section>
-                <h2>五、信息共享</h2>
-                <p>我们<strong>不会</strong>向第三方出售、出租您的个人信息。</p>
-                <p>以下情况可能涉及数据共享：</p>
-                <ul>
-                    <li><strong>AI 服务提供商</strong>：部分业务数据会发送至阿里云（通义千问）进行 AI 分析处理，我们已与服务商签署数据保护协议</li>
-                    <li><strong>法律要求</strong>：根据法律法规或政府部门的合法要求</li>
-                    <li><strong>用户授权</strong>：经您明确同意的其他情形</li>
-                </ul>
-            </section>
+      <section>
+        <h2>六、未成年人</h2>
+        <p>
+          本网站面向企业与专业用户，不以未成年人为目标用户。未成年人如需向我们提交个人信息，应在监护人指导下进行。
+        </p>
+      </section>
 
-            <section>
-                <h2>六、Cookie 政策</h2>
-                <p>我们使用 Cookie 实现以下功能：</p>
-                <ul>
-                    <li><strong>身份认证</strong>：保持登录状态、实现跨产品单点登录（SSO）</li>
-                    <li><strong>偏好设置</strong>：记录您的界面偏好</li>
-                    <li><strong>安全保护</strong>：防止跨站请求伪造（CSRF）</li>
-                </ul>
-                <p>您可以通过浏览器设置管理或禁用 Cookie，但这可能影响部分功能的正常使用。</p>
-            </section>
-
-            <section>
-                <h2>七、用户权利</h2>
-                <p>您对个人信息享有以下权利：</p>
-                <ul>
-                    <li><strong>访问权</strong>：查看我们持有的您的信息</li>
-                    <li><strong>更正权</strong>：更正不准确的个人信息</li>
-                    <li><strong>删除权</strong>：申请删除您的个人数据</li>
-                    <li><strong>撤回同意</strong>：随时撤回对数据处理的同意</li>
-                    <li><strong>账户注销</strong>：申请注销账户并删除相关数据</li>
-                </ul>
-                <p>如需行使上述权利，请通过本页底部的联系方式与我们联系。</p>
-            </section>
-
-            <section>
-                <h2>八、未成年人保护</h2>
-                <p>我们的服务主要面向企业用户和成年人。如果您是未满 18 周岁的未成年人，请在监护人的陪同下阅读本政策，并在监护人同意的前提下使用我们的服务。</p>
-            </section>
-
-            <section>
-                <h2>九、政策更新</h2>
-                <p>我们可能根据法律法规变化或业务发展需要更新本隐私政策。重大变更时，我们会通过网站公告、邮件或产品内通知等方式告知您。</p>
-            </section>
-
-            <section>
-                <h2>十、联系我们</h2>
-                <p>如有隐私相关问题或需行使数据权利，请通过以下方式联系：</p>
-                <ul>
-                    <li><strong>公司名称</strong>：深圳市简序智能科技有限责任公司</li>
-                    <li><strong>统一社会信用代码</strong>：91440300MAK40P7857</li>
-                    <li><strong>注册地址</strong>：深圳市南山区粤海街道高新区社区高新南四道025号高新工业村W2-B栋284</li>
-                    <li><strong>电子邮箱</strong>：<a href="mailto:reallier@intjsys.com">reallier@intjsys.com</a></li>
-                    <li><strong>官方网站</strong>：<a href="https://intjsys.com" target="_blank">intjsys.com</a></li>
-                </ul>
-                <p>我们将在收到请求后 15 个工作日内予以回复。</p>
-            </section>
-        </main>
-
-        <SiteFooter />
+      <section>
+        <h2>七、政策更新</h2>
+        <p>
+          当网站范围、信息处理方式或适用要求发生变化时，我们会更新本政策并修改顶部日期。
+          若未来新增账号、互动、生成式 AI 或其他数据功能，将在上线前补充相应告知与控制措施。
+        </p>
+      </section>
     </div>
+  </main>
 </template>
 
 <style scoped>
 .legal-page {
-    min-height: 100vh;
-    background: #fff;
+  min-height: 100vh;
+  padding-bottom: 80px;
+  background: var(--bg-main);
 }
 
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 80px 24px 120px;
+.legal-hero,
+.legal-content {
+  width: min(860px, calc(100% - 48px));
+  margin: 0 auto;
 }
 
-h1 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    margin-bottom: 8px;
+.legal-hero {
+  padding: 72px 0 44px;
+  border-bottom: 1px solid var(--fg);
 }
 
-.update-date {
-    color: #666;
-    margin-bottom: 48px;
-    font-size: 14px;
+.legal-hero p,
+.legal-hero span {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
 }
 
-section {
-    margin-bottom: 40px;
+.legal-hero p {
+  margin: 0 0 18px;
+  color: var(--accent);
+  font-weight: 700;
 }
 
-h2 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: 16px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #eee;
+.legal-hero h1 {
+  margin: 0 0 20px;
+  font-size: clamp(42px, 6vw, 64px);
+  letter-spacing: -0.035em;
 }
 
-h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 20px 0 12px;
-    color: #333;
+.legal-hero span {
+  color: var(--muted-light);
 }
 
-p {
-    line-height: 1.8;
-    color: #444;
-    margin-bottom: 12px;
+.legal-content {
+  padding-top: 24px;
 }
 
-ul, ol {
-    padding-left: 24px;
-    margin: 12px 0;
+.legal-content section {
+  padding: 28px 0;
+  border-bottom: 1px solid var(--border);
 }
 
-li {
-    line-height: 1.8;
-    margin: 6px 0;
-    color: #444;
+.legal-content h2 {
+  margin: 0 0 18px;
+  font-size: 22px;
 }
 
-a {
-    color: #000;
-    text-decoration: underline;
+.legal-content h3 {
+  margin: 22px 0 8px;
+  font-size: 16px;
 }
 
-a:hover {
-    opacity: 0.7;
+.legal-content p {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.9;
 }
 
-strong {
-    font-weight: 600;
-    color: #000;
+.legal-content p:last-child {
+  margin-bottom: 0;
 }
 
-@media (max-width: 768px) {
-    .container {
-        padding: 60px 20px 80px;
-    }
-    
-    h1 {
-        font-size: 2rem;
-    }
+.legal-content strong {
+  color: var(--fg);
+}
+
+.legal-content a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .legal-hero,
+  .legal-content {
+    width: calc(100% - 32px);
+  }
+
+  .legal-hero {
+    padding: 48px 0 34px;
+  }
+
+  .legal-content section {
+    padding: 24px 0;
+  }
 }
 </style>

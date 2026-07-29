@@ -1,468 +1,283 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onBeforeUnmount, ref, watch } from "vue";
 
-const showProductMenu = ref(false);
-const showTechMenu = ref(false);
+const route = useRoute();
+const mobileMenuOpen = ref(false);
 
-const toggleProductMenu = () => {
-  showProductMenu.value = !showProductMenu.value;
-  showTechMenu.value = false;
+const navItems = [
+  { label: "首页", to: "/" },
+  { label: "案例库", to: "/cases" },
+  { label: "交付能力", to: "/#delivery" },
+  { label: "行业场景", to: "/#industries" },
+  { label: "关于", to: "/about" },
+  { label: "联系", to: "/contact" },
+];
+
+const closeMenu = () => {
+  mobileMenuOpen.value = false;
+  if (typeof document !== "undefined") document.body.style.overflow = "";
 };
 
-const toggleTechMenu = () => {
-  showTechMenu.value = !showTechMenu.value;
-  showProductMenu.value = false;
+const toggleMenu = () => {
+  mobileMenuOpen.value = !mobileMenuOpen.value;
+  if (typeof document !== "undefined") {
+    document.body.style.overflow = mobileMenuOpen.value ? "hidden" : "";
+  }
 };
 
-if (typeof window !== 'undefined') {
-  window.addEventListener('click', (e) => {
-    const target = e.target as HTMLElement;
-    if (!target.closest('.nav-dropdown') && !target.closest('.nav-item')) {
-      showProductMenu.value = false;
-      showTechMenu.value = false;
-    }
-  });
-}
+const isActive = (to: string) => {
+  if (to.startsWith("/#")) return route.path === "/" && route.hash === to.slice(1);
+  if (to === "/") return route.path === "/";
+  return route.path.startsWith(to);
+};
+
+watch(() => route.fullPath, closeMenu);
+onBeforeUnmount(closeMenu);
 </script>
 
 <template>
   <header class="header">
     <div class="header-inner">
-      <a href="/" class="logo">简序智能<span>INTJsys</span></a>
-      <nav class="nav">
-        <div class="nav-item">
-          <NuxtLink to="/" class="nav-link" :class="{ active: $route.path === '/' }">
-            首页
-          </NuxtLink>
-        </div>
-        <div class="nav-item">
-          <button class="nav-link" @click.stop="toggleProductMenu" :class="{ 'active': showProductMenu }">
-            产品矩阵
-          </button>
-        </div>
-        <div class="nav-item">
-           <button class="nav-link" @click.stop="toggleTechMenu" :class="{ 'active': showTechMenu }">
-            技术资源
-          </button>
-        </div>
-        <div class="nav-item">
-          <NuxtLink to="/skills" class="nav-link" :class="{ active: $route.path === '/skills' }">
-            MCP & Skill
-          </NuxtLink>
-        </div>
-      </nav>
-    </div>
-    
-    <!-- Product Menu -->
-    <div class="dropdown-panel" v-show="showProductMenu">
-      <div class="panel-inner">
-         <div class="panel-grid cols-4">
-            <a href="https://talentai.intjsys.com" target="_blank" class="panel-item">
-              <div class="panel-icon">[ ]</div>
-              <div class="panel-content">
-                <div class="panel-head">
-                   <span class="panel-title">TALENTAI</span>
-                   <span class="panel-meta">PROD</span>
-                </div>
-                <p class="panel-desc">AI 驱动的确定性人才发现引擎。</p>
-              </div>
-            </a>
-            <a href="https://mbti.intjsys.com" target="_blank" class="panel-item">
-              <div class="panel-icon">∞</div>
-              <div class="panel-content">
-                <div class="panel-head">
-                   <span class="panel-title">MINDAI</span>
-                   <span class="panel-meta">BETA</span>
-                </div>
-                <p class="panel-desc">基于荣格八维的 MBTI 判型智能体。</p>
-              </div>
-            </a>
-            <a href="#products" class="panel-item">
-              <div class="panel-icon">//</div>
-              <div class="panel-content">
-                <div class="panel-head">
-                   <span class="panel-title">BRIDGE</span>
-                   <span class="panel-meta">CUSTOM</span>
-                </div>
-                <p class="panel-desc">定制化 AI 中台与存量业务注入。</p>
-              </div>
-            </a>
-            <a href="#products" class="panel-item">
-              <div class="panel-icon">{ }</div>
-              <div class="panel-content">
-                <div class="panel-head">
-                   <span class="panel-title">LABS</span>
-                   <span class="panel-meta">BETA</span>
-                </div>
-                <p class="panel-desc">前沿工具与原子组件原型库。</p>
-              </div>
-            </a>
-         </div>
-      </div>
-    </div>
+      <NuxtLink to="/" class="logo" aria-label="Reallier 简序智能首页" @click="closeMenu">
+        <img src="/site-logo.svg" alt="" class="logo-mark" />
+        <span class="logo-word">Reallier</span>
+      </NuxtLink>
 
-    <!-- Tech Menu -->
-    <div class="dropdown-panel" v-show="showTechMenu">
-      <div class="panel-inner">
-         <div class="panel-grid cols-4">
-            <a href="#deep-dive" class="panel-item">
-              <div class="panel-icon">&</div>
-              <div class="panel-content">
-                <div class="panel-head">
-                   <span class="panel-title">PHILOSOPHY</span>
-                </div>
-                <p class="panel-desc">核心架构设计原则。</p>
-              </div>
-            </a>
-            <a href="#deep-dive" class="panel-item">
-              <div class="panel-icon">_</div>
-              <div class="panel-content">
-                <div class="panel-head">
-                   <span class="panel-title">SPECS</span>
-                </div>
-                <p class="panel-desc">技术栈与实现细节。</p>
-              </div>
-            </a>
-            <a href="/log" class="panel-item">
-              <div class="panel-icon">::</div>
-              <div class="panel-content">
-                <div class="panel-head">
-                   <span class="panel-title">LOGS</span>
-                   <span class="panel-meta">LIVE</span>
-                </div>
-                <p class="panel-desc">实时工程演进记录。</p>
-              </div>
-            </a>
-            <a href="/docs" class="panel-item">
-              <div class="panel-icon">< ></div>
-              <div class="panel-content">
-                <div class="panel-head">
-                   <span class="panel-title">API</span>
-                   <span class="panel-meta">DOCS</span>
-                </div>
-                <p class="panel-desc">统一文档中心与标准化集成指南。</p>
-              </div>
-            </a>
-         </div>
-      </div>
+      <button
+        class="hamburger"
+        :class="{ 'is-active': mobileMenuOpen }"
+        type="button"
+        aria-label="切换主导航"
+        :aria-expanded="mobileMenuOpen"
+        @click.stop="toggleMenu"
+      >
+        <span></span><span></span><span></span>
+      </button>
+
+      <div v-if="mobileMenuOpen" class="mobile-overlay" @click="closeMenu"></div>
+
+      <nav class="nav" :class="{ 'nav-open': mobileMenuOpen }" aria-label="主导航">
+        <NuxtLink
+          v-for="item in navItems"
+          :key="item.to"
+          :to="item.to"
+          class="nav-link"
+          :class="{ active: isActive(item.to) }"
+          @click="closeMenu"
+        >
+          {{ item.label }}
+        </NuxtLink>
+        <NuxtLink to="/contact" class="nav-cta" @click="closeMenu">
+          讨论具体系统
+          <span aria-hidden="true">→</span>
+        </NuxtLink>
+      </nav>
     </div>
   </header>
 </template>
 
 <style scoped>
-/* CSS Variables */
 .header {
-  --bg: #ffffff;
-  --fg: #111111;
-  --muted: #666666;
-  --border: rgba(0, 0, 0, 0.08);
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  
   position: sticky;
   top: 0;
-  width: 100%;
-  background: #fff;
-  border-bottom: 1px solid var(--fg);
-  z-index: 1000;
+  z-index: 10030;
+  isolation: isolate;
+  border-bottom: 1px solid var(--border);
+  background: var(--navbar-bg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
 .header-inner {
-  height: 72px;
+  width: min(var(--max-content), calc(100% - 48px));
+  height: 68px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0;
-  box-sizing: border-box;
+  gap: 30px;
 }
 
 .logo {
-  font-weight: 800;
-  font-size: 20px;
-  letter-spacing: -0.04em;
-  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.logo-mark {
+  width: 32px;
+  height: 32px;
+  display: block;
+}
+
+.logo-word {
   color: var(--fg);
-  transition: opacity 0.2s var(--ease);
-}
-
-.logo:hover {
-  opacity: 0.7;
-}
-
-.logo span {
-  font-weight: 400;
-  color: var(--muted);
-  margin-left: 4px;
+  font-size: 20px;
+  font-weight: 760;
+  letter-spacing: -0.035em;
 }
 
 .nav {
   display: flex;
-  gap: 40px;
   align-items: center;
+  gap: clamp(16px, 2vw, 28px);
 }
 
 .nav-link {
   position: relative;
-  font-size: 14px;
+  padding: 8px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
   font-weight: 600;
-  text-decoration: none;
-  color: var(--fg);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
+  white-space: nowrap;
+  transition: color 180ms var(--ease);
 }
 
 .nav-link::after {
-  content: '';
+  content: "";
   position: absolute;
-  bottom: -6px;
+  right: 0;
+  bottom: 2px;
   left: 0;
-  width: 100%;
-  height: 3px;
-  background: var(--fg);
+  height: 2px;
+  background: var(--accent);
   transform: scaleX(0);
-  transition: transform 0.2s var(--ease);
+  transform-origin: left;
+  transition: transform 180ms var(--ease);
 }
 
+.nav-link:hover,
+.nav-link.active {
+  border-color: transparent;
+  background: transparent;
+  color: var(--fg);
+}
+
+.nav-link:hover::after,
 .nav-link.active::after {
   transform: scaleX(1);
 }
 
-.btn-login {
-  padding: 8px 16px;
-  border: 1px solid var(--fg);
-  border-radius: 0;
-  font-size: 13px;
-  font-weight: 600;
-  text-decoration: none;
-  color: var(--fg);
-  background: transparent;
-  cursor: pointer;
-  transition: all 0.2s var(--ease);
-}
-
-.btn-login:hover {
-  background: var(--fg);
-  color: #fff;
-}
-
-/* 用户下拉卡片 */
-.user-dropdown {
-  position: relative;
-}
-
-.btn-user {
-  display: flex;
+.nav-cta {
+  min-height: 40px;
+  padding: 0 15px;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  border: 1px solid var(--fg);
-  background: transparent;
+  gap: 14px;
+  border: 1px solid var(--accent);
+  border-radius: 2px;
+  background: var(--accent);
+  color: var(--on-deep);
   font-size: 13px;
-  font-weight: 600;
-  color: var(--fg);
-  cursor: pointer;
-  transition: all 0.2s var(--ease);
-}
-
-.btn-user:hover {
-  background: var(--fg);
-  color: #fff;
-}
-
-.btn-user .arrow {
-  font-size: 10px;
-  opacity: 0.6;
-}
-
-.user-card {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 8px;
-  width: 240px;
-  background: #fff;
-  border: 1px solid var(--fg);
-  z-index: 1001;
-}
-
-.user-card-header {
-  display: flex;
-  gap: 12px;
-  padding: 16px;
-  border-bottom: 1px solid #eee;
-}
-
-.user-avatar {
-  width: 40px;
-  height: 40px;
-  background: var(--fg);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
   font-weight: 700;
 }
 
-.user-info {
-  flex: 1;
-  min-width: 0;
+.nav-cta:hover {
+  border-color: var(--surface-deep);
+  background: var(--surface-deep);
 }
 
-.user-card-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--fg);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.user-card-id {
-  font-size: 11px;
-  color: var(--muted);
-  margin-top: 2px;
-}
-
-.user-card-stats {
-  padding: 12px 16px;
-  border-bottom: 1px solid #eee;
-}
-
-.stat-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-}
-
-.stat-label {
-  font-size: 12px;
-  color: var(--muted);
-}
-
-.stat-value {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--fg);
-}
-
-.btn-logout {
-  display: block;
-  width: 100%;
-  padding: 12px;
-  background: transparent;
-  border: none;
-  font-size: 13px;
-  color: var(--muted);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-logout:hover {
-  background: #f5f5f5;
-  color: var(--fg);
-}
-
-/* Dropdown Panels */
-.dropdown-panel {
-  position: absolute;
-  top: 72px;
-  left: 0;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--fg);
-  padding: 32px 0;
-  z-index: 999;
-}
-
-.panel-inner {
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
+.hamburger {
+  width: 42px;
+  height: 42px;
+  display: none;
   padding: 0;
-  box-sizing: border-box;
-}
-
-.panel-grid {
-  display: grid;
-  gap: 16px;
-}
-
-.cols-3 { grid-template-columns: repeat(3, 1fr); }
-.cols-4 { grid-template-columns: repeat(4, 1fr); }
-
-.panel-item {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 20px;
-  text-decoration: none;
-  border: 1px solid #000 !important;
-  background: #fff;
-  transition: background 0.15s;
-}
-
-.panel-item:hover {
-  background: rgba(0, 0, 0, 0.03);
-}
-
-.panel-icon {
-  width: 48px;
-  height: 48px;
-  background: rgba(0, 0, 0, 0.03);
   border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'SF Mono', 'Roboto Mono', monospace;
-  font-weight: 700;
-  font-size: 16px;
-  color: var(--fg);
-  flex-shrink: 0;
+  background: var(--surface);
+  cursor: pointer;
 }
 
-.panel-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+.hamburger span {
+  width: 18px;
+  height: 2px;
+  display: block;
+  margin: 4px auto;
+  background: var(--fg);
+  transition: transform 180ms ease, opacity 180ms ease;
 }
 
-.panel-head {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
+.hamburger.is-active span:first-child {
+  transform: translateY(6px) rotate(45deg);
 }
 
-.panel-title {
-  font-family: 'Inter', sans-serif;
-  font-weight: 800;
-  font-size: 14px;
-  letter-spacing: -0.01em;
-  color: var(--fg);
-  text-transform: uppercase;
+.hamburger.is-active span:nth-child(2) {
+  opacity: 0;
 }
 
-.panel-meta {
-  font-family: 'SF Mono', monospace;
-  font-size: 10px;
-  color: var(--muted);
-  background: rgba(0, 0, 0, 0.04);
-  padding: 2px 6px;
-  border: 1px solid var(--border);
+.hamburger.is-active span:last-child {
+  transform: translateY(-6px) rotate(-45deg);
 }
 
-.panel-desc {
-  font-size: 13px;
-  color: var(--muted);
-  line-height: 1.5;
-  margin: 0;
+.mobile-overlay {
+  position: fixed;
+  inset: 68px 0 0;
+  background: rgba(16, 37, 29, 0.28);
+}
+
+@media (max-width: 980px) {
+  .header-inner {
+    width: min(100% - 32px, var(--max-content));
+  }
+
+  .hamburger {
+    display: block;
+    margin-left: auto;
+  }
+
+  .nav {
+    position: fixed;
+    inset: 68px 16px auto;
+    max-height: calc(100dvh - 88px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    display: none;
+    padding: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: 0 24px 80px rgba(16, 37, 29, 0.2);
+  }
+
+  .nav.nav-open {
+    display: grid;
+  }
+
+  .nav-link {
+    min-height: 48px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--line-soft);
+    font-size: 15px;
+  }
+
+  .nav-link::after {
+    display: none;
+  }
+
+  .nav-cta {
+    min-height: 50px;
+    margin-top: 4px;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 520px) {
+  .header-inner {
+    width: calc(100% - 24px);
+    height: 64px;
+  }
+
+  .nav {
+    inset: 64px 12px auto;
+    max-height: calc(100dvh - 80px);
+  }
+
+  .mobile-overlay {
+    inset: 64px 0 0;
+  }
 }
 </style>

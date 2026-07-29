@@ -1,3 +1,5 @@
+import { domesticPublicRoutes } from "./data/domesticPolicy.mjs";
+
 // Nuxt configuration for 简序智能国内宣传站 - intjsys.com
 export default defineNuxtConfig({
   app: {
@@ -11,20 +13,6 @@ export default defineNuxtConfig({
         }
       ],
       link: [
-        // Google Fonts - Inter
-        {
-          rel: "preconnect",
-          href: "https://fonts.googleapis.com"
-        },
-        {
-          rel: "preconnect",
-          href: "https://fonts.gstatic.com",
-          crossorigin: "anonymous"
-        },
-        {
-          rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-        },
         // Favicon
         {
           rel: "icon",
@@ -49,18 +37,15 @@ export default defineNuxtConfig({
           type: "image/png",
           href: "/site-logo.png",
           sizes: "256x256"
-        },
-        // FontAwesome
-        {
-          rel: "stylesheet",
-          href:
-            "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css",
-          integrity:
-            "sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==",
-          crossorigin: "anonymous",
-          referrerpolicy: "no-referrer"
         }
       ]
+    }
+  },
+  hooks: {
+    "pages:extend"(pages) {
+      const allowed = new Set(domesticPublicRoutes);
+      const publicPages = pages.filter((page) => allowed.has(page.path));
+      pages.splice(0, pages.length, ...publicPages);
     }
   },
   css: ["@/assets/styles/main.css"],

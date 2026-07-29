@@ -1,28 +1,22 @@
 <template>
   <footer class="site-footer">
     <div class="footer-main">
-      <!-- 左侧：联系方式 -->
       <div class="footer-contact">
-        <a href="mailto:reallier@intjsys.com" class="contact-email">reallier@intjsys.com</a>
-        <div class="contact-wechat">
-          <img src="/wechat-contact.png" alt="企业微信" />
-          <span>企业微信</span>
-        </div>
+        <a href="mailto:reallier@intjsys.com">reallier@intjsys.com</a>
+        <span>深圳市简序智能科技有限责任公司</span>
       </div>
 
-      <!-- 中间：版权与备案 -->
       <div class="footer-center">
-        <span>© 2025 简序智能 INTJsys</span>
-        <span class="footer-divider">·</span>
-        <span>深圳 · 香港 · 上海</span>
-        <span class="footer-divider">·</span>
-        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">粤ICP备2026005920号</a>
+        <span>© 2026 Reallier 简序智能</span>
+        <span class="footer-divider">|</span>
+        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">
+          粤ICP备2026005920号
+        </a>
       </div>
 
-      <!-- 右侧：法律链接 -->
       <div class="footer-legal">
-        <a href="/privacy">隐私政策</a>
-        <a href="/terms">服务条款</a>
+        <NuxtLink to="/privacy">隐私政策</NuxtLink>
+        <NuxtLink to="/terms">服务条款</NuxtLink>
       </div>
     </div>
   </footer>
@@ -30,109 +24,72 @@
 
 <style scoped>
 .site-footer {
-  background: #111;
-  color: #fff;
-  margin-top: 120px;
-  padding: 40px;
+  padding: 38px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, var(--surface-deep-hover), var(--surface-deep));
+  color: var(--on-deep);
 }
 
 .footer-main {
-  max-width: 1280px;
+  width: min(var(--max-content), calc(100% - 48px));
   margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: 40px;
+  gap: 32px;
 }
 
-/* 左侧联系方式 */
 .footer-contact {
-  display: flex;
-  align-items: center;
-  gap: 24px;
+  display: grid;
+  gap: 5px;
+  font-size: 13px;
 }
 
-.contact-email {
-  color: #fff;
-  text-decoration: none;
+.footer-contact span,
+.footer-center,
+.footer-center a,
+.footer-legal a {
+  color: var(--on-deep-muted);
+  font-size: 12px;
+}
+
+.footer-contact a {
+  color: var(--on-deep);
   font-size: 14px;
 }
 
-.contact-email:hover {
-  text-decoration: underline;
-}
-
-.contact-wechat {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.contact-wechat img {
-  width: 40px;
-  height: 40px;
-  background: #fff;
-  border-radius: 4px;
-  padding: 2px;
-}
-
-.contact-wechat span {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-/* 中间版权信息 */
 .footer-center {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
 }
 
-.footer-center a {
-  color: rgba(255, 255, 255, 0.6);
-  text-decoration: none;
-}
-
-.footer-center a:hover {
-  color: #fff;
-}
-
-.footer-divider {
-  color: rgba(255, 255, 255, 0.3);
-}
-
-/* 右侧法律链接 */
 .footer-legal {
   display: flex;
-  gap: 24px;
+  justify-content: flex-end;
+  gap: 22px;
 }
 
-.footer-legal a {
-  color: rgba(255, 255, 255, 0.6);
-  text-decoration: none;
-  font-size: 13px;
-}
-
+.footer-contact a:hover,
+.footer-center a:hover,
 .footer-legal a:hover {
-  color: #fff;
+  color: var(--on-deep);
 }
 
-/* 响应式 */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .footer-main {
-    flex-direction: column;
-    gap: 24px;
+    grid-template-columns: 1fr;
     text-align: center;
   }
-  
-  .footer-contact {
-    flex-direction: column;
-  }
-  
+
   .footer-center {
     flex-wrap: wrap;
+    white-space: normal;
+  }
+
+  .footer-legal {
     justify-content: center;
   }
 }

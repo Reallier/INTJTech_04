@@ -1,7 +1,5 @@
 <template>
   <div class="page contact-page">
-    <SiteHeader />
-
     <main class="container">
       <header class="page-header">
         <span class="label">— CONTACT</span>
@@ -50,7 +48,6 @@
       </section>
     </main>
 
-    <SiteFooter />
   </div>
 </template>
 
@@ -215,4 +212,3 @@ useSeoMeta({
   }
 }
 </style>
-
